@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <variant>
 #include "tokens.h"
@@ -8,7 +9,7 @@
 
 class LexemeContext {
     private:
-        std::variant<std::string, int, double> lexeme = "";
+        std::optional<std::variant<std::string, int, double>> lexeme;
         uint8_t decimal_places = 0;
         TokenType current_token;
     public:
@@ -20,4 +21,6 @@ class LexemeContext {
         void add_double(int digit);
         void set_token_type(TokenType type);
         TokenType get_token_type();
+        void reset();
+        bool has_value() const;
 };

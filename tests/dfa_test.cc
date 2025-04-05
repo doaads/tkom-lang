@@ -78,7 +78,6 @@ TEST(DFATestHandlerOperator, HandlerManagerOperator) {
   HandlerManager manager;
   LexemeContext context;
   EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('-', context), DFAState::IN_OPERATOR);
-  EXPECT_EQ(context.get_lexeme_string(), "-");
 }
 
 TEST(DFATestHandlerLongOperator, HandlerManagerOperator) {
@@ -86,7 +85,6 @@ TEST(DFATestHandlerLongOperator, HandlerManagerOperator) {
   LexemeContext context;
   EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('-', context), DFAState::IN_OPERATOR);
   EXPECT_EQ(manager[DFAState::IN_OPERATOR]->next_state('>', context), DFAState::IN_LONG_OPERATOR);
-  EXPECT_EQ(context.get_lexeme_string(), "->");
 }
 
 TEST(DFATestHandlerLongOperatorToken, HandlerManagerOperator) {
@@ -95,7 +93,6 @@ TEST(DFATestHandlerLongOperatorToken, HandlerManagerOperator) {
   EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('-', context), DFAState::IN_OPERATOR);
   EXPECT_EQ(manager[DFAState::IN_OPERATOR]->next_state('>', context), DFAState::IN_LONG_OPERATOR);
   EXPECT_EQ(manager[DFAState::IN_LONG_OPERATOR]->next_state(' ', context), DFAState::END);
-  EXPECT_EQ(context.get_lexeme_string(), "->");
   EXPECT_EQ(context.get_token_type(), TokenType::T_CALL);
 }
 
@@ -105,7 +102,6 @@ TEST(DFATestHandlerLongOperatorAnd, HandlerManagerOperator) {
   EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('&', context), DFAState::IN_FIRST_CHAR_LONG_OP);
   EXPECT_EQ(manager[DFAState::IN_FIRST_CHAR_LONG_OP]->next_state('&', context), DFAState::IN_LONG_OPERATOR);
   EXPECT_EQ(manager[DFAState::IN_LONG_OPERATOR]->next_state(' ', context), DFAState::END);
-  EXPECT_EQ(context.get_lexeme_string(), "&&");
   EXPECT_EQ(context.get_token_type(), TokenType::T_AND);
 }
 
@@ -117,3 +113,16 @@ TEST(DFATestHandlerLongOperatorAndInvalid, HandlerManagerOperator) {
   EXPECT_EQ(context.get_token_type(), TokenType::T_ERROR);
 }
 
+TEST(DFATestHandlerSpecialChar, HandlerManagerOperator) {
+  HandlerManager manager;
+  LexemeContext context;
+  EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('(', context), DFAState::END);
+  EXPECT_EQ(context.get_token_type(), TokenType::T_LPAREN);
+}
+
+TEST(DFATestHandlerSpecialChar2, HandlerManagerOperator) {
+  HandlerManager manager;
+  LexemeContext context;
+  EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state(';', context), DFAState::END);
+  EXPECT_EQ(context.get_token_type(), TokenType::T_SEMICOLON);
+}

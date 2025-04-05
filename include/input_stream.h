@@ -3,6 +3,6 @@
 
 class InputStream {
     public:
-        virtual char getNextChar() = 0;
+        virtual char get_next_char() = 0;
         virtual bool eof() const = 0;
 };

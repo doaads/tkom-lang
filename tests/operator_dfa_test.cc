@@ -23,7 +23,7 @@ TEST_P(DFATestHandlerOperator, HandlerManagerOperator) {
     LexemeContext context;
 
     EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state(param.input_char, context), DFAState::IN_OPERATOR);
-    EXPECT_EQ(context.get_lexeme_string(), std::string(1, param.input_char));
+    EXPECT_FALSE(context.has_value());
     EXPECT_EQ(context.get_token_type(), param.expected_token);
 }
 
@@ -52,8 +52,8 @@ TEST_P(DFATestHandlerLongOperator, HandlerManagerOperator) {
 
     EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state(param.first_char, context), DFAState::IN_OPERATOR);
     EXPECT_EQ(manager[DFAState::IN_OPERATOR]->next_state(param.second_char, context), DFAState::IN_LONG_OPERATOR);
-    EXPECT_EQ(context.get_lexeme_string(), std::string(1, param.first_char) + std::string(1, param.second_char));
     EXPECT_EQ(context.get_token_type(), param.expected_token);
+    EXPECT_FALSE(context.has_value());
 }
 
 INSTANTIATE_TEST_SUITE_P(

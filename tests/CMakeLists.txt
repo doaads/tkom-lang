@@ -8,6 +8,7 @@ target_link_libraries(dfa_test PRIVATE
     handlers
     position
     operator_map
+    special_sign_map
     GTest::gtest_main
 )
 
@@ -17,6 +18,7 @@ target_link_libraries(operator_dfa_test PRIVATE
     handlers
     position
     operator_map
+    special_sign_map
     GTest::gtest_main
 )
 

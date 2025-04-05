@@ -33,6 +33,7 @@ const std::map<std::pair<char, TokenType>, TokenType> LongOperatorMap::long_oper
     {std::pair<char, TokenType>('>', TokenType::T_EQ), TokenType::T_ASSIGN},
     {std::pair<char, TokenType>('&', TokenType::T_AND), TokenType::T_AND},
     {std::pair<char, TokenType>('|', TokenType::T_OR), TokenType::T_OR},
+    {std::pair<char, TokenType>('/', TokenType::T_DIV), TokenType::T_COMMENT},
 };
 
 TokenType LongOperatorMap::operator[](std::pair<char, TokenType> pair) const {

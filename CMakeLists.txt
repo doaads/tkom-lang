@@ -13,11 +13,13 @@ add_library(handlers src/handlers.cpp)
 add_library(lexeme_context src/lexeme_context.cpp)
 add_library(handler_manager src/handler_manager.cpp)
 add_library(operator_map src/operator_map.cpp)
+add_library(special_sign_map src/special_sign_map.cpp)
 target_include_directories(position PUBLIC include)
 target_include_directories(handlers PUBLIC include)
 target_include_directories(lexeme_context PUBLIC include)
 target_include_directories(handler_manager PUBLIC include)
 target_include_directories(operator_map PUBLIC include)
+target_include_directories(special_sign_map PUBLIC include)
 
 # Enable testing
 enable_testing()
