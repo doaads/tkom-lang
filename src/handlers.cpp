@@ -1,53 +1,53 @@
 #include "handlers.h"
 #include "tokens.h"
+#include "operator_map.h"
 
 // process - returns a token (if state is END)
 // next_state - get next state from current char
 
-void StateHandler::add_string(char current_char, std::variant<std::string, int, double>& lexeme) const {
-    if (std::holds_alternative<std::string>(lexeme)) {
-        std::get<std::string>(lexeme) += current_char;
-    }
-}
-
-void StateHandler::add_int(char current_char, std::variant<std::string, int, double>& lexeme) const {
-    if (std::holds_alternative<std::string>(lexeme)) {
-        lexeme = current_char - '0';
-    } else {
-        lexeme = std::get<int>(lexeme) * 10 + (current_char - '0');
-    }
-}
+const OperatorMap op_map;
+const LongOperatorMap long_op_map;
+const LongOperatorFirstCharMap op_first_char_map;
 
 // IN WHITESPACE HANDLER
 
-TokenType InWhitespaceHandler::process(char current_char) {
-    return TokenType::T_ERROR;
-}
-
-DFAState InWhitespaceHandler::next_state(char current_char, std::variant<std::string, int, double>& lexeme) const {
+DFAState InWhitespaceHandler::next_state(char current_char, LexemeContext& context) const {
     if (std::isspace(current_char)) {
-        add_string(current_char, lexeme);
+        context.add_char(current_char);
         return DFAState::IN_WHITESPACE;
+
     } else if (std::isalpha(current_char)) {
-        add_string(current_char, lexeme);
+        context.add_char(current_char);
+        context.set_token_type(TokenType::T_IDENTIFIER);
         return DFAState::IN_IDENTIFIER;
+
     } else if (std::isdigit(current_char)){
-        add_int(current_char, lexeme);
+        context.add_int(current_char - '0');
+        context.set_token_type(TokenType::T_INT);
         return DFAState::IN_NUMBER;
-    } else {
-        return DFAState::END;
+
+    } else if (current_char == '"'){
+        context.set_token_type(TokenType::T_STRING);
+        return DFAState::IN_STRING;
+
+    } else if (op_map.contains(current_char)){
+        context.add_char(current_char);
+        context.set_token_type(op_map[current_char]);
+        return DFAState::IN_OPERATOR;
+
+    } else if (op_first_char_map.contains(current_char)) {
+        context.add_char(current_char);
+        context.set_token_type(op_first_char_map[current_char]);
+        return DFAState::IN_FIRST_CHAR_LONG_OP;
     }
+    return DFAState::END;
 }
 
 // IN IDENTIFIER HANDLER
 
-TokenType InIdentifierHandler::process(char current_char) {
-    return TokenType::T_IDENTIFIER;
-}
-
-DFAState InIdentifierHandler::next_state(char current_char, std::variant<std::string, int, double>& lexeme) const {
+DFAState InIdentifierHandler::next_state(char current_char, LexemeContext& context) const {
     if (isalnum(current_char) || current_char == '_') {
-        add_string(current_char, lexeme);
+        context.add_char(current_char);
         return DFAState::IN_IDENTIFIER;
     } else {
         return DFAState::END;
@@ -56,16 +56,80 @@ DFAState InIdentifierHandler::next_state(char current_char, std::variant<std::st
 
 // IN NUMBER HANDLER
 
-TokenType InNumberHandler::process(char current_char) {
-    return TokenType::T_INT;
-}
-
-DFAState InNumberHandler::next_state(char current_char, std::variant<std::string, int, double>& lexeme) const {
+DFAState InNumberHandler::next_state(char current_char, LexemeContext& context) const {
     if (isdigit(current_char)) {
-        add_int(current_char, lexeme);
+        context.add_int(current_char - '0');
         return DFAState::IN_NUMBER;
     } else if (current_char == '.') {
+        context.set_token_type(TokenType::T_FLT);
         return DFAState::IN_FLT;
     }
+    return DFAState::END;
+}
+
+// IN FLT HANDLER
+
+
+DFAState InFltHandler::next_state(char current_char, LexemeContext& context) const {
+    if (isdigit(current_char)) {
+        context.add_double(current_char - '0');
+        return DFAState::IN_FLT;
+    }
+
+    context.convert_to_double();
+    return DFAState::END;
+}
+
+
+// IN STRING HANDLER
+
+DFAState InStringHandler::next_state(char current_char, LexemeContext& context) const {
+    if (current_char == '"') {
+        return DFAState::END;
+    } else if (current_char == '\\') {
+        return DFAState::IN_ESCAPE;
+    }
+    context.add_char(current_char);
+    return DFAState::IN_STRING;
+}
+
+// IN ESCAPE HANDLER
+
+DFAState InEscapeHandler::next_state(char current_char, LexemeContext& context) const {
+    context.add_char(current_char);
+    return DFAState::IN_STRING;
+}
+
+// IN OPERATOR
+
+DFAState InOperatorHandler::next_state(char current_char, LexemeContext& context) const {
+    if (long_op_map.contains(std::pair<char, TokenType>(current_char, context.get_token_type()))) {
+        context.add_char(current_char);
+        context.set_token_type(long_op_map[std::pair<char, TokenType>(current_char, context.get_token_type())]);
+        return DFAState::IN_LONG_OPERATOR;
+    }
+
+    return DFAState::END;
+}
+
+// IN LONG OPERATOR
+
+DFAState InLongOperatorHandler::next_state(char current_char, LexemeContext& context) const {
+    if (long_op_map.contains(std::pair<char, TokenType>(current_char, context.get_token_type()))) {
+        context.add_char(current_char);
+        return DFAState::IN_LONG_OPERATOR;
+    }
+    return DFAState::END;
+}
+
+
+// IN FIRST CHAR LONG OP HANDLER
+
+DFAState InFirstCharLongOpHandler::next_state(char current_char, LexemeContext& context) const {
+    if (long_op_map.contains(std::pair<char, TokenType>(current_char, context.get_token_type()))) {
+        context.add_char(current_char);
+        return DFAState::IN_LONG_OPERATOR;
+    }
+    context.set_token_type(TokenType::T_ERROR);
     return DFAState::END;
 }
