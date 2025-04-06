@@ -1,6 +1,6 @@
 #include "keyword_map.h"
 
-const std::unordered_map<std::string, TokenType> keyword_tokens {
+const std::unordered_map<std::string, TokenType> KeywordMap::keyword_tokens {
     {"int", TokenType::T_INT_TYPE},
     {"flt", TokenType::T_FLT_TYPE},
     {"string", TokenType::T_STRING_TYPE},

@@ -12,7 +12,6 @@ const SpecialSignMap special_sign_map;
 
 DFAState InWhitespaceHandler::next_state(char current_char, LexemeContext& context) const {
     if (std::isspace(current_char)) {
-        context.add_char(current_char);
         return DFAState::IN_WHITESPACE;
 
     } else if (std::isalpha(current_char)) {
@@ -115,6 +114,7 @@ DFAState InOperatorHandler::next_state(char current_char, LexemeContext& context
 
 DFAState InLongOperatorHandler::next_state(char current_char, LexemeContext& context) const {
     if (long_op_map.contains(std::pair<char, TokenType>(current_char, context.get_token_type()))) {
+        context.set_token_type(long_op_map[std::pair<char, TokenType>(current_char, context.get_token_type())]);
         return DFAState::IN_LONG_OPERATOR;
     }
     return DFAState::END;

@@ -1,6 +1,6 @@
 #include "lexeme_context.h"
 #include "tokens.h"
-#include <iostream>
+#include <cmath>
 
 
 std::string LexemeContext::get_lexeme_string() {
@@ -12,7 +12,7 @@ int LexemeContext::get_lexeme_int() {
 }
 
 double LexemeContext::convert_to_double() {
-    unsigned int divisor = 10.0 * decimal_places;
+    unsigned int divisor = pow(10.0, decimal_places);
     lexeme = 1.0 * std::get<int>(*lexeme) / ((divisor) ? divisor : 1.0);
     return std::get<double>(*lexeme);
 }
@@ -53,4 +53,8 @@ void LexemeContext::reset() {
 
 bool LexemeContext::has_value() const {
     return lexeme.has_value();
+}
+
+std::optional<std::variant<std::string, int, double>> LexemeContext::get_lexeme() {
+    return lexeme;
 }
