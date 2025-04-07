@@ -34,7 +34,7 @@ bool InputManager::end() {
 }
 
 void InputManager::skip_line() {
-    while (last_char != '\n') {
+    while (last_char != '\n' && last_char != EOF) {
         get_next_char();
     }
 }
