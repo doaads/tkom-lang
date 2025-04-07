@@ -20,38 +20,38 @@ Token get_token_from_string(std::string string) {
 TEST(TokenizerIdentifier, TokenizerTestBasic) {
     Token token = get_token_from_string("test");
     EXPECT_EQ(token.type, TokenType::T_IDENTIFIER);
-    EXPECT_EQ(std::get<std::string>(*token.value), "test");
+    EXPECT_EQ(std::get<std::string>(token.value), "test");
 }
 
 TEST(TokenizerKeyword, TokenizerTestBasic) {
     Token token = get_token_from_string("while");
     EXPECT_EQ(token.type, TokenType::T_WHILE);
-    EXPECT_EQ(std::get<std::string>(*token.value), "while");
+    EXPECT_EQ(std::get<std::string>(token.value), "while");
 }
 
 TEST(TokenizerInt, TokenizerTestBasic) {
     Token token = get_token_from_string("123");
     EXPECT_EQ(token.type, TokenType::T_INT);
-    EXPECT_EQ(std::get<int>(*token.value), 123);
+    EXPECT_EQ(std::get<int>(token.value), 123);
 }
 
 TEST(TokenizerDouble, TokenizerTestBasic) {
     Token token = get_token_from_string("12.3456");
     EXPECT_EQ(token.type, TokenType::T_FLT);
-    EXPECT_EQ(std::get<double>(*token.value), 12.3456);
+    EXPECT_EQ(std::get<double>(token.value), 12.3456);
 }
 
 TEST(TokenizerOperator, TokenizerTestBasic) {
     Token token = get_token_from_string("->");
     EXPECT_EQ(token.type, TokenType::T_CALL);
-    EXPECT_FALSE(token.value.has_value());
+    EXPECT_FALSE(token.value.index() != 0);
 }
 
 // the only 3-sign op
 TEST(TokenizerOperatorBindFrt, TokenizerTestBasic) {
     Token token = get_token_from_string("->>");
     EXPECT_EQ(token.type, TokenType::T_BINDFRT);
-    EXPECT_FALSE(token.value.has_value());
+    EXPECT_FALSE(token.value.index() != 0);
 }
 
 
@@ -60,9 +60,9 @@ TEST(TokenizerTwoTokens, TokenizerTestBasic) {
     Token token1 = t.get_token();
     Token token2 = t.get_token();
     EXPECT_EQ(token1.type, TokenType::T_IDENTIFIER);
-    EXPECT_EQ(std::get<std::string>(*token1.value), "test");
+    EXPECT_EQ(std::get<std::string>(token1.value), "test");
     EXPECT_EQ(token2.type, TokenType::T_IDENTIFIER);
-    EXPECT_EQ(std::get<std::string>(*token2.value), "test2");
+    EXPECT_EQ(std::get<std::string>(token2.value), "test2");
 }
 
 
@@ -72,8 +72,8 @@ TEST(TokenizerComment, TokenizerTestBasic) {
     Token token2 = t.get_token();
     Token token3 = t.get_token();
     EXPECT_EQ(token1.type, TokenType::T_IDENTIFIER);
-    EXPECT_EQ(std::get<std::string>(*token1.value), "test");
+    EXPECT_EQ(std::get<std::string>(token1.value), "test");
     EXPECT_EQ(token2.type, TokenType::T_COMMENT);
     EXPECT_EQ(token3.type, TokenType::T_IDENTIFIER);
-    EXPECT_EQ(std::get<std::string>(*token3.value), "other");
+    EXPECT_EQ(std::get<std::string>(token3.value), "other");
 }
