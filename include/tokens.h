@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 enum class TokenType {
     // keywords
@@ -53,3 +54,5 @@ enum class TokenType {
 
     T_ERROR
 };
+
+std::ostream& operator<<(std::ostream& os, const TokenType type);

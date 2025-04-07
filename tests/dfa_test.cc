@@ -3,7 +3,6 @@
 #include "dfa_states.h"
 #include "lexeme_context.h"
 
-// Demonstrate some basic assertions.
 TEST(DFATestHandler, HandlerManagerBasicWhitespace) {
   HandlerManager manager;
   LexemeContext context;

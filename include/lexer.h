@@ -1,25 +1,20 @@
 #pragma once
 
-#include <istream>
 #include <memory>
-#include <variant>
-#include "position.h"
-#include "tokens.h"
+#include "position_manager.h"
 #include "input_stream.h"
-
-
-struct Token {
-    TokenType type;
-    std::variant<std::string, int, double> value;
-    Position position;
-};
-
+#include "tokenizer.h"
+#include "visitor.h"
 
 class Lexer {
     private:
-        std::unique_ptr<InputStream> input_stream;
-        Position position;
-        void get_next_char();
+        bool verbose = false;
+        std::unique_ptr<TokenVisitor> token_visitor;
+        std::shared_ptr<PositionManager> position;
+        std::shared_ptr<InputManager> input;
+        std::unique_ptr<Tokenizer> tokenizer;
     public:
-        explicit Lexer(std::istream& input);
+        Lexer(std::shared_ptr<InputStream> input_stream);
+        Lexer(std::shared_ptr<InputStream> input_stream, bool verbose);
+        Token get_token();
 };

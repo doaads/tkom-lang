@@ -1,7 +1,7 @@
 #include "position.h"
 
 
-Position::Position() : line(0), column(0), wrap(false) {}
+Position::Position() : line(1), column(0), wrap(false) {}
 
 uint32_t Position::get_line() {
     return line;
@@ -30,3 +30,7 @@ int Position::operator++(int) {
     return increment_column();
 }
 
+std::ostream& operator<<(std::ostream& os, Position pos) {
+    os << pos.get_line() << ':' << pos.get_column();
+    return os;
+}
