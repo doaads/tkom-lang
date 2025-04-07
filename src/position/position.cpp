@@ -1,7 +1,7 @@
 #include "position.h"
 
 
-Position::Position() : line(1), column(0), wrap(false) {}
+Position::Position() : wrap(false), line(1), column(0) {}
 
 uint32_t Position::get_line() {
     return line;

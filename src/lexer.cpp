@@ -14,8 +14,13 @@ Lexer::Lexer(std::shared_ptr<InputStream> input_stream, bool verbose) : Lexer(in
 
 Token Lexer::get_token() {
     Token result = tokenizer->get_token();
+    eof = input->end();
     if (verbose) {
         result.accept(*token_visitor);
     }
     return result;
+}
+
+bool Lexer::end() {
+    return eof;
 }

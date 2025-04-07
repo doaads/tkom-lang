@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+
+find_package(Boost REQUIRED COMPONENTS program_options)
 
 include_directories(include)
 
@@ -29,6 +32,22 @@ target_include_directories(visitor PUBLIC include)
 target_include_directories(input PUBLIC include)
 target_include_directories(position PUBLIC include)
 target_include_directories(lexer PUBLIC include)
+
+add_executable(tkom src/lexer_main.cpp)
+target_include_directories(tkom PRIVATE include)
+target_link_libraries(tkom PRIVATE
+    Boost::program_options
+    lexer
+    tokenizer
+    token
+    input
+    handlers
+    lexeme_context
+    dfa_maps
+    keyword_map
+    visitor
+    position
+)
 
 # Enable testing
 enable_testing()
