@@ -125,6 +125,7 @@ DFAState InLongOperatorHandler::next_state(char current_char, LexemeContext& con
 
 DFAState InFirstCharLongOpHandler::next_state(char current_char, LexemeContext& context) const {
     if (long_op_map.contains(std::pair<char, TokenType>(current_char, context.get_token_type()))) {
+        context.set_token_type(long_op_map[std::pair<char, TokenType>(current_char, context.get_token_type())]);
         return DFAState::IN_LONG_OPERATOR;
     }
     context.set_token_type(TokenType::T_ERROR);
