@@ -115,13 +115,13 @@ TEST(DFATestHandlerLongOperatorAndInvalid, HandlerManagerOperator) {
 TEST(DFATestHandlerSpecialChar, HandlerManagerOperator) {
   HandlerManager manager;
   LexemeContext context;
-  EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('(', context), DFAState::END);
+  EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('(', context), DFAState::IN_OPERATOR);
   EXPECT_EQ(context.get_token_type(), TokenType::T_LPAREN);
 }
 
 TEST(DFATestHandlerSpecialChar2, HandlerManagerOperator) {
   HandlerManager manager;
   LexemeContext context;
-  EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state(';', context), DFAState::END);
+  EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state(';', context), DFAState::IN_OPERATOR);
   EXPECT_EQ(context.get_token_type(), TokenType::T_SEMICOLON);
 }

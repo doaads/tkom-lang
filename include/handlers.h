@@ -51,7 +51,3 @@ class InLongOperatorHandler : public StateHandler {
 class InFirstCharLongOpHandler : public StateHandler {
     DFAState next_state(char current_char, LexemeContext& context) const override;
 };
-
-class InSpecialCharHandler : public StateHandler {
-    DFAState next_state(char current_char, LexemeContext& context) const override;
-};

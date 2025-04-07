@@ -10,6 +10,13 @@ const std::map<char, TokenType> OperatorMap::operator_tokens {
     {'!', TokenType::T_NOT},
     {'>', TokenType::T_GT},
     {'<', TokenType::T_LT},
+    {'(', TokenType::T_LPAREN},
+    {')', TokenType::T_RPAREN},
+    {'{', TokenType::T_LBLOCK},
+    {'}', TokenType::T_RBLOCK},
+    {';', TokenType::T_SEMICOLON},
+    {',', TokenType::T_COMMA},
+    {'_', TokenType::T_WILDCARD},
 };
 
 TokenType OperatorMap::operator[](char current_char) const {

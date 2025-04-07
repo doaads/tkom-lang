@@ -18,14 +18,13 @@ Token Tokenizer::get_token() {
     current_state = DFAState::IN_WHITESPACE;
     while (current_state != DFAState::END && !input->end()) {
         char next_char = input->get_next_char();
-        std::cout << "current state: " << (int)current_state << std::endl;
         current_state = manager[current_state]->next_state(next_char, context);
-        std::cout << "next state: " << (int)current_state << std::endl;
         if (current_state != DFAState::IN_WHITESPACE && !saved_position) {
             result.position = input->save_position();
             saved_position = true;
         }
     }
+
     input->unget();
     TokenType type = context.get_token_type();
 

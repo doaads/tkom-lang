@@ -10,5 +10,6 @@ enum class DFAState {
     IN_OPERATOR,
     IN_LONG_OPERATOR,
     IN_FIRST_CHAR_LONG_OP,
+    IN_SPECIAL_CHAR,
     END
 };

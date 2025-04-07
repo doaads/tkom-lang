@@ -37,8 +37,9 @@ DFAState InWhitespaceHandler::next_state(char current_char, LexemeContext& conte
         return DFAState::IN_FIRST_CHAR_LONG_OP;
     } else if (special_sign_map.contains(current_char)) {
         context.set_token_type(special_sign_map[current_char]);
-        return DFAState::END;
+        return DFAState::IN_SPECIAL_CHAR;
     }
+    context.set_token_type(TokenType::T_EOF);
     return DFAState::END;
 }
 
@@ -121,7 +122,7 @@ DFAState InLongOperatorHandler::next_state(char current_char, LexemeContext& con
 }
 
 
-// IN FIRST CHAR LONG OP HANDLER
+// IN FIRST CHAR LONG OP HANDLER (start of an operator that is not an operator itself)
 
 DFAState InFirstCharLongOpHandler::next_state(char current_char, LexemeContext& context) const {
     if (long_op_map.contains(std::pair<char, TokenType>(current_char, context.get_token_type()))) {

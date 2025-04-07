@@ -1,4 +1,5 @@
 #include "input_stream.h"
+#include <iostream>
 
 FileInputStream::FileInputStream(const std::string& path) {
     file.open(path, std::ios::in);
@@ -8,7 +9,12 @@ FileInputStream::FileInputStream(const std::string& path) {
 }
 
 char FileInputStream::get_next_char() {
-    return file.get();
+    int result;
+    if (file.eof()) {
+        return -1;
+    }
+    result = file.get();
+    return file.eof() ? -1 : result;
 }
 
 char FileInputStream::peek() {

@@ -42,7 +42,8 @@ std::ostream& operator<<(std::ostream& os, const TokenType type) {
         case TokenType::T_COMMA: os << "T_COMMA"; break;
         case TokenType::T_WILDCARD: os << "T_WILDCARD"; break;
         case TokenType::T_COMMENT: os << "T_COMMENT"; break;
-        case TokenType::T_ERROR: os << "T_ERROR"; break;
+        case TokenType::T_ERROR: os << "\033[1;32mT_ERROR\033[0m"; break;
+        case TokenType::T_EOF: os << "T_EOF"; break;
     }
     return os;
 }

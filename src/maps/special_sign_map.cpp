@@ -4,13 +4,6 @@
 #include <map>
 
 const std::map<char, TokenType> SpecialSignMap::sign_tokens {
-    {'(', TokenType::T_LPAREN},
-    {')', TokenType::T_RPAREN},
-    {'{', TokenType::T_LBLOCK},
-    {'}', TokenType::T_RBLOCK},
-    {';', TokenType::T_SEMICOLON},
-    {',', TokenType::T_COMMA},
-    {'_', TokenType::T_WILDCARD},
 };
 
 TokenType SpecialSignMap::operator[](char current_char) const {

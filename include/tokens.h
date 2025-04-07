@@ -52,7 +52,8 @@ enum class TokenType {
     T_WILDCARD,
     T_COMMENT,
 
-    T_ERROR
+    T_ERROR,
+    T_EOF
 };
 
 std::ostream& operator<<(std::ostream& os, const TokenType type);

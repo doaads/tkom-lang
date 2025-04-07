@@ -16,6 +16,6 @@ std::ostream& operator<<(std::ostream& os, const Token& token) {
         os << "\033[1;35mNone";
     }
     os << "\033[0m, ";
-    os << "Position: \033[1;36m" << token.position << "\033[0m]" << std::endl;
+    os << "Position: \033[1;36m" << token.position << "\033[0m]";
     return os;
 }
