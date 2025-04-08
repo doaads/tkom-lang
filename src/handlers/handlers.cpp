@@ -73,6 +73,7 @@ DFAState InNumberHandler::next_state(char current_char, LexemeContext& context) 
 DFAState InFltHandler::next_state(char current_char, LexemeContext& context) const {
     if (isdigit(current_char)) {
         context.add_double(current_char - '0');
+        std::cout << context.get_lexeme_double() << std::endl;
         return DFAState::IN_FLT;
     }
 

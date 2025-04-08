@@ -14,6 +14,7 @@ class LexemeContext {
     public:
         std::string get_lexeme_string();
         int get_lexeme_int();
+        double get_lexeme_double();
         std::variant<std::monostate, std::string, int, double> get_lexeme();
         double convert_to_double();
         void add_char(char current_char);

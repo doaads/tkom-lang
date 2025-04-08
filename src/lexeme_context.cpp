@@ -11,12 +11,17 @@ int LexemeContext::get_lexeme_int() {
     return std::get<int>(lexeme);
 }
 
+double LexemeContext::get_lexeme_double() {
+    return std::get<double>(lexeme);
+}
+
 double LexemeContext::convert_to_double() {
-    if (std::holds_alternative<int>(lexeme)) {
-        unsigned int divisor = pow(10.0, decimal_places);
-        lexeme = 1.0 * std::get<int>(lexeme) / ((divisor) ? divisor : 1.0);
-        decimal_places = 0;
+    if (!std::holds_alternative<double>(lexeme)) {
+        lexeme = (double)std::get<int>(lexeme);
     }
+    unsigned int divisor = pow(10, decimal_places);
+    lexeme = std::get<double>(lexeme) / ((divisor) ? divisor : 1);
+    decimal_places = 0;
     return std::get<double>(lexeme);
 }
 
@@ -28,17 +33,20 @@ void LexemeContext::add_char(char current_char) {
     }
 }
 
+void LexemeContext::add_double(int digit) {
+    if (!std::holds_alternative<double>(lexeme)) {
+        lexeme = (double)std::get<int>(lexeme);
+    }
+    lexeme = std::get<double>(lexeme) * 10 + digit;
+    decimal_places++;
+}
+
 void LexemeContext::add_int(int digit) {
     if (!has_value() || !std::holds_alternative<int>(lexeme)) {
         lexeme = digit;
     } else {
         lexeme = std::get<int>(lexeme) * 10 + digit;
     }
-}
-
-void LexemeContext::add_double(int digit) {
-    add_int(digit);
-    decimal_places++;
 }
 
 void LexemeContext::set_token_type(TokenType type) {
