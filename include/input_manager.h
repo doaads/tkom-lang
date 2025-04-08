@@ -18,4 +18,5 @@ class InputManager {
         void skip_line();
         void unget();
         bool end();
+        std::weak_ptr<PositionManager> get_position();
 };

@@ -21,6 +21,8 @@ add_library(visitor src/visitor.cpp)
 add_library(input src/input/input_stream.cpp src/input/input_manager.cpp)
 add_library(position src/position/position.cpp src/position/position_manager.cpp)
 add_library(lexer src/lexer.cpp)
+add_library(exceptions src/exceptions.cpp)
+add_library(exception_message src/exception_message.cpp)
 
 target_include_directories(handlers PUBLIC include)
 target_include_directories(lexeme_context PUBLIC include)
@@ -32,6 +34,8 @@ target_include_directories(visitor PUBLIC include)
 target_include_directories(input PUBLIC include)
 target_include_directories(position PUBLIC include)
 target_include_directories(lexer PUBLIC include)
+target_include_directories(exceptions PUBLIC include)
+target_include_directories(exception_message PUBLIC include)
 
 add_executable(tkom src/lexer_main.cpp)
 target_include_directories(tkom PRIVATE include)
@@ -47,6 +51,8 @@ target_link_libraries(tkom PRIVATE
     keyword_map
     visitor
     position
+    exceptions
+    exception_message
 )
 
 # Enable testing

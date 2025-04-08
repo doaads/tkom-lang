@@ -38,3 +38,7 @@ void InputManager::skip_line() {
         get_next_char();
     }
 }
+
+std::weak_ptr<PositionManager> InputManager::get_position() {
+    return position;
+}

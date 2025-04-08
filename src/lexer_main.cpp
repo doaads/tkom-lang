@@ -37,13 +37,16 @@ int main(int argc, char **argv) {
 
     std::shared_ptr<InputStream> input = std::make_unique<FileInputStream>(input_file);
     Lexer lexer(input, verbose);
-    if (verbose) {
+    if (verbose)
         std::cout << "--------------------------------\033[36m" << input_file << "\033[0m-------------------------------" << std::endl;
-    }
+
     while(!lexer.end()) {
         lexer.get_token();
     }
+
+    if (verbose)
         std::cout << "-------------------------------\033[36m/" << input_file << "\033[0m-------------------------------" << std::endl;
+
     return 0;
 
 }

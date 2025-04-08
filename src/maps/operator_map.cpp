@@ -17,6 +17,8 @@ const std::map<char, TokenType> OperatorMap::operator_tokens {
     {';', TokenType::T_SEMICOLON},
     {',', TokenType::T_COMMA},
     {'_', TokenType::T_WILDCARD},
+    {'[', TokenType::T_LFTYPE},
+    {']', TokenType::T_RFTYPE}
 };
 
 TokenType OperatorMap::operator[](char current_char) const {
@@ -42,6 +44,7 @@ const std::map<std::pair<char, TokenType>, TokenType> LongOperatorMap::long_oper
     {std::pair<char, TokenType>('&', TokenType::T_AND), TokenType::T_AND},
     {std::pair<char, TokenType>('|', TokenType::T_OR), TokenType::T_OR},
     {std::pair<char, TokenType>('/', TokenType::T_DIV), TokenType::T_COMMENT},
+    {std::pair<char, TokenType>(':', TokenType::T_FUNC_SIGN), TokenType::T_FUNC_SIGN},
 };
 
 TokenType LongOperatorMap::operator[](std::pair<char, TokenType> pair) const {
@@ -60,6 +63,7 @@ const std::map<char, TokenType> LongOperatorFirstCharMap::first_char_tokens {
     {'=', TokenType::T_EQ},
     {'|', TokenType::T_OR},
     {'&', TokenType::T_AND},
+    {':', TokenType::T_FUNC_SIGN},
 };
 
 TokenType LongOperatorFirstCharMap::operator[](char current_char) const {

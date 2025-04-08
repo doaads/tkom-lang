@@ -62,6 +62,9 @@ INSTANTIATE_TEST_SUITE_P(
         LexerTokenTestCase{"}", TokenType::T_RBLOCK},
         LexerTokenTestCase{";", TokenType::T_SEMICOLON},
         LexerTokenTestCase{",", TokenType::T_COMMA},
+        LexerTokenTestCase{"::", TokenType::T_FUNC_SIGN},
+        LexerTokenTestCase{"[", TokenType::T_LFTYPE},
+        LexerTokenTestCase{"]", TokenType::T_RFTYPE},
         LexerTokenTestCase{"//", TokenType::T_COMMENT}
     )
 );

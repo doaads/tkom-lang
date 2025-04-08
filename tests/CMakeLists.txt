@@ -12,6 +12,8 @@ target_link_libraries(dfa_test PRIVATE
     dfa_maps
     token
     tokenizer
+    exceptions
+    exception_message
     GTest::gtest_main
 )
 
@@ -22,6 +24,8 @@ target_link_libraries(operator_dfa_test PRIVATE
     dfa_maps
     token
     tokenizer
+    exceptions
+    exception_message
     GTest::gtest_main
 )
 
@@ -34,6 +38,8 @@ target_link_libraries(tokenizer_test PRIVATE
     input
     position
     keyword_map
+    exceptions
+    exception_message
     GTest::gtest_main
 )
 
@@ -48,6 +54,8 @@ target_link_libraries(lexer_test PRIVATE
     input
     position
     keyword_map
+    exceptions
+    exception_message
     GTest::gtest_main
 )
 
@@ -62,6 +70,8 @@ target_link_libraries(lexer_all_tokens_test PRIVATE
     input
     position
     keyword_map
+    exceptions
+    exception_message
     GTest::gtest_main
 )
 

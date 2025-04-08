@@ -1,5 +1,6 @@
 #include "lexeme_context.h"
 #include "tokens.h"
+#include "exceptions.h"
 #include <cmath>
 
 
@@ -26,6 +27,9 @@ double LexemeContext::convert_to_double() {
 }
 
 void LexemeContext::add_char(char current_char) {
+    if (blocked) {
+        return;
+    }
     if (!has_value() || !std::holds_alternative<std::string>(lexeme)) {
         lexeme = std::string(1, current_char);
     } else {
@@ -34,6 +38,9 @@ void LexemeContext::add_char(char current_char) {
 }
 
 void LexemeContext::add_double(int digit) {
+    if (blocked) {
+        return;
+    }
     if (!std::holds_alternative<double>(lexeme)) {
         lexeme = (double)std::get<int>(lexeme);
     }
@@ -42,11 +49,19 @@ void LexemeContext::add_double(int digit) {
 }
 
 void LexemeContext::add_int(int digit) {
-    if (!has_value() || !std::holds_alternative<int>(lexeme)) {
-        lexeme = digit;
-    } else {
-        lexeme = std::get<int>(lexeme) * 10 + digit;
+    if (blocked) {
+        return;
     }
+    if (!std::holds_alternative<int>(lexeme)) {
+        lexeme = digit;
+        return;
+    }
+    if (std::get<int>(lexeme) > (std::numeric_limits<int>::max() - digit) / 10) {
+        blocked = true;
+        throw OverflowWarning();
+    }
+
+    lexeme = std::get<int>(lexeme) * 10 + digit;
 }
 
 void LexemeContext::set_token_type(TokenType type) {
@@ -58,6 +73,7 @@ TokenType LexemeContext::get_token_type() {
 }
 
 void LexemeContext::reset() {
+    blocked = false;
     lexeme = std::monostate();
     decimal_places = 0;
 }
@@ -68,4 +84,12 @@ bool LexemeContext::has_value() const {
 
 std::variant<std::monostate, std::string, int, double> LexemeContext::get_lexeme() {
     return lexeme;
+}
+
+void LexemeContext::block_input() {
+    blocked = true;
+}
+
+void LexemeContext::unblock() {
+    blocked = false;
 }

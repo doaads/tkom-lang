@@ -10,11 +10,8 @@ FileInputStream::FileInputStream(const std::string& path) {
 
 char FileInputStream::get_next_char() {
     int result;
-    if (file.eof()) {
-        return -1;
-    }
     result = file.get();
-    return file.eof() ? -1 : result;
+    return result;
 }
 
 char FileInputStream::peek() {

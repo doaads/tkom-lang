@@ -33,6 +33,7 @@ enum class TokenType {
     T_NEQ,
     T_LT,
     T_GT,
+    T_FUNC_SIGN,
 
     // identifier
     T_IDENTIFIER,
@@ -47,6 +48,8 @@ enum class TokenType {
     T_RPAREN,
     T_LBLOCK,
     T_RBLOCK,
+    T_LFTYPE,
+    T_RFTYPE,
     T_SEMICOLON,
     T_COMMA,
     T_WILDCARD,

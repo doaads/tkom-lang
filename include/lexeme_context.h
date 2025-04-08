@@ -11,6 +11,7 @@ class LexemeContext {
         std::variant<std::monostate, std::string, int, double> lexeme;
         uint8_t decimal_places = 0;
         TokenType current_token;
+        bool blocked = false;
     public:
         std::string get_lexeme_string();
         int get_lexeme_int();
@@ -24,4 +25,6 @@ class LexemeContext {
         TokenType get_token_type();
         void reset();
         bool has_value() const;
+        void block_input();
+        void unblock();
 };

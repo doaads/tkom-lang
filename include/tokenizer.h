@@ -5,11 +5,13 @@
 #include "token.h"
 #include "lexeme_context.h"
 #include "input_manager.h"
+#include "exception_message.h"
 
 
 class Tokenizer {
     private:
         LexemeContext context;
+        ExceptionHandler exception_handler;
         std::shared_ptr<InputManager> input;
         DFAState current_state;
         HandlerManager manager;
