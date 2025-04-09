@@ -28,6 +28,13 @@ class OverflowWarning : public CompilerWarning {
         ~OverflowWarning() = default;
 };
 
+class IdentifierLengthExceeded : public CompilerWarning {
+    public:
+        IdentifierLengthExceeded() = default;
+        const char* what() const noexcept override;
+        ~IdentifierLengthExceeded() = default;
+};
+
 class UnexpectedToken : public CompilerError {
     public:
         UnexpectedToken() = default;

@@ -10,6 +10,7 @@ target_link_libraries(dfa_test PRIVATE
     handlers
     position
     dfa_maps
+    keyword_map
     token
     tokenizer
     exceptions
@@ -22,6 +23,7 @@ target_link_libraries(operator_dfa_test PRIVATE
     handlers
     position
     dfa_maps
+    keyword_map
     token
     tokenizer
     exceptions

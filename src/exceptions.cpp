@@ -10,3 +10,7 @@ const char* OverflowWarning::what() const noexcept {
 const char* UnexpectedToken::what() const noexcept {
     return "Unexpected Token";
 }
+
+const char* IdentifierLengthExceeded::what() const noexcept {
+    return "Identifier length exceeded - Only the first 32 characters will be processed";
+}

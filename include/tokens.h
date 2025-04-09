@@ -6,6 +6,7 @@ enum class TokenType {
     T_INT_TYPE,
     T_FLT_TYPE,
     T_STRING_TYPE,
+    T_BOOL_TYPE,
     T_VOID_TYPE,
     T_RET,
     T_WHILE,
@@ -42,6 +43,7 @@ enum class TokenType {
     T_INT,
     T_FLT,
     T_STRING,
+    T_BOOL,
 
     // special characters
     T_LPAREN,

@@ -6,15 +6,14 @@ void Token::accept(Visitor& visitor) {
 
 std::ostream& operator<<(std::ostream& os, const Token& token) {
     os << "[\033[1;32mTOKEN:\033[0m [Type: \033[1;36m" << token.type << "\033[0m, Value: \033[1;36m";
-    if (std::holds_alternative<std::string>(token.value)) {
-        os << std::get<std::string>(token.value);
-    } else if (std::holds_alternative<int>(token.value)) {
-        os << std::get<int>(token.value);
-    } else if (std::holds_alternative<double>(token.value)){
-        os << std::get<double>(token.value);
-    } else {
-        os << "\033[1;35mNone";
-    }
+        std::visit([&os](auto&& arg) {
+        using T = std::decay_t<decltype(arg)>;
+        if constexpr (std::is_same_v<T, std::monostate>) {
+            os << "\033[1;35mNone";
+        } else {
+            os << arg;
+        }
+    }, token.value);
     os << "\033[0m, ";
     os << "Position: \033[1;36m" << token.position << "\033[0m]";
     return os;

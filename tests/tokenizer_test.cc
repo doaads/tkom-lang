@@ -26,7 +26,6 @@ TEST(TokenizerIdentifier, TokenizerTestBasic) {
 TEST(TokenizerKeyword, TokenizerTestBasic) {
     Token token = get_token_from_string("while");
     EXPECT_EQ(token.type, TokenType::T_WHILE);
-    EXPECT_EQ(std::get<std::string>(token.value), "while");
 }
 
 TEST(TokenizerInt, TokenizerTestBasic) {

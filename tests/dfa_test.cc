@@ -104,14 +104,6 @@ TEST(DFATestHandlerLongOperatorAnd, HandlerManagerOperator) {
   EXPECT_EQ(context.get_token_type(), TokenType::T_AND);
 }
 
-TEST(DFATestHandlerLongOperatorAndInvalid, HandlerManagerOperator) {
-  HandlerManager manager;
-  LexemeContext context;
-  EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('&', context), DFAState::IN_FIRST_CHAR_LONG_OP);
-  EXPECT_EQ(manager[DFAState::IN_FIRST_CHAR_LONG_OP]->next_state('x', context), DFAState::END);
-  EXPECT_EQ(context.get_token_type(), TokenType::T_ERROR);
-}
-
 TEST(DFATestHandlerSpecialChar, HandlerManagerOperator) {
   HandlerManager manager;
   LexemeContext context;

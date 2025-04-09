@@ -1,12 +1,13 @@
 #include "handlers.h"
 #include "exceptions.h"
+#include "keyword_map.h"
 #include "tokens.h"
 #include "operator_map.h"
-#include "special_sign_map.h"
 
 const OperatorMap op_map;
 const LongOperatorMap long_op_map;
 const LongOperatorFirstCharMap op_first_char_map;
+static const KeywordMap keyword_map;
 
 // IN WHITESPACE HANDLER
 
@@ -49,9 +50,18 @@ DFAState InIdentifierHandler::next_state(char current_char, LexemeContext& conte
     if (isalnum(current_char) || current_char == '_') {
         context.add_char(current_char);
         return DFAState::IN_IDENTIFIER;
-    } else {
-        return DFAState::END;
     }
+
+
+    if (keyword_map.contains(context.get_lexeme_string())) {
+        context.set_token_type(keyword_map[context.get_lexeme_string()]);
+        if (context.get_lexeme_string() != "true" && context.get_lexeme_string() != "false") {
+            context.reset();
+        } else {
+            context.convert_to_bool();
+        }
+    }
+    return DFAState::END;
 }
 
 // IN NUMBER HANDLER
@@ -73,7 +83,6 @@ DFAState InNumberHandler::next_state(char current_char, LexemeContext& context) 
 DFAState InFltHandler::next_state(char current_char, LexemeContext& context) const {
     if (isdigit(current_char)) {
         context.add_double(current_char - '0');
-        std::cout << context.get_lexeme_double() << std::endl;
         return DFAState::IN_FLT;
     }
 
@@ -101,34 +110,31 @@ DFAState InEscapeHandler::next_state(char current_char, LexemeContext& context) 
     return DFAState::IN_STRING;
 }
 
-// IN OPERATOR HANDLER
+// NVI FOR CHECKING IF MATCHES LONG OPERATOR
 
-DFAState InOperatorHandler::next_state(char current_char, LexemeContext& context) const {
+DFAState AbstractOperatorHandler::next_state(char current_char, LexemeContext& context) const {
     if (long_op_map.contains(std::pair<char, TokenType>(current_char, context.get_token_type()))) {
         context.set_token_type(long_op_map[std::pair<char, TokenType>(current_char, context.get_token_type())]);
         return DFAState::IN_LONG_OPERATOR;
     }
+    return do_next_state();
+}
 
+// IN OPERATOR HANDLER
+
+DFAState InOperatorHandler::do_next_state() const {
     return DFAState::END;
 }
 
 // IN LONG OPERATOR HANDLER
 
-DFAState InLongOperatorHandler::next_state(char current_char, LexemeContext& context) const {
-    if (long_op_map.contains(std::pair<char, TokenType>(current_char, context.get_token_type()))) {
-        context.set_token_type(long_op_map[std::pair<char, TokenType>(current_char, context.get_token_type())]);
-        return DFAState::IN_LONG_OPERATOR;
-    }
+DFAState InLongOperatorHandler::do_next_state() const {
     return DFAState::END;
 }
 
 
 // IN FIRST CHAR LONG OP HANDLER (start of an operator that is not an operator itself)
 
-DFAState InFirstCharLongOpHandler::next_state(char current_char, LexemeContext& context) const {
-    if (long_op_map.contains(std::pair<char, TokenType>(current_char, context.get_token_type()))) {
-        context.set_token_type(long_op_map[std::pair<char, TokenType>(current_char, context.get_token_type())]);
-        return DFAState::IN_LONG_OPERATOR;
-    }
+DFAState InFirstCharLongOpHandler::do_next_state() const {
     throw UnexpectedToken();
 }

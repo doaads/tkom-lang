@@ -1,10 +1,7 @@
 #include "tokenizer.h"
 
-#include "keyword_map.h"
 #include <unistd.h>
 #include "exceptions.h"
-
-static const KeywordMap keyword_map;
 
 Tokenizer::Tokenizer(std::shared_ptr<InputManager> input) : input(input) {}
 
@@ -36,20 +33,14 @@ Token Tokenizer::get_token() {
     }
 
     input->unget();
+
     TokenType type = context.get_token_type();
+    result.type = type;
+
+    result.value = context.get_lexeme();
 
     if (type == TokenType::T_COMMENT) {
         input->skip_line();
-    }
-
-    if (type == TokenType::T_IDENTIFIER && keyword_map.contains(context.get_lexeme_string())) {
-        result.type = keyword_map[context.get_lexeme_string()];
-    } else {
-        result.type = context.get_token_type();
-    }
-
-    if (context.has_value()) {
-        result.value = context.get_lexeme();
     }
     return result;
 }

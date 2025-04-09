@@ -38,16 +38,22 @@ class InEscapeHandler : public StateHandler {
     DFAState next_state(char current_char, LexemeContext& context) const override;
 };
 
+class AbstractOperatorHandler : public StateHandler {
 
-class InOperatorHandler : public StateHandler {
     DFAState next_state(char current_char, LexemeContext& context) const override;
+    private:
+        virtual DFAState do_next_state() const = 0;
 };
 
-
-class InLongOperatorHandler : public StateHandler {
-    DFAState next_state(char current_char, LexemeContext& context) const override;
+class InOperatorHandler : public AbstractOperatorHandler {
+    public:
+        DFAState do_next_state() const override;
 };
 
-class InFirstCharLongOpHandler : public StateHandler {
-    DFAState next_state(char current_char, LexemeContext& context) const override;
+class InLongOperatorHandler : public AbstractOperatorHandler {
+    DFAState do_next_state() const override;
+};
+
+class InFirstCharLongOpHandler : public AbstractOperatorHandler {
+    DFAState do_next_state() const override;
 };

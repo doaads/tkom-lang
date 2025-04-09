@@ -47,6 +47,8 @@ std::ostream& operator<<(std::ostream& os, const TokenType type) {
         case TokenType::T_FUNC_SIGN: os << "T_FUNC_SIGN"; break;
         case TokenType::T_LFTYPE: os << "T_LFTYPE"; break;
         case TokenType::T_RFTYPE: os << "T_RFTYPE"; break;
+        case TokenType::T_BOOL_TYPE: os << "T_BOOL_TYPE"; break;
+        case TokenType::T_BOOL: os << "T_BOOL"; break;
     }
     return os;
 }

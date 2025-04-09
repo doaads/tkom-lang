@@ -13,6 +13,9 @@ const std::unordered_map<std::string, TokenType> KeywordMap::keyword_tokens {
     {"elif", TokenType::T_ELIF},
     {"else", TokenType::T_ELSE},
     {"mut", TokenType::T_MUT},
+    {"bool", TokenType::T_BOOL_TYPE},
+    {"true", TokenType::T_BOOL},
+    {"false", TokenType::T_BOOL},
 };
 
 TokenType KeywordMap::operator[](std::string value) const {
