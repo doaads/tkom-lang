@@ -12,7 +12,7 @@ find_package(Boost REQUIRED COMPONENTS program_options)
 include_directories(include)
 
 add_library(handlers src/handlers/handlers.cpp src/handlers/handler_manager.cpp)
-add_library(dfa_maps src/maps/operator_map.cpp src/maps/special_sign_map.cpp)
+add_library(dfa_maps src/maps/operator_map.cpp)
 add_library(keyword_map src/maps/keyword_map.cpp)
 add_library(tokenizer src/tokenizer/tokenizer.cpp src/tokenizer/lexeme_context.cpp)
 add_library(token src/token/token.cpp src/token/tokens.cpp src/token/visitor.cpp)

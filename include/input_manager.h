@@ -14,9 +14,9 @@ class InputManager {
     public:
         InputManager(std::shared_ptr<PositionManager> position, std::shared_ptr<InputStream> input);
         char get_next_char();
-        Position save_position();
+        Position save_position() const;
         void skip_line();
         void unget();
-        bool end();
-        std::weak_ptr<PositionManager> get_position();
+        bool end() const;
+        std::weak_ptr<PositionManager> get_position() const;
 };

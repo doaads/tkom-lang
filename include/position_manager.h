@@ -9,6 +9,6 @@ class PositionManager {
     public:
       PositionManager() {}
 
-      Position save_position();
+      Position save_position() const;
       void adjust_position(char ch);
 };

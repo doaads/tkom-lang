@@ -21,7 +21,7 @@ char InputManager::get_next_char() {
     return last_char;
 }
 
-Position InputManager::save_position() {
+Position InputManager::save_position() const {
     return position->save_position();
 }
 
@@ -29,7 +29,7 @@ void InputManager::unget() {
     handed_back = true;
 }
 
-bool InputManager::end() {
+bool InputManager::end() const {
     return eof;
 }
 
@@ -39,6 +39,6 @@ void InputManager::skip_line() {
     }
 }
 
-std::weak_ptr<PositionManager> InputManager::get_position() {
+std::weak_ptr<PositionManager> InputManager::get_position() const {
     return position;
 }

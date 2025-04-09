@@ -1,6 +1,6 @@
 #include "position_manager.h"
 
-Position PositionManager::save_position() {
+Position PositionManager::save_position() const {
     return position;
 }
 

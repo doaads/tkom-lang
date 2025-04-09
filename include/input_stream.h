@@ -8,7 +8,6 @@ class InputStream {
         Position position;
         void adjust_position(char ch);
     public:
-        Position save_position();
         virtual ~InputStream() = default;
         virtual char get_next_char() = 0;
         virtual char peek() = 0;
