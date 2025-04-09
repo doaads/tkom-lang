@@ -6,7 +6,6 @@ add_executable(lexer_all_tokens_test lexer_all_tokens_test.cc)
 
 # Link GoogleTest
 target_link_libraries(dfa_test PRIVATE
-    lexeme_context
     handlers
     position
     dfa_maps
@@ -18,7 +17,6 @@ target_link_libraries(dfa_test PRIVATE
 )
 
 target_link_libraries(operator_dfa_test PRIVATE
-    lexeme_context
     handlers
     position
     dfa_maps
@@ -31,7 +29,6 @@ target_link_libraries(operator_dfa_test PRIVATE
 
 target_link_libraries(tokenizer_test PRIVATE
     tokenizer
-    lexeme_context
     handlers
     dfa_maps
     token
@@ -45,8 +42,6 @@ target_link_libraries(tokenizer_test PRIVATE
 target_link_libraries(lexer_test PRIVATE
     lexer
     tokenizer
-    visitor
-    lexeme_context
     handlers
     dfa_maps
     token
@@ -60,8 +55,6 @@ target_link_libraries(lexer_test PRIVATE
 target_link_libraries(lexer_all_tokens_test PRIVATE
     lexer
     tokenizer
-    visitor
-    lexeme_context
     handlers
     dfa_maps
     token
