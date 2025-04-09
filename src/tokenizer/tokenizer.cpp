@@ -32,10 +32,13 @@ Token Tokenizer::get_token() {
         }
     }
 
-    input->unget();
 
     TokenType type = context.get_token_type();
     result.type = type;
+
+    if (result.type != TokenType::T_STRING) {
+        input->unget();
+    }
 
     result.value = context.get_lexeme();
 

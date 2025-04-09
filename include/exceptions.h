@@ -41,3 +41,10 @@ class UnexpectedToken : public CompilerError {
         const char* what() const noexcept override;
         ~UnexpectedToken() = default;
 };
+
+class UnterminatedString : public CompilerError {
+    public:
+        UnterminatedString() = default;
+        const char* what() const noexcept override;
+        ~UnterminatedString() = default;
+};

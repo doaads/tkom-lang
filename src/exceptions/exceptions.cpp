@@ -14,3 +14,7 @@ const char* UnexpectedToken::what() const noexcept {
 const char* IdentifierLengthExceeded::what() const noexcept {
     return "Identifier length exceeded - Only the first 32 characters will be processed";
 }
+
+const char* UnterminatedString::what() const noexcept {
+    return "Unterminated string";
+}

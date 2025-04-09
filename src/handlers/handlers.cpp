@@ -94,10 +94,10 @@ DFAState InFltHandler::next_state(char current_char, LexemeContext& context) con
 // IN STRING HANDLER
 
 DFAState InStringHandler::next_state(char current_char, LexemeContext& context) const {
-    if (current_char == '"') {
-        return DFAState::END;
-    } else if (current_char == '\\') {
-        return DFAState::IN_ESCAPE;
+    switch (current_char) {
+        case '"': return DFAState::END;
+        case '\\': return DFAState::IN_ESCAPE;
+        case '\n': throw UnterminatedString();
     }
     context.add_char(current_char);
     return DFAState::IN_STRING;
@@ -106,6 +106,11 @@ DFAState InStringHandler::next_state(char current_char, LexemeContext& context) 
 // IN ESCAPE HANDLER
 
 DFAState InEscapeHandler::next_state(char current_char, LexemeContext& context) const {
+    switch (current_char) {
+        case 'n': current_char = '\n'; break;
+        case 't': current_char = '\t'; break;
+        default: break;
+    }
     context.add_char(current_char);
     return DFAState::IN_STRING;
 }
