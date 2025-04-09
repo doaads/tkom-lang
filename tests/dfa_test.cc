@@ -13,14 +13,14 @@ TEST(DFATestHandler2, HandlerManagerBasicIdentifier) {
   HandlerManager manager;
   LexemeContext context;
   EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('a', context), DFAState::IN_IDENTIFIER);
-  EXPECT_EQ(context.get_lexeme_string(), "a");
+  EXPECT_EQ(context.get_lexeme_as<std::string>(), "a");
 }
 
 TEST(DFATestHandlerInt1, HandlerManagerBasicInt) {
   HandlerManager manager;
   LexemeContext context;
   EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('1', context), DFAState::IN_NUMBER);
-  EXPECT_EQ(context.get_lexeme_int(), 1);
+  EXPECT_EQ(context.get_lexeme_as<int>(), 1);
 }
 
 TEST(DFATestHandlerInt2, HandlerManagerBasicInt) {
@@ -28,7 +28,7 @@ TEST(DFATestHandlerInt2, HandlerManagerBasicInt) {
   LexemeContext context;
   context.add_int(1);
   EXPECT_EQ(manager[DFAState::IN_NUMBER]->next_state('2', context), DFAState::IN_NUMBER);
-  EXPECT_EQ(context.get_lexeme_int(), 12);
+  EXPECT_EQ(context.get_lexeme_as<int>(), 12);
 }
 
 TEST(DFATestHandlerFlt, HandlerManagerBasicFlt) {
@@ -36,7 +36,7 @@ TEST(DFATestHandlerFlt, HandlerManagerBasicFlt) {
   LexemeContext context;
   context.add_int(1);
   EXPECT_EQ(manager[DFAState::IN_NUMBER]->next_state('.', context), DFAState::IN_FLT);
-  EXPECT_EQ(context.get_lexeme_int(), 1);
+  EXPECT_EQ(context.get_lexeme_as<int>(), 1);
 }
 
 TEST(DFATestHandlerFltEmpty, HandlerManagerBasicFlt) {
@@ -61,7 +61,7 @@ TEST(DFATestHandlerStringBasic, HandlerManagerString) {
   LexemeContext context;
   EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('"', context), DFAState::IN_STRING);
   EXPECT_EQ(manager[DFAState::IN_STRING]->next_state('1', context), DFAState::IN_STRING);
-  EXPECT_EQ(context.get_lexeme_string(), "1");
+  EXPECT_EQ(context.get_lexeme_as<std::string>(), "1");
 }
 
 TEST(DFATestHandlerStringEscape, HandlerManagerString) {
@@ -70,7 +70,7 @@ TEST(DFATestHandlerStringEscape, HandlerManagerString) {
   EXPECT_EQ(manager[DFAState::IN_WHITESPACE]->next_state('"', context), DFAState::IN_STRING);
   EXPECT_EQ(manager[DFAState::IN_STRING]->next_state('\\', context), DFAState::IN_ESCAPE);
   EXPECT_EQ(manager[DFAState::IN_ESCAPE]->next_state('\"', context), DFAState::IN_STRING);
-  EXPECT_EQ(context.get_lexeme_string(), "\"");
+  EXPECT_EQ(context.get_lexeme_as<std::string>(), "\"");
 }
 
 TEST(DFATestHandlerOperator, HandlerManagerOperator) {

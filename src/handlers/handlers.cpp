@@ -52,10 +52,10 @@ DFAState InIdentifierHandler::next_state(char current_char, LexemeContext& conte
         return DFAState::IN_IDENTIFIER;
     }
 
-
-    if (keyword_map.contains(context.get_lexeme_string())) {
-        context.set_token_type(keyword_map[context.get_lexeme_string()]);
-        if (context.get_lexeme_string() != "true" && context.get_lexeme_string() != "false") {
+    std::string lexeme = context.get_lexeme_as<std::string>();
+    if (keyword_map.contains(lexeme)) {
+        context.set_token_type(keyword_map[context.get_lexeme_as<std::string>()]);
+        if (lexeme != "true" && lexeme != "false") {
             context.reset();
         } else {
             context.convert_to_bool();

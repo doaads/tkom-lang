@@ -3,11 +3,11 @@
 
 Position::Position() : wrap(false), line(1), column(0) {}
 
-uint32_t Position::get_line() {
+uint32_t Position::get_line() const noexcept {
     return line;
 }
 
-uint32_t Position::get_column() {
+uint32_t Position::get_column() const noexcept {
     return column;
 }
 

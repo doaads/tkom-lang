@@ -5,7 +5,7 @@
 #include "token.h"
 #include "lexeme_context.h"
 #include "input_manager.h"
-#include "exception_message.h"
+#include "exception_handler.h"
 
 
 class Tokenizer {

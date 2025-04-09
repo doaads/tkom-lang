@@ -13,9 +13,10 @@ class LexemeContext {
         TokenType current_token;
         bool blocked = false;
     public:
-        std::string get_lexeme_string();
-        int get_lexeme_int();
-        double get_lexeme_double();
+        template<typename T>
+        T get_lexeme_as() const {
+            return std::get<T>(lexeme);
+        }
 
         std::variant<std::monostate, std::string, int, double, bool> get_lexeme();
 

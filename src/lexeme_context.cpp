@@ -6,18 +6,6 @@
 #define MAX_IDENTIFIER_LENGTH 32
 
 
-std::string LexemeContext::get_lexeme_string() {
-    return std::get<std::string>(lexeme);
-}
-
-int LexemeContext::get_lexeme_int() {
-    return std::get<int>(lexeme);
-}
-
-double LexemeContext::get_lexeme_double() {
-    return std::get<double>(lexeme);
-}
-
 double LexemeContext::convert_to_double() {
     if (!std::holds_alternative<double>(lexeme)) {
         lexeme = (double)std::get<int>(lexeme);
