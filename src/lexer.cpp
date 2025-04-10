@@ -3,7 +3,7 @@
 
 Lexer::Lexer(std::shared_ptr<std::istream> input_stream) {
     position = std::make_shared<Position>();
-    input = std::make_unique<InputManager>(position, input_stream);
+    input = std::make_unique<InputManager>(position, std::move(input_stream));
     tokenizer = std::make_unique<Tokenizer>(input);
 }
 
