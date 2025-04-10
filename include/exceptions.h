@@ -1,24 +1,32 @@
 #pragma once
 
+#include "position.h"
 #include <exception>
 
 class CompilerException : public std::exception {
+    private:
+        Position position;
     public:
         CompilerException() = default;
+        virtual bool is_error() const = 0;
         virtual const char* what() const noexcept override = 0;
         virtual ~CompilerException() = default;
+        void set_position(Position pos);
+        const Position get_position() const;
 };
 
 class CompilerWarning : public CompilerException {
     public:
         CompilerWarning() = default;
         virtual ~CompilerWarning() = default;
+        bool is_error() const override;
 };
 
 class CompilerError : public CompilerException {
     public:
         CompilerError() = default;
         virtual ~CompilerError() = default;
+        bool is_error() const override;
 };
 
 class OverflowWarning : public CompilerWarning {

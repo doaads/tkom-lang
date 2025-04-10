@@ -1,3 +1,4 @@
+#include "exceptions.h"
 #include "input_stream.h"
 #include "lexer.h"
 #include <boost/program_options.hpp>
@@ -35,13 +36,18 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    std::shared_ptr<InputStream> input = std::make_unique<FileInputStream>(input_file);
+    std::shared_ptr<std::fstream> input = std::make_unique<std::fstream>(input_file, std::fstream::in);
     Lexer lexer(input, verbose);
     if (verbose)
         std::cout << "--------------------------------\033[36m" << input_file << "\033[0m-------------------------------" << std::endl;
 
     while(!lexer.end()) {
-        lexer.get_token();
+        try {
+            lexer.get_token();
+        } catch (CompilerException& e) {
+            std::cerr << e.what() << " at " << e.get_position() << std::endl;
+            return 1;
+        }
     }
 
     if (verbose)

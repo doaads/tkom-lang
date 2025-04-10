@@ -4,7 +4,7 @@
 #include "position.h"
 
 class InputStream {
-    protected:
+    private:
         Position position;
         void adjust_position(char ch);
     public:

@@ -9,7 +9,7 @@ struct LexerTokenTestCase {
 };
 
 Lexer get_lexer_for_string(std::string string) {
-    std::shared_ptr<InputStream> input = std::make_unique<StringInputStream>(string);
+    std::shared_ptr<std::stringstream> input = std::make_shared<std::stringstream>(string);
     Lexer lexer(input, VERBOSE);
     return lexer;
 }
@@ -20,7 +20,7 @@ TEST_P(DFATestHandlerOperator, HandlerManagerOperator) {
     const auto& param = GetParam();
     Lexer lexer = get_lexer_for_string(param.text);
     Token token = lexer.get_token();
-    EXPECT_EQ(token.type, param.expected_token);
+    EXPECT_EQ(token.get_type(), param.expected_token);
 }
 
 INSTANTIATE_TEST_SUITE_P(

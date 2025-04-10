@@ -2,7 +2,7 @@
 
 #include "token.h"
 
-struct Token;
+class Token;
 
 class Visitor {
     public:

@@ -1,6 +1,7 @@
 #include "input_manager.h"
+#include <istream>
 
-InputManager::InputManager(std::shared_ptr<PositionManager> position, std::shared_ptr<InputStream> input) : 
+InputManager::InputManager(std::shared_ptr<Position> position, std::shared_ptr<std::istream> input) : 
     position(position), input_stream(input), handed_back(false), eof(false) {}
 
 char InputManager::get_next_char() {
@@ -9,10 +10,10 @@ char InputManager::get_next_char() {
         return last_char;
     }
 
-    last_char = input_stream->get_next_char();
+    last_char = input_stream->get();
 
     if (last_char == '\r' and input_stream->peek() == '\n') {
-        last_char = input_stream->get_next_char();
+        last_char = input_stream->get();
     } else if (last_char == EOF) {
         eof = true;
     }
@@ -22,7 +23,7 @@ char InputManager::get_next_char() {
 }
 
 Position InputManager::save_position() const {
-    return position->save_position();
+    return *position;
 }
 
 void InputManager::unget() {
@@ -37,8 +38,4 @@ void InputManager::skip_line() {
     while (last_char != '\n' && last_char != EOF) {
         get_next_char();
     }
-}
-
-std::weak_ptr<PositionManager> InputManager::get_position() const {
-    return position;
 }

@@ -11,19 +11,13 @@ find_package(Boost REQUIRED COMPONENTS program_options)
 
 include_directories(include)
 
-add_library(handlers src/handlers/handlers.cpp src/handlers/handler_manager.cpp)
-add_library(dfa_maps src/maps/operator_map.cpp)
-add_library(keyword_map src/maps/keyword_map.cpp)
-add_library(tokenizer src/tokenizer/tokenizer.cpp src/tokenizer/lexeme_context.cpp)
-add_library(token src/token/token.cpp src/token/tokens.cpp src/token/visitor.cpp)
+add_library(tokenizer src/tokenizer/tokenizer.cpp)
+add_library(token src/token/token.cpp src/token/tokens.cpp)
 add_library(input src/input/input_stream.cpp src/input/input_manager.cpp)
-add_library(position src/position/position.cpp src/position/position_manager.cpp)
+add_library(position src/position/position.cpp)
 add_library(lexer src/lexer.cpp)
-add_library(exceptions src/exceptions/exceptions.cpp src/exceptions/exception_handler.cpp)
+add_library(exceptions src/exceptions/exceptions.cpp)
 
-target_include_directories(handlers PUBLIC include)
-target_include_directories(dfa_maps PUBLIC include)
-target_include_directories(keyword_map PUBLIC include)
 target_include_directories(tokenizer PUBLIC include)
 target_include_directories(token PUBLIC include)
 target_include_directories(input PUBLIC include)
@@ -39,9 +33,6 @@ target_link_libraries(tkom PRIVATE
     tokenizer
     token
     input
-    handlers
-    dfa_maps
-    keyword_map
     position
     exceptions
 )
