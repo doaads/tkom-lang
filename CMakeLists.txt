@@ -13,7 +13,7 @@ include_directories(include)
 
 add_library(tokenizer src/tokenizer/tokenizer.cpp)
 add_library(token src/token/token.cpp src/token/tokens.cpp)
-add_library(input src/input/input_stream.cpp src/input/input_manager.cpp)
+add_library(input src/input/input_manager.cpp)
 add_library(position src/position/position.cpp)
 add_library(lexer src/lexer.cpp)
 add_library(exceptions src/exceptions/exceptions.cpp)

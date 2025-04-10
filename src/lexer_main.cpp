@@ -1,7 +1,8 @@
 #include "exceptions.h"
-#include "input_stream.h"
 #include "lexer.h"
 #include <boost/program_options.hpp>
+#include <iostream>
+#include <fstream>
 
 namespace po = boost::program_options;
 

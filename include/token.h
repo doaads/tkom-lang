@@ -2,12 +2,9 @@
 
 #include "position.h"
 #include "tokens.h"
-#include "visitor.h"
 #include <string>
 #include <variant>
 #include <iostream>
-
-class Visitor;
 
 using ValueType = std::variant<std::monostate, std::string, int, double, bool>;
 
