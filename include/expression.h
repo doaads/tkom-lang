@@ -6,7 +6,6 @@
 
 
 class FunctionCall;
-class Expression;
 
 class Expression {
     private:
@@ -19,9 +18,8 @@ class Expression {
 
 class LiteralExpr : public Expression { // base
     public:
-        LiteralExpr(FunctionCall call);
-        LiteralExpr(Token token);
         LiteralExpr(Expression expr);
+        LiteralExpr(Token token);
 };
 
 class UnaryExpr : public Expression {
@@ -31,7 +29,6 @@ class UnaryExpr : public Expression {
     public:
         UnaryExpr(TokenType unary_op, std::unique_ptr<Expression> right);
 };
-
 
 class Term : public Expression {
     public:

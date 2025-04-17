@@ -2,10 +2,15 @@
 
 #include "expression.h"
 #include "tokens.h"
+#include "type.h"
 #include <memory>
+#include <optional>
 
 class Block;
 class Assign;
+
+using ExprPtr = std::unique_ptr<Expression>;
+using BlockPtr = std::unique_ptr<Block>;
 
 class Statement {
     public:
@@ -19,7 +24,11 @@ class ForLoopStatement : public Statement {
         std::unique_ptr<Block> body;
         std::unique_ptr<CallExpr> on_iter_call;
     public:
-        ForLoopStatement(std::unique_ptr<Assign> iterator, std::unique_ptr<Expression> condition, std::unique_ptr<Block> body, std::unique_ptr<CallExpr> on_iter_call);
+        ForLoopStatement(
+                std::unique_ptr<Assign> iterator,
+                std::unique_ptr<Expression> condition,
+                std::unique_ptr<Block> body,
+                std::unique_ptr<CallExpr> on_iter_call);
 };
 
 class WhileLoopStatement : public Statement {
@@ -35,10 +44,17 @@ class ConditionalStatement : public Statement {
         TokenType type;
         std::unique_ptr<Expression> condition;
         std::unique_ptr<Block> body;
-        std::variant<std::monostate, std::unique_ptr<ConditionalStatement>> else_st;
+        std::optional<std::unique_ptr<ConditionalStatement>> else_st;
     public:
-        ConditionalStatement(TokenType type, std::unique_ptr<Expression> condition, std::unique_ptr<Block> body, std::unique_ptr<Statement> else_st);
-        ConditionalStatement(TokenType type, std::unique_ptr<Expression> condition, std::unique_ptr<Block> body);
+        ConditionalStatement(
+                TokenType type,
+                std::unique_ptr<Expression> condition,
+                std::unique_ptr<Block> body,
+                std::unique_ptr<Statement> else_st);
+        ConditionalStatement(
+                TokenType type,
+                std::unique_ptr<Expression> condition,
+                std::unique_ptr<Block> body);
 };
 
 class ElseStatement : public Statement {
@@ -61,3 +77,16 @@ class CallStatement : public Statement {
     public:
         CallStatement(std::unique_ptr<CallExpr> call);
 };
+
+class AssignStatement : public Statement {
+    private:
+        std::optional<VarType> type;
+        std::string identifier;
+        std::unique_ptr<Expression> value;
+    public:
+        AssignStatement(
+                std::unique_ptr<Expression> value,
+                std::optional<VarType> type,
+                std::string identifier);
+};
+
