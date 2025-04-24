@@ -8,6 +8,7 @@
 
 class Block;
 class Assign;
+struct ForLoopArgs;
 
 using ExprPtr = std::unique_ptr<Expression>;
 using BlockPtr = std::unique_ptr<Block>;
@@ -19,17 +20,16 @@ class Statement {
 
 class ForLoopStatement : public Statement {
     private:
-        std::unique_ptr<Assign> iterator;
-        std::unique_ptr<Expression> condition;
+        std::unique_ptr<ForLoopArgs> args;
         std::unique_ptr<Block> body;
-        std::unique_ptr<CallExpr> on_iter_call;
+        std::string on_iter_call;
     public:
         ForLoopStatement(
-                std::unique_ptr<Assign> iterator,
-                std::unique_ptr<Expression> condition,
+                std::unique_ptr<ForLoopArgs> args,
                 std::unique_ptr<Block> body,
-                std::unique_ptr<CallExpr> on_iter_call);
+                std::string on_iter_call);
 };
+
 
 class WhileLoopStatement : public Statement {
     private:
@@ -90,3 +90,7 @@ class AssignStatement : public Statement {
                 std::string identifier);
 };
 
+struct ForLoopArgs {
+    std::variant<std::monostate, std::unique_ptr<Statement>, std::string> iterator;  // identifier or Assign
+    std::unique_ptr<Expression> condition;
+};

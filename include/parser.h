@@ -16,10 +16,8 @@ class FuncParams;
 
 using ExprPtr = std::unique_ptr<Expression>;
 using StatementPtr = std::unique_ptr<Statement>;
-using StatementType = std::optional<StatementPtr>;
-using ExprType = std::optional<ExprPtr>;
-using BlockType = std::optional<std::unique_ptr<Block>>;
 using BlockPtr = std::unique_ptr<Block>;
+using ForLoopArgsPtr = std::unique_ptr<ForLoopArgs>;
 
 class Parser {
     private:
@@ -32,24 +30,25 @@ class Parser {
         std::optional<Program> parse();
         std::optional<TypeMut> parse_type_mut();
         std::optional<FuncParams> parse_func_params();
-        BlockType parse_block();
-        StatementType parse_statement();
-        StatementType parse_assign();
-        StatementType parse_conditional_statement(TokenType st_type);
-        StatementType parse_else_statement();
-        StatementType parse_for_loop();
-        StatementType parse_while_loop();
-        StatementType parse_ret_statement();
-        StatementType parse_call_statement();
-        ExprType parse_condition();
-        ExprType parse_or_expression();
-        ExprType parse_and_expression();
-        ExprType parse_comp_expression();
-        ExprType parse_additive_expression();
-        ExprType parse_term();
-        ExprType parse_unary();
-        ExprType parse_factor();
-        ExprType parse_func_call();
+        BlockPtr parse_block();
+        StatementPtr parse_statement();
+        StatementPtr parse_assign();
+        StatementPtr parse_conditional_statement(TokenType st_type);
+        StatementPtr parse_else_statement();
+        StatementPtr parse_for_loop();
+        ForLoopArgsPtr parse_for_loop_args();
+        StatementPtr parse_while_loop();
+        StatementPtr parse_ret_statement();
+        StatementPtr parse_call_statement();
+        ExprPtr parse_condition();
+        ExprPtr parse_or_expression();
+        ExprPtr parse_and_expression();
+        ExprPtr parse_comp_expression();
+        ExprPtr parse_additive_expression();
+        ExprPtr parse_term();
+        ExprPtr parse_unary();
+        ExprPtr parse_factor();
+        ExprPtr parse_func_call();
         std::optional<std::vector<ExprPtr>> parse_func_args();
 
         bool is_comparative(TokenType type) const;
