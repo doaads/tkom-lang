@@ -224,7 +224,6 @@ ExprType Parser::parse_comp_expression() {
     return std::move(*left);
 }
 
-
 ExprType Parser::parse_additive_expression() {
     std::optional<ExprPtr> left = parse_term();
     if (!left) {
