@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lexer.h"
+#include "operators.h"
 #include "program.h"
 #include "token.h"
 #include "tokens.h"
@@ -38,7 +39,7 @@ class Parser {
         ForLoopArgsPtr parse_for_loop_args();
         StatementPtr parse_while_loop();
         StatementPtr parse_ret_statement();
-        StatementPtr parse_call_statement();
+        //StatementPtr parse_call_statement();
         ExprPtr parse_condition();
         ExprPtr parse_or_expression();
         ExprPtr parse_and_expression();

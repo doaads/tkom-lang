@@ -23,6 +23,7 @@ add_library(function src/parser/function.cpp)
 add_library(statement src/parser/statement.cpp)
 add_library(type src/parser/type.cpp)
 add_library(variable src/parser/variable.cpp)
+add_library(operators src/parser/operators.cpp)
 add_library(parser src/parser/parser.cpp)
 
 target_include_directories(tokenizer PUBLIC include)
@@ -37,19 +38,26 @@ target_include_directories(function PUBLIC include)
 target_include_directories(statement PUBLIC include)
 target_include_directories(type PUBLIC include)
 target_include_directories(variable PUBLIC include)
+target_include_directories(operators PUBLIC include)
 target_include_directories(parser PUBLIC include)
-
 
 add_executable(tkom src/lexer_main.cpp)
 target_include_directories(tkom PRIVATE include)
 target_link_libraries(tkom PRIVATE
     Boost::program_options
     lexer
+    parser
     tokenizer
     token
     input
     position
     exceptions
+    expression
+    function
+    statement
+    type
+    variable
+    operators
 )
 
 # Enable testing

@@ -5,7 +5,8 @@
 
 class HighOrder {
     public:
-        virtual ~HighOrder();
+        virtual ~HighOrder() = default;
+        HighOrder() = default;
 };
 
 class Variable : public HighOrder {
