@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lexer.h"
+#include "program.h"
 #include "token.h"
 #include "tokens.h"
 #include "expression.h"
@@ -9,30 +10,25 @@
 #include "function.h"
 #include <optional>
 
-/* Temporary production definitions */
-class Program;
-class TypeMut;
-class FuncParams;
-
 using ExprPtr = std::unique_ptr<Expression>;
 using StatementPtr = std::unique_ptr<Statement>;
 using BlockPtr = std::unique_ptr<Block>;
 using ForLoopArgsPtr = std::unique_ptr<ForLoopArgs>;
 using FuncPtr = std::unique_ptr<Function>;
 using TypePtr = std::unique_ptr<Type>;
+using FuncSignPtr = std::unique_ptr<FuncSignature>;
+using ProgramPtr = std::unique_ptr<Program>;
 
 class Parser {
     private:
         std::shared_ptr<Lexer> lexer;
         Token current_token;
-        // add function table here (std::map?)
     public:
         Parser(std::shared_ptr<Lexer> lexer);
 
-        std::optional<Program> parse();
-        std::optional<TypeMut> parse_type_mut();
-        std::optional<FuncParams> parse_func_params();
+        ProgramPtr parse();
         FuncPtr parse_func_def();
+        FuncSignPtr parse_func_signature();
         BlockPtr parse_block();
         StatementPtr parse_statement();
         StatementPtr parse_assign();

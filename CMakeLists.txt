@@ -18,12 +18,27 @@ add_library(position src/position/position.cpp)
 add_library(lexer src/lexer.cpp)
 add_library(exceptions src/exceptions/exceptions.cpp)
 
+add_library(expression src/parser/expression.cpp)
+add_library(function src/parser/function.cpp)
+add_library(statement src/parser/statement.cpp)
+add_library(type src/parser/type.cpp)
+add_library(variable src/parser/variable.cpp)
+add_library(parser src/parser/parser.cpp)
+
 target_include_directories(tokenizer PUBLIC include)
 target_include_directories(token PUBLIC include)
 target_include_directories(input PUBLIC include)
 target_include_directories(position PUBLIC include)
 target_include_directories(lexer PUBLIC include)
 target_include_directories(exceptions PUBLIC include)
+
+target_include_directories(expression PUBLIC include)
+target_include_directories(function PUBLIC include)
+target_include_directories(statement PUBLIC include)
+target_include_directories(type PUBLIC include)
+target_include_directories(variable PUBLIC include)
+target_include_directories(parser PUBLIC include)
+
 
 add_executable(tkom src/lexer_main.cpp)
 target_include_directories(tkom PRIVATE include)

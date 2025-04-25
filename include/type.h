@@ -14,8 +14,8 @@ enum class BaseType {
 
 class Type {
     public:
-        virtual ~Type() = default;
         static const bool is_func = false;
+        virtual ~Type() = default;
 };
 
 class VarType : public Type {

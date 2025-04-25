@@ -1,6 +1,29 @@
 #include "parser.h"
 
+ProgramPtr Parser::parse() {
+    std::vector<std::unique_ptr<Function>> functions;
+    FuncPtr function;
+    while (!is_next_token(TokenType::T_EOF)) {
+        function = parse_func_def();
+        if (!function) throw std::runtime_error("Expected function def");
+        functions.push_back(std::move(function));
+    }
+    return std::make_unique<Program>(std::move(functions));
+}
+
 FuncPtr Parser::parse_func_def() {
+    FuncSignPtr signature = parse_func_signature();
+    if (!signature) return nullptr;
+
+    BlockPtr body = parse_block();
+    if (!body) throw std::runtime_error("Expected block");
+
+    return std::make_unique<Function>(
+            std::move(signature),
+            std::move(body));
+}
+
+FuncSignPtr Parser::parse_func_signature() {
     TypePtr ret_type = parse_type();
     if (!ret_type)
         return nullptr;
@@ -10,6 +33,8 @@ FuncPtr Parser::parse_func_def() {
 
     if (!is_next_token(TokenType::T_IDENTIFIER))
         throw std::runtime_error("Expected function identifier");
+
+    std::string func_name = current_token.get_value<std::string>();
 
     std::vector<std::unique_ptr<HighOrder>> params;
     TypePtr current_arg_type;
@@ -21,10 +46,17 @@ FuncPtr Parser::parse_func_def() {
         if (!is_next_token(TokenType::T_IDENTIFIER))
             throw std::runtime_error("Expected parameter name");
         current_arg_name = current_token.get_value<std::string>();
-        // define param
-
-        params.push_back(std::move(param));
+        if (current_arg_type->is_func) {
+            params.push_back(std::make_unique<FuncVar>(std::move(current_arg_type), current_arg_name));
+        } else {
+            params.push_back(std::make_unique<Variable>(std::move(current_arg_type), current_arg_name));
+        }
     }
+
+    return std::make_unique<FuncSignature>(
+            std::move(ret_type),
+            std::move(params),
+            func_name);
 }
 
 BlockPtr Parser::parse_block() {
@@ -39,9 +71,9 @@ BlockPtr Parser::parse_block() {
         StatementPtr statement = parse_statement();
         if (!statement)
             throw std::runtime_error("Expected statement or }");
-        statements.push_back(statement);
+        statements.push_back(std::move(statement));
     }
-    return std::make_unique<Block>(statements);
+    return std::make_unique<Block>(std::move(statements));
 }
 
 StatementPtr Parser::parse_statement() {
@@ -63,7 +95,6 @@ StatementPtr Parser::parse_statement() {
     return nullptr;
 }
 
-// TODO: Add func type parsing here
 StatementPtr Parser::parse_assign() {
     ExprPtr expr = parse_or_expression();
     if (!expr)
@@ -72,21 +103,8 @@ StatementPtr Parser::parse_assign() {
     if (!is_next_token(TokenType::T_ASSIGN))
         throw std::runtime_error("Expected '=>'");
 
-    bool mut = false;
-    next_token();
-    if (current_token.get_type() == TokenType::T_MUT) {
-        mut = true;
-        next_token();
-    }
-
-    std::optional<BaseType> type = translate_token_to_type(current_token.get_type());
-    if (!type)
-        throw std::runtime_error("Expected non-void type");
-
-    std::optional<VarType> variable_type;
-    if (type) {
-        variable_type = VarType{*type, mut};
-    }
+    TypePtr type = parse_type();
+    if (!type) throw std::runtime_error("Expected type");
 
     if (!is_next_token(TokenType::T_IDENTIFIER))
         throw std::runtime_error("Expected identifier");
@@ -96,7 +114,7 @@ StatementPtr Parser::parse_assign() {
     if (!is_next_token(TokenType::T_SEMICOLON))
         throw std::runtime_error("Expected ;");
 
-    return std::make_unique<AssignStatement>(std::move(expr), variable_type, identifier);
+    return std::make_unique<AssignStatement>(std::move(expr), std::move(type), identifier);
 }
 
 StatementPtr Parser::parse_while_loop() {
@@ -289,7 +307,6 @@ ExprPtr Parser::parse_or_expression() {
     if (!left) {
         return nullptr;
     }
-    next_token();
     while (current_token.get_type() == TokenType::T_OR) {
         next_token();
         ExprPtr right = parse_and_expression();
@@ -457,7 +474,7 @@ ExprPtr Parser::parse_func_call() {
         throw std::runtime_error("Error while parsing func call. expected identifier");
    }
     std::string name = current_token.get_value<std::string>();
-    return std::make_unique<CallExpr>(name, args.value());
+    return std::make_unique<CallExpr>(name, std::move(*args));
 }
 
 std::optional<std::vector<ExprPtr>> Parser::parse_func_args() {
@@ -472,11 +489,11 @@ std::optional<std::vector<ExprPtr>> Parser::parse_func_args() {
         if (!arg) {
             throw std::runtime_error("error while parsing func args");
         }
-        args.push_back(*arg);
+        args.push_back(std::move(*arg));
         next_token();
         type = current_token.get_type();
     }
-    return std::move(args);
+    return args;
 }
 
 TypePtr Parser::parse_type() {

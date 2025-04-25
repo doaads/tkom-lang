@@ -17,8 +17,10 @@ class Expression {
 
 
 class LiteralExpr : public Expression { // base
+    private:
+        std::variant<std::unique_ptr<Expression>, Token> value;
     public:
-        LiteralExpr(Expression expr);
+        LiteralExpr(std::unique_ptr<Expression> expr);
         LiteralExpr(Token token);
 };
 
@@ -30,12 +32,12 @@ class UnaryExpr : public Expression {
         UnaryExpr(TokenType unary_op, std::unique_ptr<Expression> right);
 };
 
-class Term : public Expression {
-    public:
-        Term(std::unique_ptr<Expression> left, std::unique_ptr<Expression> right);
-};
-
 class BinaryExpr : public Expression {
+    private:
+        std::unique_ptr<Expression> left;
+        TokenType op;
+        std::unique_ptr<Expression> right;
+
     public:
         BinaryExpr(std::unique_ptr<Expression> left, TokenType op, std::unique_ptr<Expression> right);
 };

@@ -3,8 +3,8 @@
 #include "expression.h"
 #include "tokens.h"
 #include "type.h"
+#include "block.h"
 #include <memory>
-#include <optional>
 
 class Block;
 class Assign;
@@ -44,7 +44,7 @@ class ConditionalStatement : public Statement {
         TokenType type;
         std::unique_ptr<Expression> condition;
         std::unique_ptr<Block> body;
-        std::optional<std::unique_ptr<ConditionalStatement>> else_st;
+        std::unique_ptr<Statement> else_st;
     public:
         ConditionalStatement(
                 TokenType type,
@@ -80,13 +80,13 @@ class CallStatement : public Statement {
 
 class AssignStatement : public Statement {
     private:
-        std::optional<VarType> type;
-        std::string identifier;
         std::unique_ptr<Expression> value;
+        std::unique_ptr<Type> type;
+        std::string identifier;
     public:
         AssignStatement(
                 std::unique_ptr<Expression> value,
-                std::optional<VarType> type,
+                std::unique_ptr<Type> type,
                 std::string identifier);
 };
 
