@@ -322,6 +322,7 @@ ExprPtr Parser::parse_or_expression() {
                 BinaryOp::OR,
                 std::move(right));
     }
+    std::cout << *left << std::endl;
     return left;
 }
 

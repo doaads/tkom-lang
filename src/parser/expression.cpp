@@ -3,8 +3,7 @@
 const std::string Expression::expr_type = "Expression";
 
 std::ostream& operator<<(std::ostream& os, const Expression& op) {
-    os << op.expr_type << std::endl;
-    throw std::runtime_error("Cannot parse abstract expression class");
+    op.print(os);
     return os;
 }
 
@@ -16,8 +15,8 @@ const std::string LiteralExpr::expr_type = "LiteralExpr";
 LiteralExpr::LiteralExpr(Token token) :
     value(token) {}
 
-std::ostream& operator<<(std::ostream& os, const LiteralExpr& op) {
-    os << "[" << op.expr_type << "\n value: ";
+void LiteralExpr::print(std::ostream& os, unsigned short indent) const {
+    os << "[" << expr_type << ", val: ";
     std::visit([&os](const auto& val) {
         using T = std::decay_t<decltype(val)>;
         if constexpr (std::is_same_v<T, std::unique_ptr<Expression>>) {
@@ -29,8 +28,8 @@ std::ostream& operator<<(std::ostream& os, const LiteralExpr& op) {
         } else if constexpr (std::is_same_v<T, Token>) {
             os << val;
         }
-    }, op.value);
-    return os;
+    }, value);
+    os << "]";
 }
 
 const std::string UnaryExpr::expr_type = "UnaryExpr";
@@ -42,10 +41,9 @@ UnaryOp UnaryExpr::get_operator() const {
     return op_type;
 }
 
-std::ostream& operator<<(std::ostream& os, const UnaryExpr& op) {
-    os << "[" << op.expr_type << "\n op: " << op.get_operator() << std::endl;
-    os << " value: " << *op.right << std::endl;
-    return os;
+void UnaryExpr::print(std::ostream& os, unsigned short indent) const {
+    os << "[" << expr_type << ", op: " << get_operator();
+    os << ", val: " << *right << "]" << std::endl;
 }
 
 const std::string BinaryExpr::expr_type = "BinaryExpr";
@@ -60,22 +58,22 @@ BinaryOp BinaryExpr::get_operator() const {
     return op;
 }
 
-std::ostream& operator<<(std::ostream& os, const BinaryExpr& op) {
-    os << "[" << op.expr_type << "\n left: " << *op.left << std::endl;
-    os << " op: " << op.op << std::endl;
-    os << " value: " << *op.right << std::endl;
-    return os;
+void BinaryExpr::print(std::ostream& os, unsigned short indent) const {
+    os << "[" << expr_type << ",\n\tl: " << *left << std::endl;
+    os << "\top: " << op << std::endl;
+    os << "\tr: " << *right << std::endl;
+    os << "]";
 }
 
 const std::string CallExpr::expr_type = "CallExpr";
 
 CallExpr::CallExpr(std::string name, std::vector<std::unique_ptr<Expression>> args) : func_name(name), args(std::move(args)) {}
 
-std::ostream& operator<<(std::ostream& os, const CallExpr& op) {
-    os << "[" << op.expr_type << "\n function: " << op.func_name << std::endl;
-    os << " args: (";
+void CallExpr::print(std::ostream& os, unsigned short indent) const {
+    os << "[" << expr_type << ", f: " << func_name;
+    os << ", arg: (";
     bool first = true;
-    for (auto& arg : op.args) {
+    for (auto& arg : args) {
         if (!first) {
             os << ", ";
         } else {
@@ -88,6 +86,5 @@ std::ostream& operator<<(std::ostream& os, const CallExpr& op) {
             os << "null";
         }
     }
-    os << ")";
-    return os;
+    os << ")]";
 }
