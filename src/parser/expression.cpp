@@ -2,6 +2,10 @@
 
 const std::string Expression::expr_type = "Expression";
 
+std::string Expression::indent_str(int amount) {
+    return std::string(amount * 2, ' ');
+}
+
 std::ostream& operator<<(std::ostream& os, const Expression& op) {
     op.print(os);
     return os;
@@ -15,21 +19,15 @@ const std::string LiteralExpr::expr_type = "LiteralExpr";
 LiteralExpr::LiteralExpr(Token token) :
     value(token) {}
 
-void LiteralExpr::print(std::ostream& os, unsigned short indent) const {
-    os << "[" << expr_type << ", val: ";
-    std::visit([&os](const auto& val) {
-        using T = std::decay_t<decltype(val)>;
-        if constexpr (std::is_same_v<T, std::unique_ptr<Expression>>) {
-            if (val) {
-                os << *val;
-            } else {
-                os << "null";
-            }
-        } else if constexpr (std::is_same_v<T, Token>) {
-            os << val;
-        }
-    }, value);
-    os << "]";
+void LiteralExpr::print(std::ostream& os, int indent) const {
+    os << indent_str(indent) << "LiteralExpr: ";
+    if (std::holds_alternative<Token>(value)) {
+        os << std::get<Token>(value);
+    } else {
+        os << "\n";
+        std::get<std::unique_ptr<Expression>>(value)->print(os, indent + 1);
+    }
+    os << "\n";
 }
 
 const std::string UnaryExpr::expr_type = "UnaryExpr";
@@ -41,9 +39,12 @@ UnaryOp UnaryExpr::get_operator() const {
     return op_type;
 }
 
-void UnaryExpr::print(std::ostream& os, unsigned short indent) const {
+void UnaryExpr::print(std::ostream& os, int indent) const {
+    os << indent_str(indent);
     os << "[" << expr_type << ", op: " << get_operator();
-    os << ", val: " << *right << "]" << std::endl;
+    os << ", val: ";
+    right->print(os, indent + 1);
+    os << "]" << std::endl;
 }
 
 const std::string BinaryExpr::expr_type = "BinaryExpr";
@@ -58,33 +59,31 @@ BinaryOp BinaryExpr::get_operator() const {
     return op;
 }
 
-void BinaryExpr::print(std::ostream& os, unsigned short indent) const {
-    os << "[" << expr_type << ",\n\tl: " << *left << std::endl;
-    os << "\top: " << op << std::endl;
-    os << "\tr: " << *right << std::endl;
-    os << "]";
+void BinaryExpr::print(std::ostream& os, int indent) const {
+    os << indent_str(indent) << "BinaryExpr " << op << "\n";
+    left->print(os, indent + 1);
+    //os << indent_str(indent + 1) << "Operator: " << op << "\n";
+    right->print(os, indent + 1);
 }
 
 const std::string CallExpr::expr_type = "CallExpr";
 
 CallExpr::CallExpr(std::string name, std::vector<std::unique_ptr<Expression>> args) : func_name(name), args(std::move(args)) {}
 
-void CallExpr::print(std::ostream& os, unsigned short indent) const {
-    os << "[" << expr_type << ", f: " << func_name;
-    os << ", arg: (";
-    bool first = true;
-    for (auto& arg : args) {
-        if (!first) {
-            os << ", ";
-        } else {
-            first = false;
-        }
+void CallExpr::print(std::ostream& os, int indent) const {
+    os << indent_str(indent) << "CallExpr\n";
+    os << indent_str(indent + 1) << "Function: " << func_name << "\n";
+    os << indent_str(indent + 1) << "Arguments:\n";
 
-        if (arg) {
-            os << *arg;
-        } else {
-            os << "null";
+    if (args.empty()) {
+        os << indent_str(indent + 2) << "(none)\n";
+    } else {
+        for (const auto& arg : args) {
+            if (arg) {
+                arg->print(os, indent + 2);
+            } else {
+                os << indent_str(indent + 2) << "null\n";
+            }
         }
     }
-    os << ")]";
 }
