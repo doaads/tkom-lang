@@ -30,7 +30,7 @@ Powyższa wersja programu jest **połączeniem** leksera ze szkieletem parsera.
 
 ## Zawarta Funkcjonalność
 
-Jak przewidywałem w dokumentacji wstępnej, w ramach szkieletu aplikacji oddaję działający lekser wraz ze szkieletem parsera będącym w stanie bliskim gotowego. (Nie została jeszcze zaimplementowana obsługa funkcji wyższego rzędu - tj. bind front oraz dekoratorów)
+W ramach szkieletu aplikacji zaimplementowany został działający lekser wraz ze szkieletem parsera będącym w stanie bliskim gotowego. (Nie została jeszcze zaimplementowana obsługa funkcji wyższego rzędu - tj. bind front oraz dekoratorów)
 
 Lekser zawiera również obsługę dla błędów leksowania, tj. overflow, unterminated string, invalid identifier itd. Błędy te zwracają informację o napotkanym błędzie oraz pozycję w pliku, w której nastąpiły. Na ten moment błędy kończą działanie programu.
 
