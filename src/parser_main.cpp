@@ -1,5 +1,5 @@
-#include "exceptions.h"
 #include "lexer.h"
+#include "parser.h"
 #include <boost/program_options.hpp>
 #include <iostream>
 #include <fstream>
@@ -38,17 +38,23 @@ int main(int argc, char **argv) {
     }
 
     std::shared_ptr<std::fstream> input = std::make_unique<std::fstream>(input_file, std::fstream::in);
-    Lexer lexer = Lexer(input, verbose);
+    std::shared_ptr<Lexer> lexer = std::make_shared<Lexer>(input, verbose);
+    Parser parser = Parser(std::move(lexer));
     if (verbose)
         std::cout << "--------------------------------\033[36m" << input_file << "\033[0m-------------------------------" << std::endl;
 
-    while(!lexer.end()) {
-        try {
-            lexer.get_token();
-        } catch (CompilerException& e) {
-            std::cerr << e.what() << " at " << e.get_position() << std::endl;
-            return 1;
-        }
+    //while(!lexer.end()) {
+    //    try {
+    //        lexer.get_token();
+    //    } catch (CompilerException& e) {
+    //        std::cerr << e.what() << " at " << e.get_position() << std::endl;
+    //        return 1;
+    //    }
+    //}
+    try {
+        parser.parse();
+    } catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
     }
 
     if (verbose)

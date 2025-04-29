@@ -1,26 +1,7 @@
 add_executable(tokenizer_test tokenizer_test.cc)
 add_executable(lexer_test lexer_test.cc)
 add_executable(lexer_all_tokens_test lexer_all_tokens_test.cc)
-
-# Link GoogleTest
-#target_link_libraries(dfa_test PRIVATE
-#    handlers
-#    position
-#    dfa_maps
-#    keyword_map
-#    token
-#    tokenizer
-#    exceptions
-#    GTest::gtest_main
-#)
-
-#target_link_libraries(operator_dfa_test PRIVATE
-#    position
-#    token
-#    tokenizer
-#    exceptions
-#    GTest::gtest_main
-#)
+add_executable(parser_test parser_test.cc)
 
 target_link_libraries(tokenizer_test PRIVATE
     tokenizer
@@ -51,7 +32,25 @@ target_link_libraries(lexer_all_tokens_test PRIVATE
     GTest::gtest_main
 )
 
+target_link_libraries(parser_test PRIVATE
+    lexer
+    parser
+    tokenizer
+    token
+    input
+    position
+    exceptions
+    expression
+    function
+    statement
+    type
+    variable
+    operators
+    GTest::gtest_main
+)
+
 # Register tests
 add_test(NAME TokenizerTest COMMAND tokenizer_test)
 add_test(NAME LexerTest COMMAND lexer_test)
 add_test(NAME LexerAllTokensTest COMMAND lexer_all_tokens_test)
+add_test(NAME ParserTest COMMAND parser_test)

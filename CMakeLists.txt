@@ -41,9 +41,9 @@ target_include_directories(variable PUBLIC include)
 target_include_directories(operators PUBLIC include)
 target_include_directories(parser PUBLIC include)
 
-add_executable(tkom src/lexer_main.cpp)
-target_include_directories(tkom PRIVATE include)
-target_link_libraries(tkom PRIVATE
+add_executable(tkom-parser src/parser_main.cpp)
+target_include_directories(tkom-parser PRIVATE include)
+target_link_libraries(tkom-parser PRIVATE
     Boost::program_options
     lexer
     parser
@@ -58,6 +58,19 @@ target_link_libraries(tkom PRIVATE
     type
     variable
     operators
+)
+
+add_executable(tkom src/lexer_main.cpp)
+target_include_directories(tkom PRIVATE include)
+target_link_libraries(tkom PRIVATE
+    Boost::program_options
+    lexer
+    parser
+    tokenizer
+    token
+    input
+    position
+    exceptions
 )
 
 # Enable testing
