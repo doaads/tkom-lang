@@ -68,11 +68,33 @@ void BinaryExpr::print(std::ostream& os, int indent) const {
 
 const std::string CallExpr::expr_type = "CallExpr";
 
-CallExpr::CallExpr(std::string name, std::vector<std::unique_ptr<Expression>> args) : func_name(name), args(std::move(args)) {}
+CallExpr::CallExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args) : func_name(std::move(name)), args(std::move(args)) {}
 
 void CallExpr::print(std::ostream& os, int indent) const {
     os << indent_str(indent) << "CallExpr\n";
-    os << indent_str(indent + 1) << "Function: " << func_name << "\n";
+    os << indent_str(indent + 1) << "Function: ";
+    func_name->print(os, indent + 1);
+    os << indent_str(indent + 1) << "Arguments:\n";
+
+    if (args.empty()) {
+        os << indent_str(indent + 2) << "(none)\n";
+    } else {
+        for (const auto& arg : args) {
+            if (arg) {
+                arg->print(os, indent + 2);
+            } else {
+                os << indent_str(indent + 2) << "null\n";
+            }
+        }
+    }
+}
+
+BindFrtExpr::BindFrtExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args) : func_name(std::move(name)), args(std::move(args)) {}
+
+void BindFrtExpr::print(std::ostream& os, int indent) const {
+    os << indent_str(indent) << "BindFrtExpr\n";
+    os << indent_str(indent + 1) << "Function: ";
+    func_name->print(os, indent + 1);
     os << indent_str(indent + 1) << "Arguments:\n";
 
     if (args.empty()) {

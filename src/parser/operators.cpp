@@ -23,6 +23,7 @@ std::ostream& operator<<(std::ostream& os, const BinaryOp& op) {
         case BinaryOp::SUB: os << "SUB"; break;
         case BinaryOp::DIV: os << "DIV"; break;
         case BinaryOp::MULT: os << "MULT"; break;
+        case BinaryOp::DECORATE: os << "DECORATE"; break;
     }
     return os;
 }
@@ -41,6 +42,7 @@ std::optional<BinaryOp> token_to_binary_op(TokenType type) {
         case TokenType::T_MINUS: return BinaryOp::SUB;
         case TokenType::T_DIV: return BinaryOp::DIV;
         case TokenType::T_MULT: return BinaryOp::MULT;
+        case TokenType::T_DECORATE: return BinaryOp::DECORATE;
         default: return std::nullopt;
     }
 }

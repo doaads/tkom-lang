@@ -49,6 +49,13 @@ class Parser {
         ExprPtr parse_unary();
         ExprPtr parse_factor();
         ExprPtr parse_func_call_or_parens();
+
+        ExprPtr parse_bindfrt_or_call(std::vector<ExprPtr> args);
+        ExprPtr parse_bind_front_right(std::vector<ExprPtr> args);
+        ExprPtr parse_bind_front();
+        ExprPtr parse_decorator();
+
+        ExprPtr parse_identifier();
         ExprPtr parse_func_call(ExprPtr first = nullptr);
         TypePtr parse_type();
         TypePtr parse_var_type();

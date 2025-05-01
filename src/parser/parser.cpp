@@ -454,6 +454,8 @@ ExprPtr Parser::parse_unary() {
 
 /*
  * factor = function_call
+ *        | bind_front
+ *        | decorator
  *        | number
  *        | identifier
  *        | string
@@ -471,6 +473,9 @@ ExprPtr Parser::parse_factor() {
     ExprPtr factor = parse_func_call_or_parens();
     if (factor) return factor;
 
+    factor = parse_decorator();
+    if (factor) return factor;
+
     return nullptr;
 }
 
@@ -478,7 +483,7 @@ ExprPtr Parser::parse_factor() {
  *      expr can equal: '(', expr, ')'
  *      this can also be a func arg.
  *      we will parse the first expr and then check whether it is
- *      a valid function call.
+ *      a valid function call or bindfront
 */
 
 ExprPtr Parser::parse_func_call_or_parens() {
@@ -492,7 +497,7 @@ ExprPtr Parser::parse_func_call_or_parens() {
     first_expr = parse_expression();
     args = parse_func_args(std::move(first_expr));
 
-    if (!is_next_token(TokenType::T_CALL)) {
+    if (!is_next_token(TokenType::T_CALL) && current_token.get_type() != TokenType::T_BINDFRT) {
         if (first_expr) {
             return first_expr;
         } else {
@@ -500,12 +505,73 @@ ExprPtr Parser::parse_func_call_or_parens() {
         }
     }
 
-    if (!is_next_token(TokenType::T_IDENTIFIER)) {
-        throw std::runtime_error("Error while parsing func call. expected identifier");
-   }
-    std::string name = current_token.get_value<std::string>();
+    return parse_bindfrt_or_call(std::move(*args));
+}
+
+/*
+ * we have parsed the arguments, now
+ * after parsing args, parse either call or bind front
+ */
+
+ExprPtr Parser::parse_bindfrt_or_call(std::vector<ExprPtr> args) {
+    ExprPtr bindfrt = parse_bind_front_right(std::move(args));
+    if (bindfrt) return bindfrt;
+
+    if (current_token.get_type() != TokenType::T_CALL)
+        throw std::runtime_error("Expected '->' or '->>'");
     next_token();
-    return std::make_unique<CallExpr>(name, std::move(*args));
+
+    ExprPtr right = parse_bind_front();
+    return std::make_unique<CallExpr>(std::move(right), std::move(args));
+}
+
+/*
+ * bind_front = [func_args, bindfrt_op], decorator
+ */ 
+
+ExprPtr Parser::parse_bind_front_right(std::vector<ExprPtr> args) {
+    if (current_token.get_type() != TokenType::T_BINDFRT)
+        return nullptr;
+
+    next_token();
+    ExprPtr decorator = parse_decorator();
+    if (!decorator) throw std::runtime_error("Expected identifier or decorator");
+    return std::make_unique<BindFrtExpr>(std::move(decorator), std::move(args));
+}
+
+ExprPtr Parser::parse_bind_front() {
+    ExprPtr decorator = parse_decorator();
+    if (decorator)
+        return decorator;
+
+    std::optional<std::vector<ExprPtr>> args = parse_func_args();
+    if (!args)
+        return nullptr;
+
+    return parse_bind_front_right(std::move(*args));
+}
+
+/*
+ * decorator = identifier, [decorate_op, identifier]
+ */
+
+ExprPtr Parser::parse_decorator() {
+    if (current_token.get_type() != TokenType::T_IDENTIFIER)
+        return nullptr;
+
+    std::string value = current_token.get_value<std::string>();
+    ExprPtr left = std::make_unique<LiteralExpr>(current_token);
+
+    if (!is_next_token(TokenType::T_DECORATE))
+        return left;
+
+    if (!is_next_token(TokenType::T_IDENTIFIER))
+        throw std::runtime_error("Expected identifier");
+
+    value = current_token.get_value<std::string>();
+    ExprPtr right = std::make_unique<LiteralExpr>(current_token);
+
+    return std::make_unique<BinaryExpr>(std::move(left), BinaryOp::DECORATE, std::move(right));
 
 }
 
@@ -518,11 +584,10 @@ ExprPtr Parser::parse_func_call(ExprPtr first) {
         return nullptr;
     }
 
-    if (!is_next_token(TokenType::T_IDENTIFIER)) {
-        throw std::runtime_error("Error while parsing func call. expected identifier");
-   }
+    ExprPtr right = parse_bind_front();
+
     std::string name = current_token.get_value<std::string>();
-    return std::make_unique<CallExpr>(name, std::move(*args));
+    return std::make_unique<CallExpr>(std::move(right), std::move(*args));
 }
 
 std::optional<std::vector<ExprPtr>> Parser::parse_func_args(ExprPtr first_expr) {
@@ -530,12 +595,12 @@ std::optional<std::vector<ExprPtr>> Parser::parse_func_args(ExprPtr first_expr) 
     if (!first_expr) {
         if (current_token.get_type() != TokenType::T_LPAREN)
             return std::nullopt;
-        next_token();
+            
     } else {
         args.push_back(std::move(first_expr));
     }
 
-    while (current_token.get_type() == TokenType::T_COMMA) {
+    while (current_token.get_type() == TokenType::T_COMMA || current_token.get_type() == TokenType::T_LPAREN) {
         next_token();
         ExprPtr arg = parse_expression();
         if (!arg) {
@@ -582,7 +647,7 @@ TypePtr Parser::parse_func_type() {
     if (!ret_type && current_token.get_type() != TokenType::T_VOID_TYPE)
         throw std::runtime_error("Expected type");
 
-    if (is_next_token(TokenType::T_FUNC_SIGN))
+    if (!is_next_token(TokenType::T_FUNC_SIGN))
         throw std::runtime_error("Expected '::'");
 
     std::vector<std::unique_ptr<Type>> params;
@@ -590,7 +655,6 @@ TypePtr Parser::parse_func_type() {
     while (current_token.get_type() != TokenType::T_RFTYPE) {
         next_token();
         params.push_back(parse_type());
-        next_token();
         separator = current_token.get_type();
         if (separator != TokenType::T_COMMA && separator != TokenType::T_RFTYPE)
             throw std::runtime_error("Expected ',' or ']'");

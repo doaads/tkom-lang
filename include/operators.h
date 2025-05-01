@@ -23,7 +23,8 @@ enum class BinaryOp {
     ADD,
     SUB,
     DIV,
-    MULT
+    MULT,
+    DECORATE
 };
 
 std::ostream& operator<<(std::ostream& os, const BinaryOp& token);

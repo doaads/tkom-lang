@@ -58,9 +58,20 @@ class BinaryExpr : public Expression {
 class CallExpr : public Expression {
     private:
         static const std::string expr_type;
-        std::string func_name;
+        std::unique_ptr<Expression> func_name;
         std::vector<std::unique_ptr<Expression>> args;
     public:
         void print(std::ostream& os, int indent) const;
-        CallExpr(std::string name, std::vector<std::unique_ptr<Expression>> args);
+        CallExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args);
+};
+
+
+class BindFrtExpr : public Expression {
+    private:
+        static const std::string expr_type;
+        std::unique_ptr<Expression> func_name;
+        std::vector<std::unique_ptr<Expression>> args;
+    public:
+        void print(std::ostream& os, int indent) const;
+        BindFrtExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args);
 };
