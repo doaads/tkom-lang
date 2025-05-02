@@ -72,8 +72,8 @@ CallExpr::CallExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr
 
 void CallExpr::print(std::ostream& os, int indent) const {
     os << indent_str(indent) << "CallExpr\n";
-    os << indent_str(indent + 1) << "Function: ";
-    func_name->print(os, indent + 1);
+    os << indent_str(indent + 1) << "Function: " << std::endl;
+    func_name->print(os, indent + 2);
     os << indent_str(indent + 1) << "Arguments:\n";
 
     if (args.empty()) {
@@ -93,7 +93,7 @@ BindFrtExpr::BindFrtExpr(std::unique_ptr<Expression> name, std::vector<std::uniq
 
 void BindFrtExpr::print(std::ostream& os, int indent) const {
     os << indent_str(indent) << "BindFrtExpr\n";
-    os << indent_str(indent + 1) << "Function: ";
+    os << indent_str(indent + 1) << "Function: " << std::endl;
     func_name->print(os, indent + 1);
     os << indent_str(indent + 1) << "Arguments:\n";
 

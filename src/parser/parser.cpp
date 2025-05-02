@@ -336,7 +336,6 @@ ExprPtr Parser::parse_or_expression() {
                 BinaryOp::OR,
                 std::move(right));
     }
-    std::cout << *left << std::endl;
     return left;
 }
 
@@ -487,38 +486,36 @@ ExprPtr Parser::parse_factor() {
 */
 
 ExprPtr Parser::parse_func_call_or_parens() {
-    if (current_token.get_type() != TokenType::T_LPAREN) {
+    std::optional<std::vector<ExprPtr>> args = parse_func_args();
+    if (!args)
         return nullptr;
-    }
 
-    next_token();
-    ExprPtr first_expr;
-    std::optional<std::vector<ExprPtr>> args;
-    first_expr = parse_expression();
-    args = parse_func_args(std::move(first_expr));
+    ArgOrExpr bindfrt = parse_bindfrt_or_call(std::move(*args));
+    if (!bindfrt.index()) return std::get<ExprPtr>(std::move(bindfrt));
 
-    if (!is_next_token(TokenType::T_CALL) && current_token.get_type() != TokenType::T_BINDFRT) {
-        if (first_expr) {
-            return first_expr;
-        } else {
-            throw std::runtime_error("Expected expression");
-        }
-    }
+    // move args back
+    args = std::get<std::vector<ExprPtr>>(std::move(bindfrt));
 
-    return parse_bindfrt_or_call(std::move(*args));
+    if (args->size() != 1) throw std::runtime_error("Expected expression");
+
+    return std::move((*args)[0]);
 }
 
 /*
  * we have parsed the arguments, now
  * after parsing args, parse either call or bind front
+ * if function returns the ownership of arguments, it means it failed.
  */
 
-ExprPtr Parser::parse_bindfrt_or_call(std::vector<ExprPtr> args) {
-    ExprPtr bindfrt = parse_bind_front_right(std::move(args));
-    if (bindfrt) return bindfrt;
+ArgOrExpr Parser::parse_bindfrt_or_call(std::vector<ExprPtr> args) {
+    ArgOrExpr bindfrt = parse_bind_front_right(std::move(args));
+    if (!bindfrt.index()) return std::get<ExprPtr>(std::move(bindfrt));
+
+    // move args back
+    args = std::get<std::vector<ExprPtr>>(std::move(bindfrt));
 
     if (current_token.get_type() != TokenType::T_CALL)
-        throw std::runtime_error("Expected '->' or '->>'");
+        return args;  // fail, return ownership of args
     next_token();
 
     ExprPtr right = parse_bind_front();
@@ -529,9 +526,9 @@ ExprPtr Parser::parse_bindfrt_or_call(std::vector<ExprPtr> args) {
  * bind_front = [func_args, bindfrt_op], decorator
  */ 
 
-ExprPtr Parser::parse_bind_front_right(std::vector<ExprPtr> args) {
+ArgOrExpr Parser::parse_bind_front_right(std::vector<ExprPtr> args) {
     if (current_token.get_type() != TokenType::T_BINDFRT)
-        return nullptr;
+        return args;
 
     next_token();
     ExprPtr decorator = parse_decorator();
@@ -548,7 +545,10 @@ ExprPtr Parser::parse_bind_front() {
     if (!args)
         return nullptr;
 
-    return parse_bind_front_right(std::move(*args));
+    ArgOrExpr bind_front = parse_bind_front_right(std::move(*args));
+    if (bind_front.index()) return nullptr;
+
+    return std::get<ExprPtr>(std::move(bind_front));
 }
 
 /*
@@ -575,8 +575,9 @@ ExprPtr Parser::parse_decorator() {
 
 }
 
-ExprPtr Parser::parse_func_call(ExprPtr first) {
-    std::optional<std::vector<ExprPtr>> args = parse_func_args(std::move(first));
+ExprPtr Parser::parse_func_call() {
+
+    std::optional<std::vector<ExprPtr>> args = parse_func_args();
     if (!args) {
         return nullptr;
     }
@@ -590,17 +591,38 @@ ExprPtr Parser::parse_func_call(ExprPtr first) {
     return std::make_unique<CallExpr>(std::move(right), std::move(*args));
 }
 
-std::optional<std::vector<ExprPtr>> Parser::parse_func_args(ExprPtr first_expr) {
-    std::vector<ExprPtr> args;
-    if (!first_expr) {
-        if (current_token.get_type() != TokenType::T_LPAREN)
-            return std::nullopt;
-            
-    } else {
-        args.push_back(std::move(first_expr));
+/*
+ * Function's first argument parsing
+ * returns:
+ *      std::nullopt if the function did not run
+ *      nullptr if we get an empty argument vector
+ */
+
+std::optional<ExprPtr> Parser::parse_first_func_arg() {
+    if (current_token.get_type() != TokenType::T_LPAREN) {
+        return std::nullopt;
+    }
+    if (is_next_token(TokenType::T_RPAREN)) {
+        next_token();
+        return nullptr;
     }
 
-    while (current_token.get_type() == TokenType::T_COMMA || current_token.get_type() == TokenType::T_LPAREN) {
+    return parse_expression();
+}
+
+/*
+ * func_args = "(", [function_arg_list], ")"
+ * function_arg_list = expression, {",", expression}
+ */
+
+std::optional<std::vector<ExprPtr>> Parser::parse_func_args() {
+    std::vector<ExprPtr> args;
+    std::optional<ExprPtr> arg = parse_first_func_arg();
+    if (!arg) return std::nullopt;  // no match
+    if (!*arg) return args;         // empty arg vector
+    args.push_back(std::move(*arg));
+
+    while (current_token.get_type() == TokenType::T_COMMA) {
         next_token();
         ExprPtr arg = parse_expression();
         if (!arg) {
@@ -611,6 +633,7 @@ std::optional<std::vector<ExprPtr>> Parser::parse_func_args(ExprPtr first_expr) 
 
     if (current_token.get_type() != TokenType::T_RPAREN)
         throw std::runtime_error("Expected )");
+    next_token();
     return args;
 }
 

@@ -11,6 +11,7 @@
 #include <optional>
 
 using ExprPtr = std::unique_ptr<Expression>;
+using ArgOrExpr = std::variant<ExprPtr, std::vector<ExprPtr>>;
 using StatementPtr = std::unique_ptr<Statement>;
 using BlockPtr = std::unique_ptr<Block>;
 using ForLoopArgsPtr = std::unique_ptr<ForLoopArgs>;
@@ -38,7 +39,6 @@ class Parser {
         ForLoopArgsPtr parse_for_loop_args();
         StatementPtr parse_while_loop();
         StatementPtr parse_ret_statement();
-        //StatementPtr parse_call_statement();
         ExprPtr parse_condition();
         ExprPtr parse_expression();
         ExprPtr parse_or_expression();
@@ -50,17 +50,19 @@ class Parser {
         ExprPtr parse_factor();
         ExprPtr parse_func_call_or_parens();
 
-        ExprPtr parse_bindfrt_or_call(std::vector<ExprPtr> args);
-        ExprPtr parse_bind_front_right(std::vector<ExprPtr> args);
+        ArgOrExpr parse_bindfrt_or_call(std::vector<ExprPtr> args);
+        ArgOrExpr parse_bind_front_right(std::vector<ExprPtr> args);
+
         ExprPtr parse_bind_front();
         ExprPtr parse_decorator();
 
         ExprPtr parse_identifier();
-        ExprPtr parse_func_call(ExprPtr first = nullptr);
+        ExprPtr parse_func_call();
         TypePtr parse_type();
         TypePtr parse_var_type();
         TypePtr parse_func_type();
-        std::optional<std::vector<ExprPtr>> parse_func_args(ExprPtr first = nullptr);
+        std::optional<ExprPtr> parse_first_func_arg();
+        std::optional<std::vector<ExprPtr>> parse_func_args();
 
         bool is_comparative(TokenType type) const;
         bool is_factor(TokenType type) const;
