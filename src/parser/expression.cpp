@@ -1,36 +1,26 @@
 #include "expression.h"
 
-const std::string Expression::expr_type = "Expression";
-
 std::string Expression::indent_str(int amount) {
     return std::string(amount * 2, ' ');
-}
-
-std::ostream& operator<<(std::ostream& os, const Expression& op) {
-    op.print(os);
-    return os;
 }
 
 LiteralExpr::LiteralExpr(std::unique_ptr<Expression> expr) :
     value(std::move(expr)) {}
 
-const std::string LiteralExpr::expr_type = "LiteralExpr";
-
 LiteralExpr::LiteralExpr(Token token) :
     value(token) {}
 
-void LiteralExpr::print(std::ostream& os, int indent) const {
-    os << indent_str(indent) << "LiteralExpr: ";
-    if (std::holds_alternative<Token>(value)) {
-        os << std::get<Token>(value);
-    } else {
-        os << "\n";
-        std::get<std::unique_ptr<Expression>>(value)->print(os, indent + 1);
-    }
-    os << "\n";
+void LiteralExpr::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
 }
 
-const std::string UnaryExpr::expr_type = "UnaryExpr";
+std::variant<const Expression*, Token> LiteralExpr::get_value() const {
+    if (value.index()) {
+        return std::get<Token>(value);
+    } else {
+        return std::get<std::unique_ptr<Expression>>(value).get();
+    }
+}
 
 UnaryExpr::UnaryExpr(UnaryOp unary_op, std::unique_ptr<Expression> right) :
     op_type(unary_op), right(std::move(right)) {}
@@ -39,15 +29,13 @@ UnaryOp UnaryExpr::get_operator() const {
     return op_type;
 }
 
-void UnaryExpr::print(std::ostream& os, int indent) const {
-    os << indent_str(indent);
-    os << "[" << expr_type << ", op: " << get_operator();
-    os << ", val: ";
-    right->print(os, indent + 1);
-    os << "]" << std::endl;
+void UnaryExpr::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
 }
 
-const std::string BinaryExpr::expr_type = "BinaryExpr";
+const Expression* UnaryExpr::get_right() const {
+    return right.get();
+}
 
 BinaryExpr::BinaryExpr(
         std::unique_ptr<Expression> left,
@@ -55,57 +43,56 @@ BinaryExpr::BinaryExpr(
         std::unique_ptr<Expression> right) :
     left(std::move(left)), op(op), right(std::move(right)) {}
 
+void BinaryExpr::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
+}
+
 BinaryOp BinaryExpr::get_operator() const {
     return op;
 }
 
-void BinaryExpr::print(std::ostream& os, int indent) const {
-    os << indent_str(indent) << "BinaryExpr " << op << "\n";
-    left->print(os, indent + 1);
-    //os << indent_str(indent + 1) << "Operator: " << op << "\n";
-    right->print(os, indent + 1);
+const Expression* BinaryExpr::get_left() const {
+    return left.get();
 }
 
-const std::string CallExpr::expr_type = "CallExpr";
+const Expression* BinaryExpr::get_right() const {
+    return right.get();
+}
 
 CallExpr::CallExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args) : func_name(std::move(name)), args(std::move(args)) {}
 
-void CallExpr::print(std::ostream& os, int indent) const {
-    os << indent_str(indent) << "CallExpr\n";
-    os << indent_str(indent + 1) << "Function: " << std::endl;
-    func_name->print(os, indent + 2);
-    os << indent_str(indent + 1) << "Arguments:\n";
+const Expression* CallExpr::get_func_name() const {
+    return func_name.get();
+}
 
-    if (args.empty()) {
-        os << indent_str(indent + 2) << "(none)\n";
-    } else {
-        for (const auto& arg : args) {
-            if (arg) {
-                arg->print(os, indent + 2);
-            } else {
-                os << indent_str(indent + 2) << "null\n";
-            }
-        }
+const std::vector<const Expression*> CallExpr::get_args() const {
+    std::vector<const Expression*> result;
+    result.reserve(args.size());
+    for (const auto& arg : args) {
+        result.push_back(arg.get());
     }
+    return result;
+}
+
+void CallExpr::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
 }
 
 BindFrtExpr::BindFrtExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args) : func_name(std::move(name)), args(std::move(args)) {}
 
-void BindFrtExpr::print(std::ostream& os, int indent) const {
-    os << indent_str(indent) << "BindFrtExpr\n";
-    os << indent_str(indent + 1) << "Function: " << std::endl;
-    func_name->print(os, indent + 1);
-    os << indent_str(indent + 1) << "Arguments:\n";
+void BindFrtExpr::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
+}
 
-    if (args.empty()) {
-        os << indent_str(indent + 2) << "(none)\n";
-    } else {
-        for (const auto& arg : args) {
-            if (arg) {
-                arg->print(os, indent + 2);
-            } else {
-                os << indent_str(indent + 2) << "null\n";
-            }
-        }
+const Expression* BindFrtExpr::get_func_name() const {
+    return func_name.get();
+}
+
+const std::vector<const Expression*> BindFrtExpr::get_args() const {
+    std::vector<const Expression*> result;
+    result.reserve(args.size());
+    for (const auto& arg : args) {
+        result.push_back(arg.get());
     }
+    return result;
 }

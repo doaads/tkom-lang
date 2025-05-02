@@ -1,5 +1,6 @@
 #pragma once
 
+#include "parser_visitor.h"
 #include "lexer.h"
 #include "program.h"
 #include "token.h"
@@ -22,6 +23,7 @@ using ProgramPtr = std::unique_ptr<Program>;
 
 class Parser {
     private:
+        ParserPrinter printer;
         std::shared_ptr<Lexer> lexer;
         Token current_token;
     public:
@@ -57,11 +59,9 @@ class Parser {
         ExprPtr parse_decorator();
 
         ExprPtr parse_identifier();
-        ExprPtr parse_func_call();
         TypePtr parse_type();
         TypePtr parse_var_type();
         TypePtr parse_func_type();
-        std::optional<ExprPtr> parse_first_func_arg();
         std::optional<std::vector<ExprPtr>> parse_func_args();
 
         bool is_comparative(TokenType type) const;
@@ -70,6 +70,7 @@ class Parser {
         bool is_type_or_void(TokenType type) const;
         bool is_next_token(TokenType type);
         bool was_last_token(TokenType type);
+        bool is_token(TokenType type) const;
         std::optional<BaseType> translate_token_to_type(TokenType type) const;
 
         void next_token();

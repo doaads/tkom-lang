@@ -24,6 +24,7 @@ add_library(statement src/parser/statement.cpp)
 add_library(type src/parser/type.cpp)
 add_library(variable src/parser/variable.cpp)
 add_library(operators src/parser/operators.cpp)
+add_library(parser_visitor src/parser/parser_visitor.cpp)
 add_library(parser src/parser/parser.cpp)
 
 target_include_directories(tokenizer PUBLIC include)
@@ -39,6 +40,7 @@ target_include_directories(statement PUBLIC include)
 target_include_directories(type PUBLIC include)
 target_include_directories(variable PUBLIC include)
 target_include_directories(operators PUBLIC include)
+target_include_directories(parser_visitor PUBLIC include)
 target_include_directories(parser PUBLIC include)
 
 add_executable(tkom-parser src/parser_main.cpp)
@@ -47,6 +49,7 @@ target_link_libraries(tkom-parser PRIVATE
     Boost::program_options
     lexer
     parser
+    parser_visitor
     tokenizer
     token
     input
