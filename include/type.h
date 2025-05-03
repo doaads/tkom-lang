@@ -1,5 +1,6 @@
 #pragma once
 
+#include "parser_visitor.h"
 #include <memory>
 #include <optional>
 #include <vector>
@@ -16,6 +17,7 @@ class Type {
     public:
         static const bool is_func = false;
         virtual ~Type() = default;
+        virtual void accept(ParserPrinter& visitor) const = 0;
 };
 
 class VarType : public Type {
@@ -24,6 +26,7 @@ class VarType : public Type {
         bool mut = false;
     public:
         VarType(BaseType type, bool mut);
+        void accept(ParserPrinter& visitor) const override;
 
 };
 
@@ -34,4 +37,5 @@ class FuncType : public Type {
     public:
         FuncType(std::optional<BaseType> ret_type, std::vector<std::unique_ptr<Type>> params);
         static const bool is_func = true;
+        void accept(ParserPrinter& visitor) const override;
 };

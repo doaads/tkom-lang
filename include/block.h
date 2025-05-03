@@ -12,4 +12,6 @@ class Block {
     public:
         Block(std::vector<std::unique_ptr<Statement>> statements) : statements(std::move(statements)) {}
         ~Block() = default;
+
+        void accept(ParserPrinter& visitor) const;
 };

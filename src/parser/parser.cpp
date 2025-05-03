@@ -7,11 +7,14 @@ Parser::Parser(std::shared_ptr<Lexer> lexer) :
 ProgramPtr Parser::parse() {
     std::vector<std::unique_ptr<Function>> functions;
     FuncPtr function;
+
     while (!is_next_token(TokenType::T_EOF)) {
         function = parse_func_def();
         if (!function) throw std::runtime_error("Expected function def");
+
         functions.push_back(std::move(function));
     }
+
     return std::make_unique<Program>(std::move(functions));
 }
 
@@ -22,9 +25,7 @@ FuncPtr Parser::parse_func_def() {
     BlockPtr body = parse_block();
     if (!body) throw std::runtime_error("Expected block");
 
-    return std::make_unique<Function>(
-            std::move(signature),
-            std::move(body));
+    return std::make_unique<Function>(std::move(signature), std::move(body));
 }
 
 FuncSignPtr Parser::parse_func_signature() {
@@ -163,8 +164,8 @@ StatementPtr Parser::parse_for_loop() {
         throw std::runtime_error("Expected '->'");
 
     // TODO: Edit this to accept bindfront here
-    if (!is_next_token(TokenType::T_IDENTIFIER))
-        throw std::runtime_error("Expected identifier");
+    ExprPtr on_iter = parse_bind_front();
+    if (!on_iter) throw std::runtime_error("Expected bind front or identifier");
 
     std::string identifier = current_token.get_value<std::string>();
 
@@ -174,7 +175,7 @@ StatementPtr Parser::parse_for_loop() {
     return std::make_unique<ForLoopStatement>(
             std::move(args),
             std::move(block),
-            identifier);
+            std::move(on_iter));
 }
 
 /*

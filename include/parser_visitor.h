@@ -1,13 +1,28 @@
 #pragma once
 
 #include <ostream>
+#include "statement.h"
 #include "expression.h"
+#include "block.h"
 
+class Expression;
 class LiteralExpr;
 class UnaryExpr;
 class BinaryExpr;
 class CallExpr;
 class BindFrtExpr;
+
+class ForLoopStatement;
+class WhileLoopStatement;
+class ConditionalStatement;
+class ElseStatement;
+class RetStatement;
+class CallStatement;
+class AssignStatement;
+
+class VarType;
+class FuncType;
+class Block;
 
 class ParserVisitor {
 public:
@@ -18,6 +33,18 @@ public:
     virtual void visit(const BinaryExpr& expr) = 0;
     virtual void visit(const CallExpr& expr) = 0;
     virtual void visit(const BindFrtExpr& expr) = 0;
+
+    virtual void visit(const ForLoopStatement& stmt) = 0;
+    virtual void visit(const WhileLoopStatement& stmt) = 0;
+    virtual void visit(const ConditionalStatement& stmt) = 0;
+    virtual void visit(const ElseStatement& stmt) = 0;
+    virtual void visit(const RetStatement& stmt) = 0;
+    virtual void visit(const CallStatement& stmt) = 0;
+    virtual void visit(const AssignStatement& stmt) = 0;
+
+    virtual void visit(const Block& block) = 0;
+    virtual void visit(const VarType& var) = 0;
+    virtual void visit(const FuncType& func) = 0;
 };
 
 class ParserPrinter : public ParserVisitor {
@@ -37,4 +64,16 @@ class ParserPrinter : public ParserVisitor {
         void visit(const BinaryExpr& expr) override;
         void visit(const CallExpr& expr) override;
         void visit(const BindFrtExpr& expr) override;
+
+        void visit(const ForLoopStatement& stmt) override;
+        void visit(const WhileLoopStatement& stmt) override;
+        void visit(const ConditionalStatement& stmt) override;
+        void visit(const ElseStatement& stmt) override;
+        void visit(const RetStatement& stmt) override;
+        void visit(const CallStatement& stmt) override;
+        void visit(const AssignStatement& stmt) override;
+
+        void visit(const Block& block) override;
+        void visit(const VarType& type) override;
+        void visit(const FuncType& type) override;
 };

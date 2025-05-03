@@ -4,6 +4,8 @@ std::string Expression::indent_str(int amount) {
     return std::string(amount * 2, ' ');
 }
 
+/* ------------------------------[LITERAL]--------------------------------*/
+
 LiteralExpr::LiteralExpr(std::unique_ptr<Expression> expr) :
     value(std::move(expr)) {}
 
@@ -22,6 +24,8 @@ std::variant<const Expression*, Token> LiteralExpr::get_value() const {
     }
 }
 
+/* ------------------------------[UNARY]--------------------------------*/
+
 UnaryExpr::UnaryExpr(UnaryOp unary_op, std::unique_ptr<Expression> right) :
     op_type(unary_op), right(std::move(right)) {}
 
@@ -36,6 +40,8 @@ void UnaryExpr::accept(ParserPrinter& visitor) const {
 const Expression* UnaryExpr::get_right() const {
     return right.get();
 }
+
+/* ------------------------------[BINARY]--------------------------------*/
 
 BinaryExpr::BinaryExpr(
         std::unique_ptr<Expression> left,
@@ -59,6 +65,8 @@ const Expression* BinaryExpr::get_right() const {
     return right.get();
 }
 
+/* ------------------------------[CALL]--------------------------------*/
+
 CallExpr::CallExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args) : func_name(std::move(name)), args(std::move(args)) {}
 
 const Expression* CallExpr::get_func_name() const {
@@ -77,6 +85,8 @@ const std::vector<const Expression*> CallExpr::get_args() const {
 void CallExpr::accept(ParserPrinter& visitor) const {
     visitor.visit(*this);
 }
+
+/* ------------------------------[BINDFRT]--------------------------------*/
 
 BindFrtExpr::BindFrtExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args) : func_name(std::move(name)), args(std::move(args)) {}
 

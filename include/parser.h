@@ -57,7 +57,6 @@ class Parser {
 
         ExprPtr parse_bind_front();
         ExprPtr parse_decorator();
-
         ExprPtr parse_identifier();
         TypePtr parse_type();
         TypePtr parse_var_type();

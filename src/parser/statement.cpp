@@ -4,18 +4,27 @@ std::string Statement::indent_str(int amount) {
     return std::string(amount * 2, ' ');
 }
 
+/* ------------------------------[FOR LOOP]--------------------------------*/
+
 ForLoopStatement::ForLoopStatement(
         std::unique_ptr<ForLoopArgs> args,
         std::unique_ptr<Block> body,
-        std::string on_iter_call) :
+        std::unique_ptr<Expression> on_iter_call) :
     args(std::move(args)),
     body(std::move(body)),
-    on_iter_call(on_iter_call) {}
+    on_iter_call(std::move(on_iter_call)) {}
 
-//void ForLoopStatement::print(std::ostream& os, int indent) const {
-//    os << indent_str(indent) << "ForLoopStatement: " << std::endl;
-//    os << indent_str(indent + 1) << "after iter: " << on_iter_call << std::endl; 
-//}
+void ForLoopStatement::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
+}
+
+const ForLoopArgs* ForLoopStatement::get_args() const {return args.get();}
+const Block* ForLoopStatement::get_body() const {return body.get();}
+const Expression* ForLoopStatement::get_on_iter() const {
+    return on_iter_call.get();
+}
+
+/* -----------------------------[WHILE LOOP]-------------------------------*/
 
 WhileLoopStatement::WhileLoopStatement(
         std::unique_ptr<Expression> condition,
@@ -23,12 +32,18 @@ WhileLoopStatement::WhileLoopStatement(
     condition(std::move(condition)),
     body(std::move(body)) {}
 
-//void WhileLoopStatement::print(std::ostream& os, int indent) const {
-//    os << indent_str(indent) << "WhileLoopStatement: " << std::endl;
-//    os << indent_str(indent + 1) << "condition: ";
-//    condition->print(os, indent + 1);
-//    os << std::endl;
-//}
+void WhileLoopStatement::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
+}
+
+const Expression* WhileLoopStatement::get_condition() const {
+    return condition.get();
+}
+const Block* WhileLoopStatement::get_body() const {
+    return body.get();
+};
+
+/* -----------------------------[CONDITIONAL]-------------------------------*/
 
 ConditionalStatement::ConditionalStatement(
         TokenType type,
@@ -48,41 +63,66 @@ ConditionalStatement::ConditionalStatement(
     condition(std::move(condition)),
     body(std::move(body)) {}
 
-//void ConditionalStatement::print(std::ostream& os, int indent) const {
-//    os << indent_str(indent) << "ConditionalStatement: " << type << std::endl;
-//    os << indent_str(indent + 1) << "condition: ";
-//    condition->print(os, indent + 1);
-//    os << indent_str(indent) << "Else: " << std::endl;
-//    else_st->print(os, indent + 1);
-//    os << std::endl;
-//}
+void ConditionalStatement::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
+}
+
+TokenType ConditionalStatement::get_type() const {return type;}
+
+const Expression* ConditionalStatement::get_condition() const {
+    return condition.get();
+}
+
+const Block* ConditionalStatement::get_body() const {
+    return body.get();
+}
+
+const Statement* ConditionalStatement::get_else_st() const {
+    return else_st.get();
+}
+
+/* -------------------------------[ELSE]---------------------------------*/
 
 ElseStatement::ElseStatement(
         std::unique_ptr<Block> body) :
     body(std::move(body)) {}
 
+void ElseStatement::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
+}
 
-//void ElseStatement::print(std::ostream& os, int indent) const {
-//    os << indent_str(indent) << "ElseStatement:" << std::endl;
-//}
+const Block* ElseStatement::get_body() const {
+    return body.get();
+}
+
+/* -------------------------------[RET]----------------------------------*/
 
 RetStatement::RetStatement(
         std::unique_ptr<Expression> retval) :
     retval(std::move(retval)) {}
 
-//void RetStatement::print(std::ostream& os, int indent) const {
-//    os << indent_str(indent) << "Ret:" << std::endl;
-//    retval->print(os, indent + 1);
-//}
+void RetStatement::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
+}
+
+const Expression* RetStatement::get_retval() const {
+    return retval.get();
+}
+
+/* -------------------------------[CALL]---------------------------------*/
 
 CallStatement::CallStatement(std::unique_ptr<Expression> call) :
     call(std::move(call)) {}
 
+void CallStatement::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
+}
 
-//void CallStatement::print(std::ostream& os, int indent) const {
-//    os << indent_str(indent) << "Call:" << std::endl;
-//    call->print(os, indent + 1);
-//}
+const Expression* CallStatement::get_call() const {
+    return call.get();
+}
+
+/* ------------------------------[ASSIGN]--------------------------------*/
 
 AssignStatement::AssignStatement(
         std::unique_ptr<Expression> value,
@@ -92,7 +132,11 @@ AssignStatement::AssignStatement(
     type(std::move(type)),
     identifier(identifier) {}
 
-//void AssignStatement::print(std::ostream& os, int indent) const {
-//    os << indent_str(indent) << "Assign: to " << identifier << std::endl;
-//    value->print(os, indent + 1);
-//}
+void AssignStatement::accept(ParserPrinter& visitor) const {
+    visitor.visit(*this);
+}
+
+const Expression* AssignStatement::get_value() const {return value.get();}
+const Type* AssignStatement::get_type() const {return type.get();}
+const std::string AssignStatement::get_identifier() const {return identifier;}
+

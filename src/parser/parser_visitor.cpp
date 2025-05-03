@@ -77,3 +77,51 @@ void ParserPrinter::visit(const BindFrtExpr& expr) {
     }
     decrease_indent();
 }
+
+
+void ParserPrinter::visit(const ForLoopStatement& stmt) {
+    os << indent_str() << "ForLoop:" << stmt.get_args();
+    os << "->";
+    stmt.get_on_iter()->accept(*this);
+    os << std::endl;
+
+    increase_indent();
+    stmt.get_body()->accept(*this);
+    decrease_indent();
+}
+
+void ParserPrinter::visit(const WhileLoopStatement& stmt) {
+    os << indent_str() << "WhileLoop:" << stmt.get_condition();
+    os << std::endl;
+
+    increase_indent();
+    stmt.get_body()->accept(*this);
+    decrease_indent();
+}
+
+void ParserPrinter::visit(const ConditionalStatement& stmt) {
+    os << indent_str() << "Conditional: " << stmt.get_type() << std::endl;
+
+    increase_indent();
+    stmt.get_body()->accept(*this);
+    decrease_indent();
+}
+void ParserPrinter::visit(const ElseStatement& stmt) {
+    os << indent_str() << "Else: " << std::endl;
+
+    increase_indent();
+    stmt.get_body()->accept(*this);
+    decrease_indent();
+}
+void ParserPrinter::visit(const RetStatement& stmt) {
+    os << indent_str() << "Ret: " << stmt.get_retval() << std::endl;
+}
+
+void ParserPrinter::visit(const CallStatement& stmt) {
+    os << indent_str() << "Call: " << stmt.get_call() << std::endl;
+}
+void ParserPrinter::visit(const AssignStatement& stmt) {
+    os << indent_str() << "Assign: " << stmt.get_identifier();
+    os << " of ";
+    stmt.get_type()->accept(*this);
+}

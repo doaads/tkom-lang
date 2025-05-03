@@ -25,6 +25,7 @@ class LiteralExpr : public Expression {
     public:
         LiteralExpr(std::unique_ptr<Expression> expr);
         LiteralExpr(Token token);
+
         void accept(ParserPrinter& visitor) const override;
 
         std::variant<const Expression*, Token> get_value() const;
