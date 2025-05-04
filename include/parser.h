@@ -5,6 +5,7 @@
 #include "program.h"
 #include "token.h"
 #include "tokens.h"
+#include "type.h"
 #include "expression.h"
 #include "statement.h"
 #include "block.h"
@@ -23,11 +24,12 @@ using ProgramPtr = std::unique_ptr<Program>;
 
 class Parser {
     private:
+        bool verbose;
         ParserPrinter printer;
         std::shared_ptr<Lexer> lexer;
         Token current_token;
     public:
-        Parser(std::shared_ptr<Lexer> lexer);
+        Parser(std::shared_ptr<Lexer> lexer, bool verbose=false);
 
         ProgramPtr parse();
         FuncPtr parse_func_def();
@@ -70,7 +72,6 @@ class Parser {
         bool is_next_token(TokenType type);
         bool was_last_token(TokenType type);
         bool is_token(TokenType type) const;
-        std::optional<BaseType> translate_token_to_type(TokenType type) const;
 
         void next_token();
 };

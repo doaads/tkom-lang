@@ -1,8 +1,8 @@
 #include "parser.h"
 #include "operators.h"
 
-Parser::Parser(std::shared_ptr<Lexer> lexer) :
-    printer(std::cout), lexer(std::move(lexer)) {}
+Parser::Parser(std::shared_ptr<Lexer> lexer, bool verbose) :
+    verbose(verbose), printer(std::cout), lexer(std::move(lexer)) {}
 
 ProgramPtr Parser::parse() {
     std::vector<std::unique_ptr<Function>> functions;
@@ -24,6 +24,8 @@ FuncPtr Parser::parse_func_def() {
 
     BlockPtr body = parse_block();
     if (!body) throw std::runtime_error("Expected block");
+
+    body->accept(printer);
 
     return std::make_unique<Function>(std::move(signature), std::move(body));
 }
@@ -163,13 +165,11 @@ StatementPtr Parser::parse_for_loop() {
     if (!is_next_token(TokenType::T_CALL))
         throw std::runtime_error("Expected '->'");
 
-    // TODO: Edit this to accept bindfront here
+    next_token();
     ExprPtr on_iter = parse_bind_front();
     if (!on_iter) throw std::runtime_error("Expected bind front or identifier");
 
-    std::string identifier = current_token.get_value<std::string>();
-
-    if (!is_next_token(TokenType::T_SEMICOLON))
+    if (!is_token(TokenType::T_SEMICOLON))
         throw std::runtime_error("Expected ;");
 
     return std::make_unique<ForLoopStatement>(
@@ -316,7 +316,6 @@ ExprPtr Parser::parse_condition() {
 
 ExprPtr Parser::parse_expression() {
     ExprPtr expr = parse_or_expression();
-    expr->accept(printer);
     return expr;
 }
 
@@ -472,6 +471,12 @@ ExprPtr Parser::parse_factor() {
         return expr;
     }
 
+    if (is_token(TokenType::T_IDENTIFIER)) {
+        ExprPtr expr = std::make_unique<IdentifierExpr>(current_token.get_value<std::string>());
+        next_token();
+        return expr;
+    }
+
     ExprPtr factor = parse_func_call_or_parens();
     if (factor) return factor;
 
@@ -563,7 +568,7 @@ ExprPtr Parser::parse_decorator() {
         return nullptr;
 
     std::string value = current_token.get_value<std::string>();
-    ExprPtr left = std::make_unique<LiteralExpr>(current_token);
+    ExprPtr left = std::make_unique<IdentifierExpr>(value);
 
     if (!is_next_token(TokenType::T_DECORATE))
         return left;
@@ -572,8 +577,9 @@ ExprPtr Parser::parse_decorator() {
         throw std::runtime_error("Expected identifier");
 
     value = current_token.get_value<std::string>();
-    ExprPtr right = std::make_unique<LiteralExpr>(current_token);
+    ExprPtr right = std::make_unique<IdentifierExpr>(value);
 
+    next_token();
     return std::make_unique<BinaryExpr>(std::move(left), BinaryOp::DECORATE, std::move(right));
 
 }
@@ -611,19 +617,21 @@ TypePtr Parser::parse_type() {
 }
 
 TypePtr Parser::parse_var_type() {
-    TokenType type = current_token.get_type();
-    if (!is_type(type)) return nullptr;
-
     bool mut = false;
-    BaseType opt_type = *translate_token_to_type(current_token.get_type());
-
-    next_token();
     if (is_token(TokenType::T_MUT)) {
         mut = true;
         next_token();
     }
 
-    return std::make_unique<VarType>(opt_type, mut);
+    std::optional<BaseType> type;
+
+    if (!(type = translate_token_to_type(current_token.get_type()))) {
+        if (mut) throw std::runtime_error("Expected type");
+        return nullptr;
+    }
+
+    next_token();
+    return std::make_unique<VarType>(*type, mut);
 }
 
 TypePtr Parser::parse_func_type() {
@@ -631,11 +639,12 @@ TypePtr Parser::parse_func_type() {
         return nullptr;
 
     next_token();
-    std::optional<BaseType> ret_type = translate_token_to_type(current_token.get_type());
+    TypePtr ret_type = parse_type();
     if (!ret_type && !is_token(TokenType::T_VOID_TYPE))
         throw std::runtime_error("Expected type");
+    // if ret_type = nullptr we have a void func
 
-    if (!is_next_token(TokenType::T_FUNC_SIGN))
+    if (!is_token(TokenType::T_FUNC_SIGN))
         throw std::runtime_error("Expected '::'");
 
     std::vector<std::unique_ptr<Type>> params;
@@ -650,7 +659,7 @@ TypePtr Parser::parse_func_type() {
 
     next_token();
 
-    return std::make_unique<FuncType>(ret_type, std::move(params));
+    return std::make_unique<FuncType>(std::move(ret_type), std::move(params));
 }
 
 
@@ -671,7 +680,6 @@ bool Parser::is_factor(TokenType type) const {
         case TokenType::T_INT: return true;
         case TokenType::T_FLT: return true;
         case TokenType::T_BOOL: return true;
-        case TokenType::T_IDENTIFIER: return true;
         case TokenType::T_STRING: return true;
         default: return false;
     }
@@ -704,16 +712,6 @@ bool Parser::was_last_token(TokenType type) {
 
 bool Parser::is_token(TokenType type) const {
     return current_token.get_type() == type;
-}
-
-std::optional<BaseType> Parser::translate_token_to_type(TokenType type) const {
-    switch(type) {
-        case TokenType::T_INT_TYPE: return BaseType::INT;
-        case TokenType::T_FLT_TYPE: return BaseType::INT;
-        case TokenType::T_STRING_TYPE: return BaseType::STRING;
-        case TokenType::T_BOOL_TYPE: return BaseType::BOOL;
-        default: return std::nullopt;
-    }
 }
 
 void Parser::next_token() {

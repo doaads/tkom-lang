@@ -1,14 +1,15 @@
 #pragma once
 
-#include "expression.h"
-#include "tokens.h"
-#include "type.h"
-#include "block.h"
 #include <memory>
+#include <string>
+#include <variant>
 
+class Expression;
 class Block;
-struct ForLoopArgs;
 class ParserPrinter;
+class Type;
+struct ForLoopArgs;
+enum class TokenType;
 
 using ExprPtr = std::unique_ptr<Expression>;
 using BlockPtr = std::unique_ptr<Block>;
@@ -117,7 +118,7 @@ class AssignStatement : public Statement {
     private:
         std::unique_ptr<Expression> value;
         std::unique_ptr<Type> type;
-        std::string identifier;
+        std::unique_ptr<Expression> identifier;
     public:
         AssignStatement(
                 std::unique_ptr<Expression> value,
@@ -128,7 +129,7 @@ class AssignStatement : public Statement {
 
         const Expression* get_value() const;
         const Type* get_type() const;
-        const std::string get_identifier() const;
+        const Expression* get_identifier() const;
 };
 
 struct ForLoopArgs {

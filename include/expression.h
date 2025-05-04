@@ -1,34 +1,49 @@
 #pragma once
 
-#include "operators.h"
-#include "parser_visitor.h"
-#include "token.h"
 #include <memory>
 #include <vector>
+#include <variant>
 
+#include "token.h"
+#include "operators.h"
 
-class FunctionCall;
+enum class BaseType;
 class ParserPrinter;
 
 class Expression {
-    protected:
-        static std::string indent_str(int amount);
     public:
         virtual ~Expression() = default;
         virtual void accept(ParserPrinter& visitor) const = 0;
 };
 
-
+using ValueType = std::variant<std::monostate, std::string, int, double, bool>;
 class LiteralExpr : public Expression {
     private:
-        std::variant<std::unique_ptr<Expression>, Token> value;
+        BaseType type;
+        ValueType value;
+        Position position;
     public:
-        LiteralExpr(std::unique_ptr<Expression> expr);
+        template<typename T>
+        T get_value() const {
+            if (const T* pval = std::get_if<T>(value)) {
+                return *pval;
+            } else {
+                throw std::runtime_error("Unable to get LiteralExpr value");
+            }
+        }
         LiteralExpr(Token token);
+        void accept(ParserPrinter& visitor) const override;
+        std::string get_value_string() const;
+};
+
+class IdentifierExpr : public Expression {
+    private:
+        std::string identifier;
+    public:
+        IdentifierExpr(std::string identifier);
 
         void accept(ParserPrinter& visitor) const override;
-
-        std::variant<const Expression*, Token> get_value() const;
+        std::string get_identifier() const;
 };
 
 

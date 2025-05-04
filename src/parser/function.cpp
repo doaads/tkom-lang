@@ -1,5 +1,7 @@
 #include "function.h"
-
+#include "statement.h"
+#include "block.h"
+#include "type.h"
 
 FuncSignature::FuncSignature(
         std::unique_ptr<Type> ret,

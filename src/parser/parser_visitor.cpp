@@ -1,4 +1,8 @@
 #include "parser_visitor.h"
+#include "type.h"
+#include "statement.h"
+#include "expression.h"
+#include "block.h"
 
 std::string ParserPrinter::indent_str() const {
     return std::string(indent * 2, ' ');
@@ -8,19 +12,17 @@ void ParserPrinter::increase_indent() { ++indent; }
 void ParserPrinter::decrease_indent() { --indent; }
 
 void ParserPrinter::visit(const LiteralExpr& expr) {
-    os << indent_str() << "LiteralExpr: ";
-    std::variant<const Expression*, Token> val = expr.get_value();
-    if (val.index()) {
-        os << std::get<Token>(val) << std::endl;
-    } else {
-        increase_indent();
-        std::get<const Expression*>(val)->accept(*this);
-        decrease_indent();
-    }
+    os << indent_str() << "└[LiteralExpr \033[1m";
+    os << expr.get_value_string() << "\033[0m]" << std::endl;
+}
+
+void ParserPrinter::visit(const IdentifierExpr& expr) {
+    os << indent_str() << "└[Identifier \033[1m";
+    os << expr.get_identifier() << "\033[0m]" << std::endl;
 }
 
 void ParserPrinter::visit(const BinaryExpr& expr) {
-    os << indent_str() << "BinaryExpr: " << expr.get_operator() << "\n";
+    os << indent_str() << "└[\033[1;32mBinaryExpr " << expr.get_operator() << "\033[0m]\n";
     increase_indent();
     expr.get_left()->accept(*this);
     expr.get_right()->accept(*this);
@@ -28,70 +30,35 @@ void ParserPrinter::visit(const BinaryExpr& expr) {
 }
 
 void ParserPrinter::visit(const UnaryExpr& expr) {
-    os << indent_str() << "UnaryExpr: " << expr.get_operator() << "\n";
+    os << indent_str() << "└[\033[1;32mUnaryExpr\033[0m] " << expr.get_operator() << "\n";
     increase_indent();
     expr.get_right()->accept(*this);
     decrease_indent();
 }
 
 void ParserPrinter::visit(const CallExpr& expr) {
-    os << indent_str() << "CallExpr: " << std::endl;
-    increase_indent();
-    os << indent_str() << "Func:" << std::endl;
+    os << indent_str() << "└[\033[1;32mCallExpr\033[0m] " << std::endl;
     increase_indent();
     expr.get_func_name()->accept(*this);
-    decrease_indent();
-    os << indent_str() << "Args:" << std::endl;
-    std::vector<const Expression*> args = expr.get_args();
-    increase_indent();
-    if (args.empty()) {
-        os << indent_str() << "(none)\n";
-    } else {
-        for (const auto& arg : args) {
-            if (arg) {
-                arg->accept(*this);
-            } else {
-                os << "null\n";
-            }
-        }
-    }
     decrease_indent();
 }
 
 void ParserPrinter::visit(const BindFrtExpr& expr) {
-    os << indent_str() << "BindFrtExpr: " << std::endl;
-    increase_indent();
+    os << indent_str() << "└[\033[1;32m[BindFrtExpr\033[0m] " << std::endl;
     expr.get_func_name()->accept(*this);
-    std::vector<const Expression*> args = expr.get_args();
-    increase_indent();
-    if (args.empty()) {
-        os << indent_str() << "(none)\n";
-    } else {
-        for (const auto& arg : args) {
-            if (arg) {
-                arg->accept(*this);
-            } else {
-                os << "null\n";
-            }
-        }
-    }
-    decrease_indent();
 }
 
 
 void ParserPrinter::visit(const ForLoopStatement& stmt) {
-    os << indent_str() << "ForLoop:" << stmt.get_args();
-    os << "->";
+    os << indent_str() << "[\033[1;36mForLoop\033[0m]" << std::endl;
     stmt.get_on_iter()->accept(*this);
-    os << std::endl;
-
     increase_indent();
     stmt.get_body()->accept(*this);
     decrease_indent();
 }
 
 void ParserPrinter::visit(const WhileLoopStatement& stmt) {
-    os << indent_str() << "WhileLoop:" << stmt.get_condition();
+    os << indent_str() << "[\033[1;36mWhileLoop\033[0m] ";
     os << std::endl;
 
     increase_indent();
@@ -100,28 +67,69 @@ void ParserPrinter::visit(const WhileLoopStatement& stmt) {
 }
 
 void ParserPrinter::visit(const ConditionalStatement& stmt) {
-    os << indent_str() << "Conditional: " << stmt.get_type() << std::endl;
+    os << indent_str() << "[\033[1;36mConditional\033[0m] " << stmt.get_type() << std::endl;
 
     increase_indent();
     stmt.get_body()->accept(*this);
     decrease_indent();
 }
 void ParserPrinter::visit(const ElseStatement& stmt) {
-    os << indent_str() << "Else: " << std::endl;
+    os << indent_str() << "[\033[1;36mElse\033[0m] " << std::endl;
 
     increase_indent();
     stmt.get_body()->accept(*this);
     decrease_indent();
 }
 void ParserPrinter::visit(const RetStatement& stmt) {
-    os << indent_str() << "Ret: " << stmt.get_retval() << std::endl;
+    os << indent_str() << "[\033[1;36mRet\033[0m] " << stmt.get_retval() << std::endl;
 }
 
 void ParserPrinter::visit(const CallStatement& stmt) {
-    os << indent_str() << "Call: " << stmt.get_call() << std::endl;
+    stmt.get_call()->accept(*this);
 }
 void ParserPrinter::visit(const AssignStatement& stmt) {
-    os << indent_str() << "Assign: " << stmt.get_identifier();
-    os << " of ";
+    os << indent_str() << "[\033[1;36mAssign\033[0m] ";
+    os << "\033[1;31m";
     stmt.get_type()->accept(*this);
+    os << "\033[0m" << std::endl;
+    stmt.get_identifier()->accept(*this);
+    increase_indent();
+    stmt.get_value()->accept(*this);
+    decrease_indent();
 }
+
+void ParserPrinter::visit(const VarType& type) {
+    os << (type.get_mut() ? "mut " : "");
+    os << type.get_type();
+}
+
+void ParserPrinter::visit(const Block& block) {
+    increase_indent();
+    for (auto& stmt : block.get_statements()) {
+        stmt->accept(*this);
+    }
+    decrease_indent();
+}
+
+void ParserPrinter::visit(const FuncType& type) {
+    os << "[";
+    const Type* ret_type = type.get_ret_type();
+    if (!ret_type) {
+        os << "void";
+    } else {
+        ret_type->accept(*this);
+    }
+
+    os << "::";
+    bool first_done = false;
+    for (auto& param : type.get_params()) {
+        if (first_done) {
+            os << ",";
+        } else {
+            first_done = true;
+        }
+        param->accept(*this);
+    }
+    os << "]";
+}
+

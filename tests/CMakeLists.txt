@@ -36,6 +36,7 @@ target_link_libraries(parser_test PRIVATE
     lexer
     parser
     parser_visitor
+    block
     tokenizer
     token
     input

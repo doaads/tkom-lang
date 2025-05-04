@@ -1,10 +1,11 @@
 #pragma once
 
-#include "parser_visitor.h"
+#include "tokens.h"
 #include <memory>
 #include <optional>
 #include <vector>
 
+class ParserPrinter;
 
 enum class BaseType {
     INT,
@@ -12,6 +13,11 @@ enum class BaseType {
     STRING,
     BOOL,
 };
+
+std::optional<BaseType> translate_token_to_type(TokenType type);
+std::optional<BaseType> get_literal_token_type(TokenType type);
+std::ostream& operator<<(std::ostream& os, const BaseType& type);
+
 
 class Type {
     public:
@@ -27,15 +33,21 @@ class VarType : public Type {
     public:
         VarType(BaseType type, bool mut);
         void accept(ParserPrinter& visitor) const override;
+        
+        BaseType get_type() const;
+        bool get_mut() const;
 
 };
 
 class FuncType : public Type {
     private:
-        std::optional<BaseType> ret_type;
+        std::unique_ptr<Type> ret_type;
         std::vector<std::unique_ptr<Type>> params;
     public:
-        FuncType(std::optional<BaseType> ret_type, std::vector<std::unique_ptr<Type>> params);
+        FuncType(std::unique_ptr<Type> ret_type, std::vector<std::unique_ptr<Type>> params);
         static const bool is_func = true;
         void accept(ParserPrinter& visitor) const override;
+
+        const Type* get_ret_type() const;
+        const std::vector<const Type*> get_params() const;
 };

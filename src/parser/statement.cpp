@@ -1,4 +1,9 @@
 #include "statement.h"
+#include "expression.h"
+#include "block.h"
+#include "parser_visitor.h"
+#include "type.h"
+#include "tokens.h"
 
 std::string Statement::indent_str(int amount) {
     return std::string(amount * 2, ' ');
@@ -130,7 +135,7 @@ AssignStatement::AssignStatement(
         std::string identifier) :
     value(std::move(value)),
     type(std::move(type)),
-    identifier(identifier) {}
+    identifier(std::make_unique<IdentifierExpr>(identifier)) {}
 
 void AssignStatement::accept(ParserPrinter& visitor) const {
     visitor.visit(*this);
@@ -138,5 +143,5 @@ void AssignStatement::accept(ParserPrinter& visitor) const {
 
 const Expression* AssignStatement::get_value() const {return value.get();}
 const Type* AssignStatement::get_type() const {return type.get();}
-const std::string AssignStatement::get_identifier() const {return identifier;}
+const Expression* AssignStatement::get_identifier() const {return identifier.get();}
 

@@ -11,6 +11,7 @@ class UnaryExpr;
 class BinaryExpr;
 class CallExpr;
 class BindFrtExpr;
+class IdentifierExpr;
 
 class ForLoopStatement;
 class WhileLoopStatement;
@@ -20,6 +21,7 @@ class RetStatement;
 class CallStatement;
 class AssignStatement;
 
+class Type;
 class VarType;
 class FuncType;
 class Block;
@@ -29,6 +31,7 @@ public:
     virtual ~ParserVisitor() = default;
 
     virtual void visit(const LiteralExpr& expr) = 0;
+    virtual void visit(const IdentifierExpr& expr) = 0;
     virtual void visit(const UnaryExpr& expr) = 0;
     virtual void visit(const BinaryExpr& expr) = 0;
     virtual void visit(const CallExpr& expr) = 0;
@@ -60,6 +63,7 @@ class ParserPrinter : public ParserVisitor {
         ~ParserPrinter() = default;
 
         void visit(const LiteralExpr& expr) override;
+        void visit(const IdentifierExpr& expr) override;
         void visit(const UnaryExpr& expr) override;
         void visit(const BinaryExpr& expr) override;
         void visit(const CallExpr& expr) override;

@@ -1,28 +1,46 @@
 #include "expression.h"
+#include "parser_visitor.h"
+#include "type.h"
 
-std::string Expression::indent_str(int amount) {
-    return std::string(amount * 2, ' ');
-}
+#include <string>
 
 /* ------------------------------[LITERAL]--------------------------------*/
 
-LiteralExpr::LiteralExpr(std::unique_ptr<Expression> expr) :
-    value(std::move(expr)) {}
-
 LiteralExpr::LiteralExpr(Token token) :
-    value(token) {}
+    value(token.get_value()) {
+        std::optional<BaseType> type = get_literal_token_type(token.get_type());
+        if (!type) throw std::runtime_error("Invalid type passed on to LiteralExpr");
+        LiteralExpr::type = *type;
+    }
 
 void LiteralExpr::accept(ParserPrinter& visitor) const {
     visitor.visit(*this);
 }
 
-std::variant<const Expression*, Token> LiteralExpr::get_value() const {
-    if (value.index()) {
-        return std::get<Token>(value);
-    } else {
-        return std::get<std::unique_ptr<Expression>>(value).get();
-    }
+std::string LiteralExpr::get_value_string() const {
+    return std::visit([](auto&& val) -> std::string {
+        using T = std::decay_t<decltype(val)>;
+        if constexpr (std::is_same_v<T, std::monostate>) {
+            return "null";
+        } else if constexpr (std::is_same_v<T, std::string>) {
+            return val;
+        } else if constexpr (std::is_same_v<T, bool>) {
+            return val ? "true" : "false";
+        } else if constexpr (std::is_arithmetic_v<T>){
+            return std::to_string(val);
+        } else {
+            throw std::runtime_error("Invalid type");
+        }
+    }, value);
 }
+
+/* ----------------------------[IDENTIFIER]--------------------------------*/
+
+IdentifierExpr::IdentifierExpr(std::string identifier) : identifier(identifier) {}
+
+std::string IdentifierExpr::get_identifier() const {return identifier;}
+void IdentifierExpr::accept(ParserPrinter& visitor) const {visitor.visit(*this);}
+
 
 /* ------------------------------[UNARY]--------------------------------*/
 
