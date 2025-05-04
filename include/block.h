@@ -5,6 +5,7 @@
 
 class Statement;
 class ParserPrinter;
+class ParserVisitor;
 
 class Block {
     private:
@@ -13,7 +14,7 @@ class Block {
         Block(std::vector<std::unique_ptr<Statement>> statements);
         ~Block() = default;
 
-        void accept(ParserPrinter& visitor) const;
+        void accept(ParserVisitor& visitor) const;
 
         const std::vector<const Statement*> get_statements() const;
 };

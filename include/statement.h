@@ -6,7 +6,7 @@
 
 class Expression;
 class Block;
-class ParserPrinter;
+class ParserVisitor;
 class Type;
 struct ForLoopArgs;
 enum class TokenType;
@@ -20,7 +20,7 @@ class Statement {
     public:
         virtual ~Statement() = default;
 
-        virtual void accept(ParserPrinter& visitor) const = 0;
+        virtual void accept(ParserVisitor& visitor) const = 0;
 };
 
 class ForLoopStatement : public Statement {
@@ -34,7 +34,7 @@ class ForLoopStatement : public Statement {
                 std::unique_ptr<Block> body,
                 std::unique_ptr<Expression> on_iter_call);
 
-        void accept(ParserPrinter& visitor) const override;
+        void accept(ParserVisitor& visitor) const override;
 
         const ForLoopArgs* get_args() const;
         const Block* get_body() const;
@@ -49,7 +49,7 @@ class WhileLoopStatement : public Statement {
     public:
         WhileLoopStatement(std::unique_ptr<Expression> condition, std::unique_ptr<Block> body);
 
-        void accept(ParserPrinter& visitor) const override;
+        void accept(ParserVisitor& visitor) const override;
         
         const Expression* get_condition() const;
         const Block* get_body() const;
@@ -72,7 +72,7 @@ class ConditionalStatement : public Statement {
                 std::unique_ptr<Expression> condition,
                 std::unique_ptr<Block> body);
 
-        void accept(ParserPrinter& visitor) const override;
+        void accept(ParserVisitor& visitor) const override;
 
         TokenType get_type() const;
         const Expression* get_condition() const;
@@ -87,7 +87,7 @@ class ElseStatement : public Statement {
     public:
         ElseStatement(std::unique_ptr<Block> body);
 
-        void accept(ParserPrinter& visitor) const override;
+        void accept(ParserVisitor& visitor) const override;
 
         const Block* get_body() const;
 };
@@ -98,7 +98,7 @@ class RetStatement : public Statement {
     public:
         RetStatement(std::unique_ptr<Expression> retval);
 
-        void accept(ParserPrinter& visitor) const override;
+        void accept(ParserVisitor& visitor) const override;
 
         const Expression* get_retval() const;
 };
@@ -109,7 +109,7 @@ class CallStatement : public Statement {
     public:
         CallStatement(std::unique_ptr<Expression> call);
 
-        void accept(ParserPrinter& visitor) const override;
+        void accept(ParserVisitor& visitor) const override;
 
         const Expression* get_call() const;
 };
@@ -125,7 +125,7 @@ class AssignStatement : public Statement {
                 std::unique_ptr<Type> type,
                 std::string identifier);
 
-        void accept(ParserPrinter& visitor) const override;
+        void accept(ParserVisitor& visitor) const override;
 
         const Expression* get_value() const;
         const Type* get_type() const;

@@ -36,7 +36,7 @@ VarType::VarType(BaseType type, bool mut) : type(type), mut(mut) {}
 
 BaseType VarType::get_type() const {return type;}
 bool VarType::get_mut() const {return mut;}
-void VarType::accept(ParserPrinter& visitor) const {visitor.visit(*this);}
+void VarType::accept(ParserVisitor& visitor) const {visitor.visit(*this);}
 
 FuncType::FuncType(
         std::unique_ptr<Type> ret_type,
@@ -55,4 +55,4 @@ const std::vector<const Type*> FuncType::get_params() const {
     return result;
 }
 
-void FuncType::accept(ParserPrinter& visitor) const {visitor.visit(*this);}
+void FuncType::accept(ParserVisitor& visitor) const {visitor.visit(*this);}

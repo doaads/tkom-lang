@@ -25,11 +25,12 @@ using ProgramPtr = std::unique_ptr<Program>;
 class Parser {
     private:
         bool verbose;
-        ParserPrinter printer;
+        std::unique_ptr<ParserVisitor> visitor;
         std::shared_ptr<Lexer> lexer;
         Token current_token;
     public:
         Parser(std::shared_ptr<Lexer> lexer, bool verbose=false);
+        Parser(std::shared_ptr<Lexer> lexer, std::unique_ptr<ParserVisitor> visitor);
 
         ProgramPtr parse();
         FuncPtr parse_func_def();

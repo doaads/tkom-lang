@@ -8,12 +8,12 @@
 #include "operators.h"
 
 enum class BaseType;
-class ParserPrinter;
+class ParserVisitor;
 
 class Expression {
     public:
         virtual ~Expression() = default;
-        virtual void accept(ParserPrinter& visitor) const = 0;
+        virtual void accept(ParserVisitor& visitor) const = 0;
 };
 
 using ValueType = std::variant<std::monostate, std::string, int, double, bool>;
@@ -32,7 +32,7 @@ class LiteralExpr : public Expression {
             }
         }
         LiteralExpr(Token token);
-        void accept(ParserPrinter& visitor) const override;
+        void accept(ParserVisitor& visitor) const override;
         std::string get_value_string() const;
 };
 
@@ -42,7 +42,7 @@ class IdentifierExpr : public Expression {
     public:
         IdentifierExpr(std::string identifier);
 
-        void accept(ParserPrinter& visitor) const override;
+        void accept(ParserVisitor& visitor) const override;
         std::string get_identifier() const;
 };
 
@@ -54,7 +54,7 @@ class UnaryExpr : public Expression {
     public:
         UnaryExpr(UnaryOp unary_op, std::unique_ptr<Expression> right);
         UnaryOp get_operator() const;
-        void accept(ParserPrinter& visitor) const;
+        void accept(ParserVisitor& visitor) const;
 
         const Expression* get_right() const;
 };
@@ -67,7 +67,7 @@ class BinaryExpr : public Expression {
         std::unique_ptr<Expression> right;
     public:
         BinaryExpr(std::unique_ptr<Expression> left, BinaryOp op, std::unique_ptr<Expression> right);
-        void accept(ParserPrinter& visitor) const;
+        void accept(ParserVisitor& visitor) const;
 
         const Expression* get_left() const;
         BinaryOp get_operator() const;
@@ -81,7 +81,7 @@ class CallExpr : public Expression {
         std::vector<std::unique_ptr<Expression>> args;
     public:
         CallExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args);
-        void accept(ParserPrinter& visitor) const;
+        void accept(ParserVisitor& visitor) const;
 
         const Expression* get_func_name() const;
         const std::vector<const Expression*> get_args() const;
@@ -94,7 +94,7 @@ class BindFrtExpr : public Expression {
         std::vector<std::unique_ptr<Expression>> args;
     public:
         BindFrtExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args);
-        void accept(ParserPrinter& visitor) const;
+        void accept(ParserVisitor& visitor) const;
 
         const Expression* get_func_name() const;
         const std::vector<const Expression*> get_args() const;

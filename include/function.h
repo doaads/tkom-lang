@@ -5,15 +5,21 @@
 #include "variable.h"
 #include <memory>
 
+class ParserVisitor;
+
 class FuncSignature {
     std::unique_ptr<Type> ret_type;
-    std::vector<std::unique_ptr<HighOrder>> args;
+    std::vector<std::unique_ptr<Variable>> args;
     std::string name;
     public:
         FuncSignature(
             std::unique_ptr<Type> ret,
-            std::vector<std::unique_ptr<HighOrder>> args,
+            std::vector<std::unique_ptr<Variable>> args,
             std::string name);
+        void accept(ParserVisitor& visitor) const;
+        const Type* get_type() const;
+        const std::vector<const Variable*> get_params() const;
+        std::string get_name() const;
 };
 
 class Function {
@@ -24,4 +30,8 @@ class Function {
         Function(
                 std::unique_ptr<FuncSignature> signature,
                 std::unique_ptr<Block> body);
+        void accept(ParserVisitor& visitor) const;
+        const FuncSignature* get_signature() const;
+        const Block* get_body() const;
 };
+

@@ -3,23 +3,15 @@
 #include "type.h"
 #include <string>
 
-class HighOrder {
-    public:
-        virtual ~HighOrder() = default;
-        HighOrder() = default;
-};
+class ParserVisitor;
 
-class Variable : public HighOrder {
+class Variable {
     std::unique_ptr<Type> type;
     std::string name;
     public:
         Variable(std::unique_ptr<Type> type, std::string name);
-};
 
-class FuncVar : public HighOrder {
-    std::unique_ptr<Type> type;
-    std::string name;
-    public:
-        FuncVar(std::unique_ptr<Type> type, std::string name);
+        void accept(ParserVisitor& visitor) const;
+        const Type* get_type() const;
 };
 

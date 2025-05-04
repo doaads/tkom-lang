@@ -5,7 +5,7 @@
 #include <optional>
 #include <vector>
 
-class ParserPrinter;
+class ParserVisitor;
 
 enum class BaseType {
     INT,
@@ -23,7 +23,7 @@ class Type {
     public:
         static const bool is_func = false;
         virtual ~Type() = default;
-        virtual void accept(ParserPrinter& visitor) const = 0;
+        virtual void accept(ParserVisitor& visitor) const = 0;
 };
 
 class VarType : public Type {
@@ -32,7 +32,7 @@ class VarType : public Type {
         bool mut = false;
     public:
         VarType(BaseType type, bool mut);
-        void accept(ParserPrinter& visitor) const override;
+        void accept(ParserVisitor& visitor) const override;
         
         BaseType get_type() const;
         bool get_mut() const;
@@ -46,7 +46,7 @@ class FuncType : public Type {
     public:
         FuncType(std::unique_ptr<Type> ret_type, std::vector<std::unique_ptr<Type>> params);
         static const bool is_func = true;
-        void accept(ParserPrinter& visitor) const override;
+        void accept(ParserVisitor& visitor) const override;
 
         const Type* get_ret_type() const;
         const std::vector<const Type*> get_params() const;

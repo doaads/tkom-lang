@@ -26,6 +26,10 @@ class VarType;
 class FuncType;
 class Block;
 
+class Variable;
+class FuncSignature;
+class Function;
+
 class ParserVisitor {
 public:
     virtual ~ParserVisitor() = default;
@@ -48,6 +52,10 @@ public:
     virtual void visit(const Block& block) = 0;
     virtual void visit(const VarType& var) = 0;
     virtual void visit(const FuncType& func) = 0;
+
+    virtual void visit(const Variable& var) = 0;
+    virtual void visit(const FuncSignature& sign) = 0;
+    virtual void visit(const Function& func) = 0;
 };
 
 class ParserPrinter : public ParserVisitor {
@@ -80,4 +88,8 @@ class ParserPrinter : public ParserVisitor {
         void visit(const Block& block) override;
         void visit(const VarType& type) override;
         void visit(const FuncType& type) override;
+
+        void visit(const Variable& var) override;
+        void visit(const FuncSignature& sign) override;
+        void visit(const Function& func) override;
 };

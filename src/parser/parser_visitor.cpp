@@ -1,11 +1,12 @@
 #include "parser_visitor.h"
+#include "function.h"
 #include "type.h"
 #include "statement.h"
 #include "expression.h"
 #include "block.h"
 
 std::string ParserPrinter::indent_str() const {
-    return std::string(indent * 2, ' ');
+    return (std::string("┃") + std::string(indent * 2, ' '));
 }
 
 void ParserPrinter::increase_indent() { ++indent; }
@@ -133,3 +134,41 @@ void ParserPrinter::visit(const FuncType& type) {
     os << "]";
 }
 
+void ParserPrinter::visit(const Variable& var) {
+    var.get_type()->accept(*this);
+}
+
+void ParserPrinter::visit(const FuncSignature& sign) {
+    os << "┏━━━FUNCTION: \033[1;33m";
+    os << sign.get_name() << "\033[0m" << std::endl;
+    os << "┃ TYPE: ";
+    const Type* type = sign.get_type();
+    if (type) {
+        type->accept(*this);
+    } else {
+        os << "void";
+    }
+    os << std::endl;
+    os << "┃ PARAMS: ";
+    bool first = true;
+    for (auto& param : sign.get_params()) {
+        if (!first) {
+            os << ", ";
+        } else {
+            first = false;
+        }
+        param->accept(*this);
+    }
+    os << std::endl;
+}
+
+void ParserPrinter::visit(const Function& func) {
+    func.get_signature()->accept(*this);
+    os << "┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
+    os << std::endl;
+    increase_indent();
+    func.get_body()->accept(*this);
+    decrease_indent();
+    os << "┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
+    os << std::endl;
+}

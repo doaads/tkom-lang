@@ -19,7 +19,7 @@ ForLoopStatement::ForLoopStatement(
     body(std::move(body)),
     on_iter_call(std::move(on_iter_call)) {}
 
-void ForLoopStatement::accept(ParserPrinter& visitor) const {
+void ForLoopStatement::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 
@@ -37,7 +37,7 @@ WhileLoopStatement::WhileLoopStatement(
     condition(std::move(condition)),
     body(std::move(body)) {}
 
-void WhileLoopStatement::accept(ParserPrinter& visitor) const {
+void WhileLoopStatement::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 
@@ -68,7 +68,7 @@ ConditionalStatement::ConditionalStatement(
     condition(std::move(condition)),
     body(std::move(body)) {}
 
-void ConditionalStatement::accept(ParserPrinter& visitor) const {
+void ConditionalStatement::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 
@@ -92,7 +92,7 @@ ElseStatement::ElseStatement(
         std::unique_ptr<Block> body) :
     body(std::move(body)) {}
 
-void ElseStatement::accept(ParserPrinter& visitor) const {
+void ElseStatement::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 
@@ -106,7 +106,7 @@ RetStatement::RetStatement(
         std::unique_ptr<Expression> retval) :
     retval(std::move(retval)) {}
 
-void RetStatement::accept(ParserPrinter& visitor) const {
+void RetStatement::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 
@@ -119,7 +119,7 @@ const Expression* RetStatement::get_retval() const {
 CallStatement::CallStatement(std::unique_ptr<Expression> call) :
     call(std::move(call)) {}
 
-void CallStatement::accept(ParserPrinter& visitor) const {
+void CallStatement::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 
@@ -137,7 +137,7 @@ AssignStatement::AssignStatement(
     type(std::move(type)),
     identifier(std::make_unique<IdentifierExpr>(identifier)) {}
 
-void AssignStatement::accept(ParserPrinter& visitor) const {
+void AssignStatement::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 

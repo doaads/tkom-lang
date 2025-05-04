@@ -2,7 +2,14 @@
 #include "operators.h"
 
 Parser::Parser(std::shared_ptr<Lexer> lexer, bool verbose) :
-    verbose(verbose), printer(std::cout), lexer(std::move(lexer)) {}
+    verbose(verbose), lexer(std::move(lexer)) {
+        visitor = std::make_unique<ParserPrinter>(std::cout);
+    }
+
+Parser::Parser(std::shared_ptr<Lexer> lexer, std::unique_ptr<ParserVisitor> visitor) :
+    verbose(true),  // assume user wanted verbose output if visitor is provided
+    visitor(std::move(visitor)),
+    lexer(std::move(lexer)) {}
 
 ProgramPtr Parser::parse() {
     std::vector<std::unique_ptr<Function>> functions;
@@ -12,6 +19,7 @@ ProgramPtr Parser::parse() {
         function = parse_func_def();
         if (!function) throw std::runtime_error("Expected function def");
 
+        function->accept(*visitor);
         functions.push_back(std::move(function));
     }
 
@@ -25,15 +33,18 @@ FuncPtr Parser::parse_func_def() {
     BlockPtr body = parse_block();
     if (!body) throw std::runtime_error("Expected block");
 
-    body->accept(printer);
 
     return std::make_unique<Function>(std::move(signature), std::move(body));
 }
 
 FuncSignPtr Parser::parse_func_signature() {
     TypePtr ret_type = parse_type();
-    if (!ret_type)
-        return nullptr;
+    if (!ret_type) {
+        if (!is_token(TokenType::T_VOID_TYPE)) {
+            return nullptr;
+        }
+        next_token();
+    }
 
     if (!is_token(TokenType::T_IDENTIFIER))
         throw std::runtime_error("Expected function identifier");
@@ -43,21 +54,17 @@ FuncSignPtr Parser::parse_func_signature() {
     if (!is_next_token(TokenType::T_FUNC_SIGN))
         throw std::runtime_error("Expected '::'");
 
-    std::vector<std::unique_ptr<HighOrder>> params;
+    std::vector<std::unique_ptr<Variable>> params;
     TypePtr current_arg_type;
     std::string current_arg_name;
     while (!is_next_token(TokenType::T_LBLOCK) || is_token(TokenType::T_COMMA)) {
         current_arg_type = parse_type();
         if (!current_arg_type)
             throw std::runtime_error("Expected type or {");
-        if (!is_next_token(TokenType::T_IDENTIFIER))
+        if (!is_token(TokenType::T_IDENTIFIER))
             throw std::runtime_error("Expected parameter name");
         current_arg_name = current_token.get_value<std::string>();
-        if (current_arg_type->is_func) {
-            params.push_back(std::make_unique<FuncVar>(std::move(current_arg_type), current_arg_name));
-        } else {
-            params.push_back(std::make_unique<Variable>(std::move(current_arg_type), current_arg_name));
-        }
+        params.push_back(std::make_unique<Variable>(std::move(current_arg_type), current_arg_name));
     }
 
     return std::make_unique<FuncSignature>(

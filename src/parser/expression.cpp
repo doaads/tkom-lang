@@ -13,7 +13,7 @@ LiteralExpr::LiteralExpr(Token token) :
         LiteralExpr::type = *type;
     }
 
-void LiteralExpr::accept(ParserPrinter& visitor) const {
+void LiteralExpr::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 
@@ -39,7 +39,7 @@ std::string LiteralExpr::get_value_string() const {
 IdentifierExpr::IdentifierExpr(std::string identifier) : identifier(identifier) {}
 
 std::string IdentifierExpr::get_identifier() const {return identifier;}
-void IdentifierExpr::accept(ParserPrinter& visitor) const {visitor.visit(*this);}
+void IdentifierExpr::accept(ParserVisitor& visitor) const {visitor.visit(*this);}
 
 
 /* ------------------------------[UNARY]--------------------------------*/
@@ -51,7 +51,7 @@ UnaryOp UnaryExpr::get_operator() const {
     return op_type;
 }
 
-void UnaryExpr::accept(ParserPrinter& visitor) const {
+void UnaryExpr::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 
@@ -67,7 +67,7 @@ BinaryExpr::BinaryExpr(
         std::unique_ptr<Expression> right) :
     left(std::move(left)), op(op), right(std::move(right)) {}
 
-void BinaryExpr::accept(ParserPrinter& visitor) const {
+void BinaryExpr::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 
@@ -100,7 +100,7 @@ const std::vector<const Expression*> CallExpr::get_args() const {
     return result;
 }
 
-void CallExpr::accept(ParserPrinter& visitor) const {
+void CallExpr::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 
@@ -108,7 +108,7 @@ void CallExpr::accept(ParserPrinter& visitor) const {
 
 BindFrtExpr::BindFrtExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args) : func_name(std::move(name)), args(std::move(args)) {}
 
-void BindFrtExpr::accept(ParserPrinter& visitor) const {
+void BindFrtExpr::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);
 }
 
