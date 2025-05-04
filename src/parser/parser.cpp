@@ -3,10 +3,10 @@
 
 Parser::Parser(std::shared_ptr<Lexer> lexer, bool verbose) :
     verbose(verbose), lexer(std::move(lexer)) {
-        visitor = std::make_unique<ParserPrinter>(std::cout);
+        visitor = std::make_shared<ParserPrinter>(std::cout);
     }
 
-Parser::Parser(std::shared_ptr<Lexer> lexer, std::unique_ptr<ParserVisitor> visitor) :
+Parser::Parser(std::shared_ptr<Lexer> lexer, std::shared_ptr<ParserVisitor> visitor) :
     verbose(true),  // assume user wanted verbose output if visitor is provided
     visitor(std::move(visitor)),
     lexer(std::move(lexer)) {}
@@ -261,7 +261,6 @@ StatementPtr Parser::parse_conditional_statement(TokenType st_type) {
     if (!block)
         throw std::runtime_error("Expected block after conditional statement");
 
-    next_token();
     StatementPtr else_st = parse_conditional_statement(TokenType::T_ELIF);
     if (!else_st)
         else_st = parse_else_statement();

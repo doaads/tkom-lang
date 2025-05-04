@@ -3,6 +3,8 @@ add_executable(lexer_test lexer_test.cc)
 add_executable(lexer_all_tokens_test lexer_all_tokens_test.cc)
 add_executable(parser_test parser_test.cc)
 
+target_include_directories(parser_test PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 target_link_libraries(tokenizer_test PRIVATE
     tokenizer
     token

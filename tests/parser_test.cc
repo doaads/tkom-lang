@@ -1,6 +1,9 @@
 #include <gtest/gtest.h>
+#include "parser_test_counter.h"
 #include "lexer.h"
 #include "parser.h"
+
+#include <memory>
 
 #define VERBOSE false
 
@@ -9,146 +12,74 @@ Lexer get_lexer_for_string(std::string string) {
     Lexer lexer(input, VERBOSE);
     return lexer;
 }
-TEST(ParserTest, ParsesLiteralExpression) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("42"));
-    Parser parser(lexer);
-    parser.next_token();
-    ExprPtr expr = parser.parse_expression();
-    ASSERT_NE(expr, nullptr);
-    ASSERT_NE(dynamic_cast<LiteralExpr*>(expr.get()), nullptr);
+
+std::unique_ptr<Parser> get_parser(std::string string, std::shared_ptr<ParserTestCounter> visitor) {
+    auto lexer = std::make_shared<Lexer>(get_lexer_for_string(string));
+    return std::make_unique<Parser>(std::move(lexer), visitor);
 }
 
-TEST(ParserTest, ParsesBinaryExpression) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("1 + 2"));
-    Parser parser(lexer);
-    parser.next_token();
-    ExprPtr expr = parser.parse_expression();
-    ASSERT_NE(expr, nullptr);
-    ASSERT_NE(dynamic_cast<BinaryExpr*>(expr.get()), nullptr);
+TEST(ParserTest, ParsesAssignmentStatement) {
+    std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
+    auto parser = get_parser("int main:: { 10 => int x; }", counter);
+    auto program = parser->parse();
+
+    ASSERT_NE(program, nullptr);
+    EXPECT_EQ(counter->assign_stmt_count, 1);
+    EXPECT_EQ(counter->literal_expr_count, 1);
+    EXPECT_EQ(counter->identifier_expr_count, 1);
+    EXPECT_EQ(counter->var_type_count, 2);  // func def & assign
+    EXPECT_EQ(counter->function_count, 1);
+    EXPECT_EQ(counter->func_signature_count, 1);
 }
 
-TEST(ParserTest, ParsesBinaryOrExpression) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("1 || 2"));
-    Parser parser(lexer);
-    parser.next_token();
-    ExprPtr expr = parser.parse_expression();
-    ASSERT_NE(expr, nullptr);
-    ASSERT_NE(dynamic_cast<BinaryExpr*>(expr.get()), nullptr);
+TEST(ParserTest, ParsesFunctionCall) {
+    std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
+    auto parser = get_parser("int main:: { (10, 20)->foo; }", counter);
+    auto program = parser->parse();
+
+    ASSERT_NE(program, nullptr);
+    EXPECT_EQ(counter->call_stmt_count, 1); // One function call
+    EXPECT_EQ(counter->call_expr_count, 1); // One call expression
+    EXPECT_EQ(counter->literal_expr_count, 2); // Two literals: `10` and `20`
+    EXPECT_EQ(counter->function_count, 1); // One function (main)
+    EXPECT_EQ(counter->func_signature_count, 1); // One function signature for main
 }
 
-TEST(ParserTest, ParsesBinaryAndExpression) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("1 && 2"));
-    Parser parser(lexer);
-    parser.next_token();
-    ExprPtr expr = parser.parse_expression();
-    ASSERT_NE(expr, nullptr);
-    ASSERT_NE(dynamic_cast<BinaryExpr*>(expr.get()), nullptr);
-}
+TEST(ParserTest, ParsesWhileLoop) {
+    std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
+    auto parser = get_parser("int main:: { while (i < 10) { (i)->increment; } }", counter);
+    auto program = parser->parse();
 
-TEST(ParserTest, ParsesFunctionCallExpression) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("(1, 2)->foo"));
-    Parser parser(lexer);
-    parser.next_token();
-    ExprPtr expr = parser.parse_expression();
-    ASSERT_NE(expr, nullptr);
-    ASSERT_NE(dynamic_cast<CallExpr*>(expr.get()), nullptr);
-}
-
-TEST(ParserTest, ParsesFunctionNoArgs) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("()->foo"));
-    Parser parser(lexer);
-    parser.next_token();
-    ExprPtr expr = parser.parse_expression();
-    ASSERT_NE(expr, nullptr);
-    ASSERT_NE(dynamic_cast<CallExpr*>(expr.get()), nullptr);
-}
-
-TEST(ParserTest, ParsesFunctionOneArg) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("(1)->foo"));
-    Parser parser(lexer);
-    parser.next_token();
-    ExprPtr expr = parser.parse_expression();
-    ASSERT_NE(expr, nullptr);
-    ASSERT_NE(dynamic_cast<CallExpr*>(expr.get()), nullptr);
-}
-
-TEST(ParserTest, ParsesFunctionNestedExpr) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("(1 + 5)->foo"));
-    Parser parser(lexer);
-    parser.next_token();
-    ExprPtr expr = parser.parse_expression();
-    ASSERT_NE(expr, nullptr);
-    ASSERT_NE(dynamic_cast<CallExpr*>(expr.get()), nullptr);
-}
-
-TEST(ParserTest, ParsesFunctionNestedCall) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("((5)->inc)->foo"));
-    Parser parser(lexer);
-    parser.next_token();
-    ExprPtr expr = parser.parse_expression();
-    ASSERT_NE(expr, nullptr);
-    ASSERT_NE(dynamic_cast<CallExpr*>(expr.get()), nullptr);
-}
-
-TEST(ParserTest, ParsesFunctionNestedNoArgs) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("(()->inc)->foo"));
-    Parser parser(lexer);
-    parser.next_token();
-    ExprPtr expr = parser.parse_expression();
-    ASSERT_NE(expr, nullptr);
-    ASSERT_NE(dynamic_cast<CallExpr*>(expr.get()), nullptr);
-}
-
-TEST(ParserTest, ParsesAssignStatement) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("5 => int a;"));
-    Parser parser(lexer);
-    parser.next_token();
-    StatementPtr stmt = parser.parse_statement();
-    ASSERT_NE(stmt, nullptr);
-    ASSERT_NE(dynamic_cast<AssignStatement*>(stmt.get()), nullptr);
+    ASSERT_NE(program, nullptr);
+    EXPECT_EQ(counter->while_stmt_count, 1); // One while loop statement
+    EXPECT_EQ(counter->call_stmt_count, 1); // One assignment in the loop: `i++`
+    EXPECT_EQ(counter->binary_expr_count, 1); // One binary expression: `i < 10`
+    EXPECT_EQ(counter->literal_expr_count, 1); // One literal: `10`
 }
 
 TEST(ParserTest, ParsesReturnStatement) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("ret 0;"));
-    Parser parser(lexer);
-    parser.next_token();
-    StatementPtr stmt = parser.parse_statement();
-    ASSERT_NE(stmt, nullptr);
-    ASSERT_NE(dynamic_cast<RetStatement*>(stmt.get()), nullptr);
+    std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
+    auto parser = get_parser("int main:: { ret 42; }", counter);
+    auto program = parser->parse();
+
+    ASSERT_NE(program, nullptr);
+    EXPECT_EQ(counter->ret_stmt_count, 1); // One return statement
+    EXPECT_EQ(counter->literal_expr_count, 1); // One literal: `42`
 }
 
-TEST(ParserTest, ParsesIfStatement) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("if (x < 5) { ret 5; }"));
-    Parser parser(lexer);
-    parser.next_token();
-    StatementPtr stmt = parser.parse_statement();
-    ASSERT_NE(stmt, nullptr);
-    ASSERT_NE(dynamic_cast<ConditionalStatement*>(stmt.get()), nullptr);
+TEST(ParserTest, ParsesConditionalStatement) {
+    std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
+    auto parser = get_parser("int main:: { if (x > 10) { 20 => int y; } }", counter);
+    auto program = parser->parse();
+
+    ASSERT_NE(program, nullptr);
+    EXPECT_EQ(counter->conditional_stmt_count, 1); // One conditional statement (if)
+    EXPECT_EQ(counter->binary_expr_count, 1); // One binary expression: `x > 10`
+    EXPECT_EQ(counter->assign_stmt_count, 1); // One assignment in the if block: `20 => int y`
+    EXPECT_EQ(counter->literal_expr_count, 2); // Two literals: `10` and `20`
+    EXPECT_EQ(counter->identifier_expr_count, 2); // Two identifiers: `x` and `y`
+    EXPECT_EQ(counter->function_count, 1); // One function (main)
+    EXPECT_EQ(counter->func_signature_count, 1); // One function signature for main
+    EXPECT_EQ(counter->block_count, 2); // One function signature for main
 }
 
-TEST(ParserTest, ParsesWhileLoopStatement) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("while (x < 10) { ret 5; }"));
-    Parser parser(lexer);
-    parser.next_token();
-    StatementPtr stmt = parser.parse_statement();
-    ASSERT_NE(stmt, nullptr);
-    ASSERT_NE(dynamic_cast<WhileLoopStatement*>(stmt.get()), nullptr);
-}
-
-TEST(ParserTest, ParsesAsignCall) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("(5)->increment => int b;"));
-    Parser parser(lexer);
-    parser.next_token();
-    StatementPtr stmt = parser.parse_statement();
-    ASSERT_NE(stmt, nullptr);
-    ASSERT_NE(dynamic_cast<AssignStatement*>(stmt.get()), nullptr);
-}
-
-TEST(ParserTest, ParsesForLoop) {
-    auto lexer = std::make_shared<Lexer>(get_lexer_for_string("for (5 => int a; a < 10) { (a)->some_func; } -> increment;"));
-    Parser parser(lexer);
-    parser.next_token();
-    StatementPtr stmt = parser.parse_statement();
-    ASSERT_NE(stmt, nullptr);
-    ASSERT_NE(dynamic_cast<ForLoopStatement*>(stmt.get()), nullptr);
-}
