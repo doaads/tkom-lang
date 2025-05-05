@@ -1,5 +1,7 @@
 #pragma once
 
+#include "expression.h"
+#include "node.h"
 #include <memory>
 #include <string>
 #include <variant>
@@ -14,10 +16,11 @@ enum class TokenType;
 using ExprPtr = std::unique_ptr<Expression>;
 using BlockPtr = std::unique_ptr<Block>;
 
-class Statement {
+class Statement : public Node {
     protected:
         static std::string indent_str(int amount);
     public:
+        Statement(const Position pos) : Node(pos) {}
         virtual ~Statement() = default;
 
         virtual void accept(ParserVisitor& visitor) const = 0;
@@ -30,6 +33,7 @@ class ForLoopStatement : public Statement {
         std::unique_ptr<Expression> on_iter_call;
     public:
         ForLoopStatement(
+                Position pos,
                 std::unique_ptr<ForLoopArgs> args,
                 std::unique_ptr<Block> body,
                 std::unique_ptr<Expression> on_iter_call);
@@ -47,7 +51,7 @@ class WhileLoopStatement : public Statement {
         std::unique_ptr<Expression> condition;
         std::unique_ptr<Block> body;
     public:
-        WhileLoopStatement(std::unique_ptr<Expression> condition, std::unique_ptr<Block> body);
+        WhileLoopStatement(Position pos, std::unique_ptr<Expression> condition, std::unique_ptr<Block> body);
 
         void accept(ParserVisitor& visitor) const override;
         
@@ -63,11 +67,13 @@ class ConditionalStatement : public Statement {
         std::unique_ptr<Statement> else_st;
     public:
         ConditionalStatement(
+                Position pos,
                 TokenType type,
                 std::unique_ptr<Expression> condition,
                 std::unique_ptr<Block> body,
                 std::unique_ptr<Statement> else_st);
         ConditionalStatement(
+                Position pos,
                 TokenType type,
                 std::unique_ptr<Expression> condition,
                 std::unique_ptr<Block> body);
@@ -85,7 +91,7 @@ class ElseStatement : public Statement {
     private:
         std::unique_ptr<Block> body;
     public:
-        ElseStatement(std::unique_ptr<Block> body);
+        ElseStatement(Position pos, std::unique_ptr<Block> body);
 
         void accept(ParserVisitor& visitor) const override;
 
@@ -96,7 +102,7 @@ class RetStatement : public Statement {
     private:
         std::unique_ptr<Expression> retval;
     public:
-        RetStatement(std::unique_ptr<Expression> retval);
+        RetStatement(Position pos, std::unique_ptr<Expression> retval);
 
         void accept(ParserVisitor& visitor) const override;
 
@@ -107,7 +113,7 @@ class CallStatement : public Statement {
     private:
         std::unique_ptr<Expression> call;
     public:
-        CallStatement(std::unique_ptr<Expression> call);
+        CallStatement(Position pos, std::unique_ptr<Expression> call);
 
         void accept(ParserVisitor& visitor) const override;
 
@@ -121,9 +127,10 @@ class AssignStatement : public Statement {
         std::unique_ptr<Expression> identifier;
     public:
         AssignStatement(
+                Position pos,
                 std::unique_ptr<Expression> value,
                 std::unique_ptr<Type> type,
-                std::string identifier);
+                std::unique_ptr<Expression>);
 
         void accept(ParserVisitor& visitor) const override;
 

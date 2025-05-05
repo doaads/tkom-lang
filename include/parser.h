@@ -76,4 +76,5 @@ class Parser {
 
         void next_token();
         std::shared_ptr<ParserVisitor> get_visitor() {return visitor;};
+        const Position get_position() const {return current_token.get_position();};
 };

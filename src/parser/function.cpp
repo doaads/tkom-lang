@@ -5,9 +5,11 @@
 #include "type.h"
 
 FuncSignature::FuncSignature(
+        Position pos,
         std::unique_ptr<Type> ret,
         std::vector<std::unique_ptr<Variable>> args,
         std::string name) :
+    Node(pos),
     ret_type(std::move(ret)),
     args(std::move(args)),
     name(name) {}
@@ -33,7 +35,9 @@ Function::Function(
         std::unique_ptr<FuncSignature> signature,
         std::unique_ptr<Block> body) :
     signature(std::move(signature)),
-    body(std::move(body)) {}
+    body(std::move(body)) {
+        Function::Node(Function::signature->get_position());
+    }
 
 void Function::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);

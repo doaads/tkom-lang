@@ -7,12 +7,13 @@
 
 class ParserVisitor;
 
-class FuncSignature {
+class FuncSignature : public Node {
     std::unique_ptr<Type> ret_type;
     std::vector<std::unique_ptr<Variable>> args;
     std::string name;
     public:
         FuncSignature(
+            Position pos,
             std::unique_ptr<Type> ret,
             std::vector<std::unique_ptr<Variable>> args,
             std::string name);
@@ -22,7 +23,7 @@ class FuncSignature {
         std::string get_name() const;
 };
 
-class Function {
+class Function : public Node {
     private:
         std::unique_ptr<FuncSignature> signature;
         std::unique_ptr<Block> body;

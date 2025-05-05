@@ -83,3 +83,36 @@ TEST(ParserTest, ParsesConditionalStatement) {
     EXPECT_EQ(counter->block_count, 2); // One function signature for main
 }
 
+TEST(ParserTest, ParserLongProgramTest) {
+    static const std::string program_str =
+            "int main:: {"
+            "    (\"Enter a\")->stdin => flt a;"
+            "    (\"Enter b\")->stdin => flt b;"
+            "    (\"Enter c\")->stdin => flt c;"
+            "    b * b - 4 * a * c => flt delta;"
+            "    if (delta > 0) {"
+            "          (-b - (delta)->sqrt) / (2 * a) => flt x1;\n"
+            "          (-b + (delta)->sqrt) / (2 * a) => flt x2;"
+            "          (\"Result: \") -> stdout;"
+            "          (x1 + \" and \" + x2) -> stdout;"
+            "      } elif (delta == 0) {"
+            "          -b / 2 * a => flt x1;"
+            "          (\"Result: \") -> stdout;"
+            "          (x1) -> stdout;\n"
+            "      } else {"
+            "          (\"No real solution\") -> stdout;"
+            "    }"
+            "}";
+
+    std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
+    auto parser = get_parser(program_str, counter);
+    auto program = parser->parse();
+
+    EXPECT_NE(program, nullptr);
+    EXPECT_EQ(counter->conditional_stmt_count, 2); // two conditional statements (if, else if)
+    EXPECT_EQ(counter->else_stmt_count, 1);
+    EXPECT_EQ(counter->call_expr_count, 10);
+    EXPECT_EQ(counter->assign_stmt_count, 7);
+    EXPECT_EQ(counter->block_count, 4);
+    EXPECT_EQ(counter->identifier_expr_count, 34);
+}

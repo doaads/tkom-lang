@@ -38,6 +38,7 @@ FuncPtr Parser::parse_func_def() {
 }
 
 FuncSignPtr Parser::parse_func_signature() {
+    const Position pos = get_position();
     TypePtr ret_type = parse_type();
     if (!ret_type) {
         if (!is_token(TokenType::T_VOID_TYPE)) {
@@ -68,6 +69,7 @@ FuncSignPtr Parser::parse_func_signature() {
     }
 
     return std::make_unique<FuncSignature>(
+            pos,
             std::move(ret_type),
             std::move(params),
             func_name);
@@ -79,12 +81,14 @@ BlockPtr Parser::parse_block() {
 
     std::vector<StatementPtr> statements;
 
-    while (!is_next_token(TokenType::T_RBLOCK)) {
+    next_token();
+    while (!is_token(TokenType::T_RBLOCK)) {
         StatementPtr statement = parse_statement();
         if (!statement)
             throw std::runtime_error("Expected statement or }");
         statements.push_back(std::move(statement));
     }
+    next_token();
     return std::make_unique<Block>(std::move(statements));
 }
 
@@ -108,15 +112,17 @@ StatementPtr Parser::parse_statement() {
 }
 
 StatementPtr Parser::parse_assign_or_call() {
+    const Position pos = get_position();
     ExprPtr expr = parse_expression();
     if (!expr)
         return nullptr;
 
+
     TokenType op_type = current_token.get_type();
     if (op_type != TokenType::T_ASSIGN) {
-        if (op_type == TokenType::T_SEMICOLON)
+        if (was_last_token(TokenType::T_SEMICOLON))
             // if statement ends here, we have a ready CallStatement
-            return std::make_unique<CallStatement>(std::move(expr));
+            return std::make_unique<CallStatement>(pos, std::move(expr));
         throw std::runtime_error("Expected '=>'");
     }
 
@@ -127,17 +133,19 @@ StatementPtr Parser::parse_assign_or_call() {
     if (!is_token(TokenType::T_IDENTIFIER))
         throw std::runtime_error("Expected identifier");
 
-    std::string identifier = current_token.get_value<std::string>();
+    ExprPtr identifier = std::make_unique<IdentifierExpr>(get_position(), current_token.get_value<std::string>());
 
     if (!is_next_token(TokenType::T_SEMICOLON))
         throw std::runtime_error("Expected ;");
+    next_token();
 
-    return std::make_unique<AssignStatement>(std::move(expr), std::move(type), identifier);
+    return std::make_unique<AssignStatement>(pos, std::move(expr), std::move(type), std::move(identifier));
 }
 
 StatementPtr Parser::parse_while_loop() {
     if (!is_token(TokenType::T_WHILE))
         return nullptr;
+    const Position pos = get_position();
 
     next_token();
     ExprPtr condition = parse_condition();
@@ -148,7 +156,7 @@ StatementPtr Parser::parse_while_loop() {
         throw std::runtime_error("Expected block");
 
     return std::make_unique<WhileLoopStatement>(
-            std::move(condition), std::move(block));
+            pos, std::move(condition), std::move(block));
 }
 
 /*
@@ -158,6 +166,7 @@ StatementPtr Parser::parse_while_loop() {
 StatementPtr Parser::parse_for_loop() {
     if (!is_token(TokenType::T_FOR))
         return nullptr;
+    const Position pos = get_position();
 
     next_token();
     ForLoopArgsPtr args = parse_for_loop_args();
@@ -169,17 +178,18 @@ StatementPtr Parser::parse_for_loop() {
     if (!block)
         throw std::runtime_error("Expected block");
 
-    if (!is_next_token(TokenType::T_CALL))
+    if (!is_token(TokenType::T_CALL))
         throw std::runtime_error("Expected '->'");
 
     next_token();
     ExprPtr on_iter = parse_bind_front();
     if (!on_iter) throw std::runtime_error("Expected bind front or identifier");
 
-    if (!is_token(TokenType::T_SEMICOLON))
+    if (!was_last_token(TokenType::T_SEMICOLON))
         throw std::runtime_error("Expected ;");
 
     return std::make_unique<ForLoopStatement>(
+            pos,
             std::move(args),
             std::move(block),
             std::move(on_iter));
@@ -237,11 +247,15 @@ ForLoopArgsPtr Parser::parse_for_loop_args() {
 StatementPtr Parser::parse_ret_statement() {
     if (!is_token(TokenType::T_RET))
         return nullptr;
+    const Position pos = get_position();
 
     next_token();
     ExprPtr expression = parse_expression();
 
-    return std::make_unique<RetStatement>(std::move(expression));
+    if (!was_last_token(TokenType::T_SEMICOLON))
+        throw std::runtime_error("Expected ';'");
+
+    return std::make_unique<RetStatement>(pos, std::move(expression));
 }
 
 /*
@@ -250,8 +264,9 @@ StatementPtr Parser::parse_ret_statement() {
 */
 
 StatementPtr Parser::parse_conditional_statement(TokenType st_type) {
-    if (current_token.get_type() != st_type)
+    if (!is_token(st_type))
         return nullptr;
+    const Position pos = get_position();
 
     next_token();
     ExprPtr condition = parse_condition();
@@ -265,15 +280,9 @@ StatementPtr Parser::parse_conditional_statement(TokenType st_type) {
     if (!else_st)
         else_st = parse_else_statement();
 
-    if (!else_st)
-        return std::make_unique<ConditionalStatement>(
-                TokenType::T_IF,
-                std::move(condition),
-                std::move(block)
-                );
-
     return std::make_unique<ConditionalStatement>(
-            TokenType::T_IF,
+            pos,
+            st_type,
             std::move(condition),
             std::move(block),
             std::move(else_st)
@@ -288,11 +297,14 @@ StatementPtr Parser::parse_else_statement() {
     if (!is_token(TokenType::T_ELSE))
         return nullptr;
 
+    const Position pos = get_position();
+    next_token();
+
     BlockPtr block = parse_block();
     if (!block)
         throw std::runtime_error("Expected block after else");
 
-    return std::make_unique<ElseStatement>(std::move(block));
+    return std::make_unique<ElseStatement>(pos, std::move(block));
 }
 
 
@@ -340,6 +352,7 @@ ExprPtr Parser::parse_or_expression() {
         if (!right)
             throw std::runtime_error("Error while parsing OR. Expected identifier");
         left = std::make_unique<BinaryExpr>(
+                left->get_position(),
                 std::move(left),
                 BinaryOp::OR,
                 std::move(right));
@@ -362,6 +375,7 @@ ExprPtr Parser::parse_and_expression() {
         if (!right)
             throw std::runtime_error("Error while parsing AND. Expected identifier");
         left = std::make_unique<BinaryExpr>(
+                left->get_position(),
                 std::move(left),
                 BinaryOp::AND,
                 std::move(right));
@@ -385,6 +399,7 @@ ExprPtr Parser::parse_comp_expression() {
         if (!right)
             throw std::runtime_error("Error while parsing comp. Expected identifier");
         left = std::make_unique<BinaryExpr>(
+                left->get_position(),
                 std::move(left),
                 *type,
                 std::move(right));
@@ -408,6 +423,7 @@ ExprPtr Parser::parse_additive_expression() {
         if (!right)
             throw std::runtime_error("Expected identifier");
         left = std::make_unique<BinaryExpr>(
+                left->get_position(),
                 std::move(left),
                 *op_type,
                 std::move(right));
@@ -433,6 +449,7 @@ ExprPtr Parser::parse_term() {
         if (!right)
             throw std::runtime_error("Error while parsing terms. Expected identifier");
         left = std::make_unique<BinaryExpr>(
+                left->get_position(),
                 std::move(left),
                 *op_type,
                 std::move(right));
@@ -447,13 +464,14 @@ ExprPtr Parser::parse_term() {
 
 ExprPtr Parser::parse_unary() {
     TokenType type = current_token.get_type();
+    const Position pos = get_position();
     std::optional<UnaryOp> unary_op = token_to_unary_op(type);
     if (unary_op) next_token();
     ExprPtr right = parse_factor();
     if (unary_op && !right)
         throw std::runtime_error("Expected factor after unary operator");
     if (unary_op) {
-        return std::make_unique<UnaryExpr>(*unary_op, std::move(right));
+        return std::make_unique<UnaryExpr>(pos, *unary_op, std::move(right));
     } else {
         return right;
     }
@@ -472,13 +490,13 @@ ExprPtr Parser::parse_unary() {
 ExprPtr Parser::parse_factor() {
     TokenType type = current_token.get_type();
     if (is_factor(type)) {
-        std::unique_ptr<LiteralExpr> expr = std::make_unique<LiteralExpr>(current_token);
+        std::unique_ptr<LiteralExpr> expr = std::make_unique<LiteralExpr>(get_position(), current_token);
         next_token();
         return expr;
     }
 
     if (is_token(TokenType::T_IDENTIFIER)) {
-        ExprPtr expr = std::make_unique<IdentifierExpr>(current_token.get_value<std::string>());
+        ExprPtr expr = std::make_unique<IdentifierExpr>(get_position(), current_token.get_value<std::string>());
         next_token();
         return expr;
     }
@@ -525,6 +543,8 @@ ArgOrExpr Parser::parse_bindfrt_or_call(std::vector<ExprPtr> args) {
     ArgOrExpr bindfrt = parse_bind_front_right(std::move(args));
     if (!bindfrt.index()) return std::get<ExprPtr>(std::move(bindfrt));
 
+    const Position pos = get_position();
+
     // move args back
     args = std::get<std::vector<ExprPtr>>(std::move(bindfrt));
 
@@ -533,7 +553,7 @@ ArgOrExpr Parser::parse_bindfrt_or_call(std::vector<ExprPtr> args) {
     next_token();
 
     ExprPtr right = parse_bind_front();
-    return std::make_unique<CallExpr>(std::move(right), std::move(args));
+    return std::make_unique<CallExpr>(pos, std::move(right), std::move(args));
 }
 
 /*
@@ -544,10 +564,12 @@ ArgOrExpr Parser::parse_bind_front_right(std::vector<ExprPtr> args) {
     if (!is_token(TokenType::T_BINDFRT))
         return args;
 
+    const Position pos = get_position();
+
     next_token();
     ExprPtr decorator = parse_decorator();
     if (!decorator) throw std::runtime_error("Expected identifier or decorator");
-    return std::make_unique<BindFrtExpr>(std::move(decorator), std::move(args));
+    return std::make_unique<BindFrtExpr>(pos, std::move(decorator), std::move(args));
 }
 
 ExprPtr Parser::parse_bind_front() {
@@ -574,7 +596,7 @@ ExprPtr Parser::parse_decorator() {
         return nullptr;
 
     std::string value = current_token.get_value<std::string>();
-    ExprPtr left = std::make_unique<IdentifierExpr>(value);
+    ExprPtr left = std::make_unique<IdentifierExpr>(get_position(), value);
 
     if (!is_next_token(TokenType::T_DECORATE))
         return left;
@@ -583,10 +605,10 @@ ExprPtr Parser::parse_decorator() {
         throw std::runtime_error("Expected identifier");
 
     value = current_token.get_value<std::string>();
-    ExprPtr right = std::make_unique<IdentifierExpr>(value);
+    ExprPtr right = std::make_unique<IdentifierExpr>(get_position(), value);
 
     next_token();
-    return std::make_unique<BinaryExpr>(std::move(left), BinaryOp::DECORATE, std::move(right));
+    return std::make_unique<BinaryExpr>(left->get_position(), std::move(left), BinaryOp::DECORATE, std::move(right));
 
 }
 
@@ -722,4 +744,6 @@ bool Parser::is_token(TokenType type) const {
 
 void Parser::next_token() {
     current_token = lexer->get_token();
+    if (is_token(TokenType::T_COMMENT))
+        current_token = lexer->get_token();
 }

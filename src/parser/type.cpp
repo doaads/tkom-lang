@@ -14,7 +14,7 @@ std::ostream& operator<<(std::ostream& os, const BaseType& type) {
 std::optional<BaseType> translate_token_to_type(TokenType type) {
     switch(type) {
         case TokenType::T_INT_TYPE: return BaseType::INT;
-        case TokenType::T_FLT_TYPE: return BaseType::INT;
+        case TokenType::T_FLT_TYPE: return BaseType::FLT;
         case TokenType::T_STRING_TYPE: return BaseType::STRING;
         case TokenType::T_BOOL_TYPE: return BaseType::BOOL;
         default: return std::nullopt;
@@ -24,7 +24,7 @@ std::optional<BaseType> translate_token_to_type(TokenType type) {
 std::optional<BaseType> get_literal_token_type(TokenType type) {
     switch(type) {
         case TokenType::T_INT: return BaseType::INT;
-        case TokenType::T_FLT: return BaseType::INT;
+        case TokenType::T_FLT: return BaseType::FLT;
         case TokenType::T_STRING: return BaseType::STRING;
         case TokenType::T_BOOL: return BaseType::BOOL;
         case TokenType::T_IDENTIFIER: return BaseType::STRING;

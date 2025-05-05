@@ -1,5 +1,6 @@
 #pragma once
 
+#include "node.h"
 #include "tokens.h"
 #include <memory>
 #include <optional>
@@ -19,7 +20,7 @@ std::optional<BaseType> get_literal_token_type(TokenType type);
 std::ostream& operator<<(std::ostream& os, const BaseType& type);
 
 
-class Type {
+class Type : public Node {
     public:
         static const bool is_func = false;
         virtual ~Type() = default;

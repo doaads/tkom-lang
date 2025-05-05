@@ -4,14 +4,16 @@
 #include <vector>
 #include <variant>
 
+#include "node.h"
 #include "token.h"
 #include "operators.h"
 
 enum class BaseType;
 class ParserVisitor;
 
-class Expression {
+class Expression : public Node {
     public:
+        Expression(const Position pos) : Node(pos) {}
         virtual ~Expression() = default;
         virtual void accept(ParserVisitor& visitor) const = 0;
 };
@@ -31,7 +33,7 @@ class LiteralExpr : public Expression {
                 throw std::runtime_error("Unable to get LiteralExpr value");
             }
         }
-        LiteralExpr(Token token);
+        LiteralExpr(const Position pos, Token token);
         void accept(ParserVisitor& visitor) const override;
         std::string get_value_string() const;
 };
@@ -40,7 +42,7 @@ class IdentifierExpr : public Expression {
     private:
         std::string identifier;
     public:
-        IdentifierExpr(std::string identifier);
+        IdentifierExpr(const Position pos, std::string identifier);
 
         void accept(ParserVisitor& visitor) const override;
         std::string get_identifier() const;
@@ -52,7 +54,7 @@ class UnaryExpr : public Expression {
         UnaryOp op_type;
         std::unique_ptr<Expression> right;
     public:
-        UnaryExpr(UnaryOp unary_op, std::unique_ptr<Expression> right);
+        UnaryExpr(const Position pos, UnaryOp unary_op, std::unique_ptr<Expression> right);
         UnaryOp get_operator() const;
         void accept(ParserVisitor& visitor) const;
 
@@ -66,7 +68,7 @@ class BinaryExpr : public Expression {
         BinaryOp op;
         std::unique_ptr<Expression> right;
     public:
-        BinaryExpr(std::unique_ptr<Expression> left, BinaryOp op, std::unique_ptr<Expression> right);
+        BinaryExpr(const Position pos, std::unique_ptr<Expression> left, BinaryOp op, std::unique_ptr<Expression> right);
         void accept(ParserVisitor& visitor) const;
 
         const Expression* get_left() const;
@@ -80,7 +82,7 @@ class CallExpr : public Expression {
         std::unique_ptr<Expression> func_name;
         std::vector<std::unique_ptr<Expression>> args;
     public:
-        CallExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args);
+        CallExpr(const Position pos, std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args);
         void accept(ParserVisitor& visitor) const;
 
         const Expression* get_func_name() const;
@@ -93,7 +95,7 @@ class BindFrtExpr : public Expression {
         std::unique_ptr<Expression> func_name;
         std::vector<std::unique_ptr<Expression>> args;
     public:
-        BindFrtExpr(std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args);
+        BindFrtExpr(const Position pos, std::unique_ptr<Expression> name, std::vector<std::unique_ptr<Expression>> args);
         void accept(ParserVisitor& visitor) const;
 
         const Expression* get_func_name() const;

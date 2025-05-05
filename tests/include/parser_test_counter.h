@@ -47,8 +47,9 @@ public:
         identifier_expr_count++;
     }
 
-    void visit(const UnaryExpr&) override {
+    void visit(const UnaryExpr& expr) override {
         unary_expr_count++;
+        expr.get_right()->accept(*this);
     }
 
     void visit(const BinaryExpr& expr) override {
@@ -60,7 +61,7 @@ public:
     void visit(const CallExpr& expr) override { 
         call_expr_count++;
         expr.get_func_name()->accept(*this);
-        for (auto& arg : expr.get_args()) {
+        for (const auto& arg : expr.get_args()) {
             arg->accept(*this);
         }
     }

@@ -66,6 +66,7 @@ class ParserPrinter : public ParserVisitor {
         std::string indent_str() const;
         void increase_indent();
         void decrease_indent();
+        void print_pos(const Node& expr);
     public:
         ParserPrinter(std::ostream& os, int indent = 0) : os(os), indent(indent) {}
         ~ParserPrinter() = default;

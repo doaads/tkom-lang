@@ -12,9 +12,11 @@ std::string Statement::indent_str(int amount) {
 /* ------------------------------[FOR LOOP]--------------------------------*/
 
 ForLoopStatement::ForLoopStatement(
+        Position pos,
         std::unique_ptr<ForLoopArgs> args,
         std::unique_ptr<Block> body,
         std::unique_ptr<Expression> on_iter_call) :
+    Statement(pos),
     args(std::move(args)),
     body(std::move(body)),
     on_iter_call(std::move(on_iter_call)) {}
@@ -32,8 +34,10 @@ const Expression* ForLoopStatement::get_on_iter() const {
 /* -----------------------------[WHILE LOOP]-------------------------------*/
 
 WhileLoopStatement::WhileLoopStatement(
+        Position pos,
         std::unique_ptr<Expression> condition,
         std::unique_ptr<Block> body) :
+    Statement(pos),
     condition(std::move(condition)),
     body(std::move(body)) {}
 
@@ -51,19 +55,23 @@ const Block* WhileLoopStatement::get_body() const {
 /* -----------------------------[CONDITIONAL]-------------------------------*/
 
 ConditionalStatement::ConditionalStatement(
+        Position pos,
         TokenType type,
         std::unique_ptr<Expression> condition,
         std::unique_ptr<Block> body,
         std::unique_ptr<Statement> else_st) :
+    Statement(pos),
     type(type),
     condition(std::move(condition)),
     body(std::move(body)),
     else_st(std::move(else_st)) {}
 
 ConditionalStatement::ConditionalStatement(
+        Position pos,
         TokenType type,
         std::unique_ptr<Expression> condition,
         std::unique_ptr<Block> body) :
+    Statement(pos),
     type(type),
     condition(std::move(condition)),
     body(std::move(body)) {}
@@ -89,7 +97,9 @@ const Statement* ConditionalStatement::get_else_st() const {
 /* -------------------------------[ELSE]---------------------------------*/
 
 ElseStatement::ElseStatement(
+        Position pos,
         std::unique_ptr<Block> body) :
+    Statement(pos),
     body(std::move(body)) {}
 
 void ElseStatement::accept(ParserVisitor& visitor) const {
@@ -103,7 +113,9 @@ const Block* ElseStatement::get_body() const {
 /* -------------------------------[RET]----------------------------------*/
 
 RetStatement::RetStatement(
+        Position pos,
         std::unique_ptr<Expression> retval) :
+    Statement(pos),
     retval(std::move(retval)) {}
 
 void RetStatement::accept(ParserVisitor& visitor) const {
@@ -116,7 +128,10 @@ const Expression* RetStatement::get_retval() const {
 
 /* -------------------------------[CALL]---------------------------------*/
 
-CallStatement::CallStatement(std::unique_ptr<Expression> call) :
+CallStatement::CallStatement(
+        Position pos,
+        std::unique_ptr<Expression> call) :
+    Statement(pos),
     call(std::move(call)) {}
 
 void CallStatement::accept(ParserVisitor& visitor) const {
@@ -130,12 +145,14 @@ const Expression* CallStatement::get_call() const {
 /* ------------------------------[ASSIGN]--------------------------------*/
 
 AssignStatement::AssignStatement(
+        Position pos,
         std::unique_ptr<Expression> value,
         std::unique_ptr<Type> type,
-        std::string identifier) :
+        std::unique_ptr<Expression> identifier) :
+    Statement(pos),
     value(std::move(value)),
     type(std::move(type)),
-    identifier(std::make_unique<IdentifierExpr>(identifier)) {}
+    identifier(std::move(identifier)) {}
 
 void AssignStatement::accept(ParserVisitor& visitor) const {
     visitor.visit(*this);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "node.h"
 #include <memory>
 #include <vector>
 
@@ -7,7 +8,7 @@ class Statement;
 class ParserPrinter;
 class ParserVisitor;
 
-class Block {
+class Block : public Node {
     private:
         std::vector<std::unique_ptr<Statement>> statements;
     public:
