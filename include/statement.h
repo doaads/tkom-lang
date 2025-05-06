@@ -140,7 +140,7 @@ class AssignStatement : public Statement {
 };
 
 struct ForLoopArgs {
-    std::variant<std::monostate, std::unique_ptr<Statement>, std::string> iterator;  // identifier or Assign
+    std::variant<std::monostate, std::unique_ptr<Statement>, std::unique_ptr<Expression>> iterator;  // identifier or Assign
     std::unique_ptr<Expression> condition;
     friend std::ostream& operator<<(std::ostream& os, ForLoopArgs args);
 };

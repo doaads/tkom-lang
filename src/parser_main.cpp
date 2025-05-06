@@ -1,4 +1,6 @@
+#include "exceptions.h"
 #include "lexer.h"
+#include "print_error.h"
 #include "parser.h"
 #include <boost/program_options.hpp>
 #include <iostream>
@@ -43,18 +45,16 @@ int main(int argc, char **argv) {
     if (verbose)
         std::cout << "--------------------------------\033[36m" << input_file << "\033[0m-------------------------------" << std::endl;
 
-    //while(!lexer.end()) {
-    //    try {
-    //        lexer.get_token();
-    //    } catch (CompilerException& e) {
-    //        std::cerr << e.what() << " at " << e.get_position() << std::endl;
-    //        return 1;
-    //    }
-    //}
     try {
         parser.parse();
-    } catch (std::exception& e) {
-        std::cerr << e.what() << std::endl;
+    } catch (const ParserError& e) {
+        std::cerr << "\033[1;31mError:\033[0m " << e.what() << std::endl;
+
+        print_error(e, input_file);
+        return 1;
+    } catch (const std::exception& e) {
+        std::cerr << "\033[1;31mUnhandled Error:\033[0m " << e.what() << std::endl;
+        return 1;
     }
 
     if (verbose)
@@ -63,4 +63,6 @@ int main(int argc, char **argv) {
     return 0;
 
 }
+
+
 

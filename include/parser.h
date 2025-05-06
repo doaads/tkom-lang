@@ -28,24 +28,14 @@ class Parser {
         std::shared_ptr<ParserVisitor> visitor;
         std::shared_ptr<Lexer> lexer;
         Token current_token;
-    public:
-        Parser(std::shared_ptr<Lexer> lexer, bool verbose=false);
-        Parser(std::shared_ptr<Lexer> lexer, std::shared_ptr<ParserVisitor> visitor);
 
-        ProgramPtr parse();
+        template<typename ConditionFunc, typename NextFunc>
+        ExprPtr parse_binary_expr(ConditionFunc condition, NextFunc next, bool limited = false);
+
         FuncPtr parse_func_def();
         FuncSignPtr parse_func_signature();
         BlockPtr parse_block();
-        StatementPtr parse_statement();
-        StatementPtr parse_assign_or_call();
-        StatementPtr parse_conditional_statement(TokenType st_type);
-        StatementPtr parse_else_statement();
-        StatementPtr parse_for_loop();
-        ForLoopArgsPtr parse_for_loop_args();
-        StatementPtr parse_while_loop();
-        StatementPtr parse_ret_statement();
-        ExprPtr parse_condition();
-        ExprPtr parse_expression();
+
         ExprPtr parse_or_expression();
         ExprPtr parse_and_expression();
         ExprPtr parse_comp_expression();
@@ -55,14 +45,23 @@ class Parser {
         ExprPtr parse_factor();
         ExprPtr parse_func_call_or_parens();
 
+        StatementPtr parse_assign_or_call();
+        StatementPtr parse_conditional_statement(TokenType st_type);
+        StatementPtr parse_else_statement();
+        StatementPtr parse_for_loop();
+        ForLoopArgsPtr parse_for_loop_args();
+        StatementPtr parse_while_loop();
+        StatementPtr parse_ret_statement();
+        ExprPtr parse_condition();
+
         ArgOrExpr parse_bindfrt_or_call(std::vector<ExprPtr> args);
         ArgOrExpr parse_bind_front_right(std::vector<ExprPtr> args);
 
         ExprPtr parse_bind_front();
         ExprPtr parse_decorator();
         ExprPtr parse_identifier();
-        TypePtr parse_type();
-        TypePtr parse_var_type();
+        TypePtr parse_type(bool allow_void = false);
+        TypePtr parse_var_type(bool allow_void);
         TypePtr parse_func_type();
         std::optional<std::vector<ExprPtr>> parse_func_args();
 
@@ -73,6 +72,14 @@ class Parser {
         bool is_next_token(TokenType type);
         bool was_last_token(TokenType type);
         bool is_token(TokenType type) const;
+
+    public:
+        Parser(std::shared_ptr<Lexer> lexer, bool verbose=false);
+        Parser(std::shared_ptr<Lexer> lexer, std::shared_ptr<ParserVisitor> visitor);
+
+        ProgramPtr parse();
+        StatementPtr parse_statement();
+        ExprPtr parse_expression();
 
         void next_token();
         std::shared_ptr<ParserVisitor> get_visitor() {return visitor;};

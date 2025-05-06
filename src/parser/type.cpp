@@ -7,6 +7,7 @@ std::ostream& operator<<(std::ostream& os, const BaseType& type) {
         case BaseType::FLT: os << "flt"; break;
         case BaseType::STRING: os << "string"; break;
         case BaseType::BOOL: os << "bool"; break;
+        case BaseType::VOID: os << "void"; break;
     }
     return os;
 }
@@ -17,6 +18,7 @@ std::optional<BaseType> translate_token_to_type(TokenType type) {
         case TokenType::T_FLT_TYPE: return BaseType::FLT;
         case TokenType::T_STRING_TYPE: return BaseType::STRING;
         case TokenType::T_BOOL_TYPE: return BaseType::BOOL;
+        case TokenType::T_VOID_TYPE: return BaseType::VOID;
         default: return std::nullopt;
     }
 }

@@ -13,6 +13,7 @@ enum class BaseType {
     FLT,
     STRING,
     BOOL,
+    VOID,
 };
 
 std::optional<BaseType> translate_token_to_type(TokenType type);

@@ -20,7 +20,7 @@ std::unique_ptr<Parser> get_parser(std::string string, std::shared_ptr<ParserTes
 
 TEST(ParserTest, ParsesAssignmentStatement) {
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser("int main:: { 10 => int x; }", counter);
+    auto parser = get_parser("int main { 10 => int x; }", counter);
     auto program = parser->parse();
 
     ASSERT_NE(program, nullptr);
@@ -34,7 +34,7 @@ TEST(ParserTest, ParsesAssignmentStatement) {
 
 TEST(ParserTest, ParsesFunctionCall) {
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser("int main:: { (10, 20)->foo; }", counter);
+    auto parser = get_parser("int main { (10, 20)->foo; }", counter);
     auto program = parser->parse();
 
     ASSERT_NE(program, nullptr);
@@ -47,7 +47,7 @@ TEST(ParserTest, ParsesFunctionCall) {
 
 TEST(ParserTest, ParsesWhileLoop) {
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser("int main:: { while (i < 10) { (i)->increment; } }", counter);
+    auto parser = get_parser("int main { while (i < 10) { (i)->increment; } }", counter);
     auto program = parser->parse();
 
     ASSERT_NE(program, nullptr);
@@ -59,7 +59,7 @@ TEST(ParserTest, ParsesWhileLoop) {
 
 TEST(ParserTest, ParsesReturnStatement) {
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser("int main:: { ret 42; }", counter);
+    auto parser = get_parser("int main { ret 42; }", counter);
     auto program = parser->parse();
 
     ASSERT_NE(program, nullptr);
@@ -69,7 +69,7 @@ TEST(ParserTest, ParsesReturnStatement) {
 
 TEST(ParserTest, ParsesConditionalStatement) {
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser("int main:: { if (x > 10) { 20 => int y; } }", counter);
+    auto parser = get_parser("int main { if (x > 10) { 20 => int y; } }", counter);
     auto program = parser->parse();
 
     ASSERT_NE(program, nullptr);
@@ -85,7 +85,7 @@ TEST(ParserTest, ParsesConditionalStatement) {
 
 TEST(ParserTest, ParserLongProgramTest) {
     static const std::string program_str =
-            "int main:: {"
+            "int main {"
             "    (\"Enter a\")->stdin => flt a;"
             "    (\"Enter b\")->stdin => flt b;"
             "    (\"Enter c\")->stdin => flt c;"

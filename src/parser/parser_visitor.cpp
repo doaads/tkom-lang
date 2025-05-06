@@ -54,10 +54,6 @@ void ParserPrinter::visit(const CallExpr& expr) {
     os << indent_str() << "└[\033[1;32mCallExpr\033[0m]";
     print_pos(expr);
     os << std::endl;
-    os << indent_str() << "[DEBUG] ARGS: ";
-    for (auto& arg : expr.get_args()) {
-        arg->accept(*this);
-    }
     increase_indent();
     expr.get_func_name()->accept(*this);
     decrease_indent();
@@ -93,11 +89,9 @@ void ParserPrinter::visit(const WhileLoopStatement& stmt) {
 
 void ParserPrinter::visit(const ConditionalStatement& stmt) {
     os << indent_str() << "[\033[1;36mConditional\033[0m " << stmt.get_type() << "]";
-    os << indent_str() << "[DEBUG] CONDITION:" << std::endl;
-    increase_indent();
-    stmt.get_condition()->accept(*this);
     print_pos(stmt);
     os << std::endl;
+    stmt.get_condition()->accept(*this);
 
     increase_indent();
     stmt.get_body()->accept(*this);
@@ -183,9 +177,9 @@ void ParserPrinter::visit(const FuncSignature& sign) {
     os << "┃ TYPE: ";
     const Type* type = sign.get_type();
     if (type) {
+        os << "\033[1;31m";
         type->accept(*this);
-    } else {
-        os << "void";
+        os << "\033[0m";
     }
     os << std::endl;
     os << "┃ PARAMS: ";

@@ -56,3 +56,14 @@ class UnterminatedString : public CompilerError {
         const char* what() const noexcept override;
         ~UnterminatedString() = default;
 };
+
+class ParserError : public std::runtime_error {
+    private:
+        const Position pos;
+        static std::string format_message(const Position& pos, const std::string& msg);
+    public:
+        ParserError(
+                const Position& pos,
+                const std::string& msg);
+        const Position get_position() const;
+};
