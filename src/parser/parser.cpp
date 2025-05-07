@@ -593,9 +593,10 @@ ExprPtr Parser::parse_identifier() {
     if (!is_token(TokenType::T_IDENTIFIER))
         return nullptr;
     std::string value = current_token.get_value<std::string>();
+    const Position pos = get_position();
 
     next_token();
-    return std::make_unique<IdentifierExpr>(get_position(), value);
+    return std::make_unique<IdentifierExpr>(pos, value);
 }
 
 /*

@@ -1,5 +1,7 @@
+// some high order function examples
 void main {
     for (0 => mut int i; i < 20) {
         (i) -> some_func;
     } -> increment @ print_current_val;
+    (5) -> (1) ->> some_func @ decorator_func; // bind to a decorated function then call
 }
