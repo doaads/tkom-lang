@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(Compiler LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -25,6 +25,7 @@ add_library(type src/parser/type.cpp)
 add_library(variable src/parser/variable.cpp)
 add_library(block src/parser/block.cpp)
 add_library(operators src/parser/operators.cpp)
+add_library(program src/parser/program.cpp)
 add_library(parser_visitor src/parser/parser_visitor.cpp)
 add_library(print_error src/exceptions/print_error.cpp)
 add_library(parser src/parser/parser.cpp)
@@ -43,18 +44,20 @@ target_include_directories(type PUBLIC include)
 target_include_directories(variable PUBLIC include)
 target_include_directories(operators PUBLIC include)
 target_include_directories(block PUBLIC include)
+target_include_directories(program PUBLIC include)
 target_include_directories(parser_visitor PUBLIC include)
 target_include_directories(print_error PUBLIC include)
 target_include_directories(parser PUBLIC include)
 
-add_executable(tkom-parser src/parser_main.cpp)
-target_include_directories(tkom-parser PRIVATE include)
-target_link_libraries(tkom-parser PRIVATE
+add_executable(tkom src/parser_main.cpp)
+target_include_directories(tkom PRIVATE include)
+target_link_libraries(tkom PRIVATE
     Boost::program_options
     lexer
     parser
     print_error
     parser_visitor
+    program
     block
     tokenizer
     token
@@ -69,9 +72,9 @@ target_link_libraries(tkom-parser PRIVATE
     operators
 )
 
-add_executable(tkom src/lexer_main.cpp)
-target_include_directories(tkom PRIVATE include)
-target_link_libraries(tkom PRIVATE
+add_executable(tkom-lexer src/lexer_main.cpp)
+target_include_directories(tkom-lexer PRIVATE include)
+target_link_libraries(tkom-lexer PRIVATE
     Boost::program_options
     lexer
     parser

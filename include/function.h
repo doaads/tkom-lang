@@ -9,17 +9,17 @@ class ParserVisitor;
 
 class FuncSignature : public Node {
     std::unique_ptr<Type> ret_type;
-    std::vector<std::unique_ptr<Variable>> args;
+    std::vector<std::unique_ptr<FuncParam>> args;
     std::string name;
     public:
         FuncSignature(
             Position pos,
             std::unique_ptr<Type> ret,
-            std::vector<std::unique_ptr<Variable>> args,
+            std::vector<std::unique_ptr<FuncParam>> args,
             std::string name);
         void accept(ParserVisitor& visitor) const;
         const Type* get_type() const;
-        const std::vector<const Variable*> get_params() const;
+        const std::vector<const FuncParam*> get_params() const;
         std::string get_name() const;
 };
 

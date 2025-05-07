@@ -1,10 +1,10 @@
 #pragma once
 
+#include "statement.h"
 #include "node.h"
 #include <memory>
 #include <vector>
 
-class Statement;
 class ParserPrinter;
 class ParserVisitor;
 

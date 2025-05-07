@@ -4,10 +4,9 @@
 #include "parser_visitor.h"
 #include "type.h"
 #include "variable.h"
+#include "statement_specific.h"
 
 #pragma once
-
-#include "parser_visitor.h"
 
 class ParserTestCounter : public ParserVisitor {
 public:
@@ -34,9 +33,15 @@ public:
     int func_type_count = 0;
     int void_count = 0;
 
-    int variable_count = 0;
+    int func_param_count = 0;
     int func_signature_count = 0;
     int function_count = 0;
+
+    void visit(const Program& prog) override {
+        for (const auto& func : prog.get_functions()) {
+            func->accept(*this);
+        }
+    }
 
     // Expression visitors
     void visit(const LiteralExpr&) override { 
@@ -102,7 +107,9 @@ public:
 
     void visit(const RetStatement& stmt) override {
         ret_stmt_count++;
-        stmt.get_retval()->accept(*this);
+
+        if (auto retval = stmt.get_retval())
+            retval->accept(*this);
     }
 
     void visit(const CallStatement& stmt) override {
@@ -127,8 +134,8 @@ public:
     void visit(const VarType&) override { var_type_count++; }
     void visit(const FuncType&) override { func_type_count++; }
 
-    void visit(const Variable& var) override {
-        variable_count++;
+    void visit(const FuncParam& var) override {
+        func_param_count++;
         var.get_type()->accept(*this);
     }
 

@@ -7,7 +7,7 @@
 FuncSignature::FuncSignature(
         Position pos,
         std::unique_ptr<Type> ret,
-        std::vector<std::unique_ptr<Variable>> args,
+        std::vector<std::unique_ptr<FuncParam>> args,
         std::string name) :
     Node(pos),
     ret_type(std::move(ret)),
@@ -23,8 +23,8 @@ void FuncSignature::accept(ParserVisitor& visitor) const {
 const Type* FuncSignature::get_type() const { return ret_type.get();}
 std::string FuncSignature::get_name() const { return name;}
 
-const std::vector<const Variable*> FuncSignature::get_params() const {
-    std::vector<const Variable*> params;
+const std::vector<const FuncParam*> FuncSignature::get_params() const {
+    std::vector<const FuncParam*> params;
     for (auto& param : args) {
         params.push_back(param.get());
     }

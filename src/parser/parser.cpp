@@ -24,11 +24,12 @@ ProgramPtr Parser::parse() {
         function = parse_func_def();
         if (!function) throw ParserError(get_position(), "Expected function def");
 
-        function->accept(*visitor);
         functions.push_back(std::move(function));
     }
 
-    return std::make_unique<Program>(std::move(functions));
+    ProgramPtr program = std::make_unique<Program>(std::move(functions));
+    program->accept(*visitor);
+    return program;
 }
 
 /*
@@ -62,7 +63,7 @@ FuncSignPtr Parser::parse_func_signature() {
         throw ParserError(get_position(), "Expected function identifier");
 
     std::string func_name = current_token.get_value<std::string>();
-    std::vector<std::unique_ptr<Variable>> params;
+    std::vector<std::unique_ptr<FuncParam>> params;
 
     if (!is_next_token(TokenType::T_FUNC_SIGN)) {
         if (!is_token(TokenType::T_LBLOCK))
@@ -80,7 +81,7 @@ FuncSignPtr Parser::parse_func_signature() {
         if (!is_token(TokenType::T_IDENTIFIER))
             throw ParserError(get_position(), "Expected parameter name");
         current_arg_name = current_token.get_value<std::string>();
-        params.push_back(std::make_unique<Variable>(std::move(current_arg_type), current_arg_name));
+        params.push_back(std::make_unique<FuncParam>(std::move(current_arg_type), current_arg_name));
     } while (is_next_token(TokenType::T_COMMA));
 
     return std::make_unique<FuncSignature>(
@@ -175,6 +176,10 @@ StatementPtr Parser::parse_assign_or_call() {
 
     return std::make_unique<AssignStatement>(pos, std::move(expr), std::move(type), std::move(identifier));
 }
+
+/*
+ *    while_loop = while, condition, block
+ */
 
 StatementPtr Parser::parse_while_loop() {
     if (!is_token(TokenType::T_WHILE))
@@ -476,13 +481,10 @@ ExprPtr Parser::parse_factor() {
         return expr;
     }
 
-    ExprPtr factor = parse_identifier();
+    ExprPtr factor = parse_decorator();
     if (factor) return factor;
 
     factor = parse_func_call_or_parens();
-    if (factor) return factor;
-
-    factor = parse_decorator();
     if (factor) return factor;
 
     return nullptr;
@@ -577,6 +579,7 @@ ExprPtr Parser::parse_decorator() {
 
     if (!is_token(TokenType::T_DECORATE))
         return left;
+    next_token();
 
     ExprPtr right = parse_identifier();
     if (!right)

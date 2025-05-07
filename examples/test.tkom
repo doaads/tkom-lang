@@ -1,0 +1,5 @@
+void main {
+    for (0 => mut int i; i < 20) {
+        (i) -> some_func;
+    } -> increment @ print_current_val;
+}

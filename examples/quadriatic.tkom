@@ -1,4 +1,3 @@
-// Quadriatic equation example program
 int main:: { 
     ("Enter a")->stdin => flt a;
     ("Enter b")->stdin => flt b;

@@ -1,7 +1,7 @@
 #include "parser_visitor.h"
 #include "function.h"
 #include "type.h"
-#include "statement.h"
+#include "statement_specific.h"
 #include "expression.h"
 #include "block.h"
 
@@ -14,6 +14,12 @@ void ParserPrinter::decrease_indent() { --indent; }
 
 void ParserPrinter::print_pos(const Node& expr) {
     os << " at (\033[1;36m" << expr.get_position() << "\033[0m)";
+}
+
+void ParserPrinter::visit(const Program& program) {
+    for (const auto& func : program.get_functions()) {
+        return func->accept(*this);
+    }
 }
 
 void ParserPrinter::visit(const LiteralExpr& expr) {
@@ -109,7 +115,9 @@ void ParserPrinter::visit(const ElseStatement& stmt) {
     decrease_indent();
 }
 void ParserPrinter::visit(const RetStatement& stmt) {
-    os << indent_str() << "[\033[1;36mRet\033[0m] " << stmt.get_retval();
+    os << indent_str() << "[\033[1;36mRet\033[0m] ";
+    if (auto retval = stmt.get_retval())
+        retval->accept(*this);
     print_pos(stmt);
     os << std::endl;
 }
@@ -165,7 +173,7 @@ void ParserPrinter::visit(const FuncType& type) {
     os << "]";
 }
 
-void ParserPrinter::visit(const Variable& var) {
+void ParserPrinter::visit(const FuncParam& var) {
     var.get_type()->accept(*this);
 }
 
