@@ -18,7 +18,7 @@ void ParserPrinter::print_pos(const Node& expr) {
 
 void ParserPrinter::visit(const Program& program) {
     for (const auto& func : program.get_functions()) {
-        return func->accept(*this);
+        func->accept(*this);
     }
 }
 

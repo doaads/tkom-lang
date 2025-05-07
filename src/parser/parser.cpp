@@ -20,7 +20,8 @@ ProgramPtr Parser::parse() {
     std::vector<std::unique_ptr<Function>> functions;
     FuncPtr function;
 
-    while (!is_next_token(TokenType::T_EOF)) {
+    next_token();
+    while (!is_token(TokenType::T_EOF)) {
         function = parse_func_def();
         if (!function) throw ParserError(get_position(), "Expected function def");
 

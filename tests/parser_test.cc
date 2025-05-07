@@ -116,3 +116,15 @@ TEST(ParserTest, ParserLongProgramTest) {
     EXPECT_EQ(counter->block_count, 4);
     EXPECT_EQ(counter->identifier_expr_count, 34);
 }
+
+TEST(ParserTest, ParsesMultipleFunctions) {
+    std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
+    auto parser = get_parser("int main {} int other_fun {}", counter);
+    auto program = parser->parse();
+
+    ASSERT_NE(program, nullptr);
+    EXPECT_EQ(counter->function_count, 2);
+    EXPECT_EQ(counter->func_signature_count, 2);
+    EXPECT_EQ(counter->block_count, 2);
+}
+
