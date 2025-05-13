@@ -231,7 +231,7 @@ ForLoopArgsPtr Parser::parse_for_loop_args() {
 }
 
 /*
- *    ret_statement = ret, expression
+ *    ret_statement = ret, [expression]
  */
 
 StatementPtr Parser::parse_ret_statement() {
