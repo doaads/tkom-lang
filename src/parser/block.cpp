@@ -5,7 +5,7 @@ Block::Block(std::vector<std::unique_ptr<Statement>> statements) : statements(st
 
 void Block::accept(ParserVisitor& visitor) const {visitor.visit(*this);}
 
-const std::vector<const Statement*> Block::get_statements() const {
+std::vector<const Statement*> Block::get_statements() const {
     std::vector<const Statement*> result;
     result.reserve(statements.size());
     for (const auto& stmt : statements) {

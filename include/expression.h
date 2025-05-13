@@ -32,7 +32,6 @@ class Expression : public Node {
          * @param pos The position of the expression in the source code.
          */
         Expression(const Position pos) : Node(pos) {}
-        virtual ~Expression() = default;
         virtual void accept(ParserVisitor& visitor) const = 0;
 };
 

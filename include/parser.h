@@ -1,6 +1,5 @@
 #pragma once
 
-#include "parser_visitor.h"
 #include "lexer.h"
 #include "program.h"
 #include "token.h"
@@ -25,15 +24,9 @@ using ProgramPtr = std::unique_ptr<Program>;
 
 /**
  * @brief A class responsible for parsing source code into an program tree.
- *
- * This class uses recursive descent parsing techniques and provides methods for parsing different
- * types of expressions (binary, unary, etc.), statements (assignments, loops, conditionals, etc.), 
- * and functions.
  */
 class Parser {
     private:
-        bool verbose;  ///< Whether verbose logging is enabled.
-        std::shared_ptr<ParserVisitor> visitor;  ///< Visitor to traverse the parse tree.
         std::shared_ptr<Lexer> lexer;  ///< Source lexer for tokens.
         Token current_token;  ///< Current token being processed.
 
@@ -55,8 +48,6 @@ class Parser {
          * `function_def = func_signature, block`
          * 
          * @return A unique pointer to the parsed function.
-         *
-         *
          */
         FuncPtr parse_func_def();
 
@@ -360,17 +351,8 @@ class Parser {
          * @brief Constructs a parser with a lexer.
          * 
          * @param lexer Shared pointer to the lexer.
-         * @param verbose Enable verbose logging.
          */
-        Parser(std::shared_ptr<Lexer> lexer, bool verbose=false);
-
-        /**
-         * @brief Constructs a parser with a lexer and a visitor.
-         * 
-         * @param lexer Shared pointer to the lexer.
-         * @param visitor Shared pointer to the visitor.
-         */
-        Parser(std::shared_ptr<Lexer> lexer, std::shared_ptr<ParserVisitor> visitor);
+        Parser(std::shared_ptr<Lexer> lexer);
 
         /**
          * @brief Starts parsing and returns a full program tree.
@@ -397,12 +379,4 @@ class Parser {
          * @brief Advances to the next token.
          */
         void next_token();
-
-        
-        /**
-         * @brief Gets the current visitor.
-         * 
-         * @return Shared pointer to visitor.
-         */
-        std::shared_ptr<ParserVisitor> get_visitor() {return visitor;};
 };

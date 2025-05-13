@@ -13,15 +13,16 @@ Lexer get_lexer_for_string(std::string string) {
     return lexer;
 }
 
-std::unique_ptr<Parser> get_parser(std::string string, std::shared_ptr<ParserTestCounter> visitor) {
+std::unique_ptr<Parser> get_parser(std::string string) {
     auto lexer = std::make_shared<Lexer>(get_lexer_for_string(string));
-    return std::make_unique<Parser>(std::move(lexer), visitor);
+    return std::make_unique<Parser>(std::move(lexer));
 }
 
 TEST(ParserTest, ParsesAssignmentStatement) {
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser("int main { 10 => int x; }", counter);
+    auto parser = get_parser("int main { 10 => int x; }");
     auto program = parser->parse();
+    counter->visit(*program);
 
     ASSERT_NE(program, nullptr);
     EXPECT_EQ(counter->assign_stmt_count, 1);
@@ -34,8 +35,9 @@ TEST(ParserTest, ParsesAssignmentStatement) {
 
 TEST(ParserTest, ParsesFunctionCall) {
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser("int main { (10, 20)->foo; }", counter);
+    auto parser = get_parser("int main { (10, 20)->foo; }");
     auto program = parser->parse();
+    counter->visit(*program);
 
     ASSERT_NE(program, nullptr);
     EXPECT_EQ(counter->call_stmt_count, 1); // One function call
@@ -47,8 +49,9 @@ TEST(ParserTest, ParsesFunctionCall) {
 
 TEST(ParserTest, ParsesWhileLoop) {
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser("int main { while (i < 10) { (i)->increment; } }", counter);
+    auto parser = get_parser("int main { while (i < 10) { (i)->increment; } }");
     auto program = parser->parse();
+    counter->visit(*program);
 
     ASSERT_NE(program, nullptr);
     EXPECT_EQ(counter->while_stmt_count, 1); // One while loop statement
@@ -59,8 +62,9 @@ TEST(ParserTest, ParsesWhileLoop) {
 
 TEST(ParserTest, ParsesReturnStatement) {
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser("int main { ret 42; }", counter);
+    auto parser = get_parser("int main { ret 42; }");
     auto program = parser->parse();
+    counter->visit(*program);
 
     ASSERT_NE(program, nullptr);
     EXPECT_EQ(counter->ret_stmt_count, 1); // One return statement
@@ -69,8 +73,9 @@ TEST(ParserTest, ParsesReturnStatement) {
 
 TEST(ParserTest, ParsesConditionalStatement) {
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser("int main { if (x > 10) { 20 => int y; } }", counter);
+    auto parser = get_parser("int main { if (x > 10) { 20 => int y; } }");
     auto program = parser->parse();
+    counter->visit(*program);
 
     ASSERT_NE(program, nullptr);
     EXPECT_EQ(counter->conditional_stmt_count, 1); // One conditional statement (if)
@@ -105,8 +110,9 @@ TEST(ParserTest, ParserLongProgramTest) {
             "}";
 
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser(program_str, counter);
+    auto parser = get_parser(program_str);
     auto program = parser->parse();
+    counter->visit(*program);
 
     EXPECT_NE(program, nullptr);
     EXPECT_EQ(counter->conditional_stmt_count, 2); // two conditional statements (if, else if)
@@ -119,8 +125,9 @@ TEST(ParserTest, ParserLongProgramTest) {
 
 TEST(ParserTest, ParsesMultipleFunctions) {
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser("int main {} int other_fun {}", counter);
+    auto parser = get_parser("int main {} int other_fun {}");
     auto program = parser->parse();
+    counter->visit(*program);
 
     ASSERT_NE(program, nullptr);
     EXPECT_EQ(counter->function_count, 2);

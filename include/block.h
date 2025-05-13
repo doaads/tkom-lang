@@ -17,5 +17,5 @@ class Block : public Node {
 
         void accept(ParserVisitor& visitor) const;
 
-        const std::vector<const Statement*> get_statements() const;
+        std::vector<const Statement*> get_statements() const;
 };

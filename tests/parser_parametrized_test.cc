@@ -14,9 +14,9 @@ Lexer get_lexer_for_string(std::string string) {
     return lexer;
 }
 
-std::unique_ptr<Parser> get_parser(std::string string, std::shared_ptr<ParserTestCounter> visitor, bool skip = false) {
+std::unique_ptr<Parser> get_parser(std::string string, bool skip = false) {
     auto lexer = std::make_shared<Lexer>(get_lexer_for_string(string));
-    auto parser = std::make_unique<Parser>(std::move(lexer), visitor);
+    auto parser = std::make_unique<Parser>(std::move(lexer));
     if (skip) parser->next_token();
     return parser;
 }
@@ -36,7 +36,7 @@ class ParserParametrizedExpr : public ::testing::TestWithParam<ExprCount> {};
 TEST_P(ParserParametrizedExpr, HandlerManagerOperator) {
     const auto& param = GetParam();
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser(param.program, counter, true);
+    auto parser = get_parser(param.program, true);
     auto expr = parser->parse_expression();
     std::cout << param.program << std::endl;
     ASSERT_NE(expr, nullptr);
@@ -227,7 +227,7 @@ class ParserParametrizedStmt : public ::testing::TestWithParam<StmtCount> {};
 TEST_P(ParserParametrizedStmt, HandlerManagerOperator) {
     const auto& param = GetParam();
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser(param.program, counter, true);
+    auto parser = get_parser(param.program, true);
     auto stmt = parser->parse_statement();
     std::cout << param.program << std::endl;
     ASSERT_NE(stmt, nullptr);
@@ -287,7 +287,7 @@ class ParserInvalidPrograms : public ::testing::TestWithParam<InvalidProgram> {}
 TEST_P(ParserInvalidPrograms, ThrowsOnInvalidCode) {
     const auto& param = GetParam();
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser(param.program, counter, true);
+    auto parser = get_parser(param.program, true);
     std::cout << "Testing: " << param.program << std::endl;
     EXPECT_THROW({
         parser->parse();

@@ -40,7 +40,6 @@ class Statement : public Node {
         static std::string indent_str(int amount);
     public:
         Statement(const Position pos) : Node(pos) {}
-        virtual ~Statement() = default;
 
         virtual void accept(ParserVisitor& visitor) const = 0;
 };
