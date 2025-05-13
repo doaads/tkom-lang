@@ -50,11 +50,7 @@ class LiteralExpr : public Expression {
    public:
     template <typename T>
     T get_value() const {
-        if (const T *pval = std::get_if<T>(value)) {
-            return *pval;
-        } else {
-            throw std::runtime_error("Unable to get LiteralExpr value");
-        }
+            return std::get<T>(value);
     }
     LiteralExpr(const Position pos, Token token);
     void accept(ParserVisitor &visitor) const override;

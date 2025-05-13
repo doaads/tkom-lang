@@ -13,12 +13,10 @@ ProgramPtr Parser::parse() {
     FuncPtr function;
 
     next_token();
-    while (!is_token(TokenType::T_EOF)) {
-        function = parse_func_def();
-        if (!function) throw ParserError(get_position(), "Expected function def");
-
+    while (auto function = parse_func_def()) {
         functions.push_back(std::move(function));
     }
+    shall(is_token(TokenType::T_EOF), "Expected function def");
 
     ProgramPtr program = std::make_unique<Program>(std::move(functions));
     return program;
@@ -32,16 +30,15 @@ FuncPtr Parser::parse_func_def() {
     FuncSignPtr signature = parse_func_signature();
     if (!signature) return nullptr;
 
-    BlockPtr body = parse_block();
-    if (!body) throw ParserError(get_position(), "Expected block");
+    BlockPtr body = shall(parse_block(), "Expected block");
 
     return std::make_unique<Function>(std::move(signature), std::move(body));
 }
 
 /*
  *      func_signature  = type, identifier, [function_sign_op,
- * function_def_params] func_def_params = type_non_void, identifier, {",",
- * type_non_void, identifier}
+ * function_def_params] func_def_params = func_param, {",",
+ * func_param}
  */
 
 FuncSignPtr Parser::parse_func_signature() {
@@ -51,32 +48,36 @@ FuncSignPtr Parser::parse_func_signature() {
         return nullptr;
     }
 
-    if (!is_token(TokenType::T_IDENTIFIER))
-        throw ParserError(get_position(), "Expected function identifier");
+    shall(is_token(TokenType::T_IDENTIFIER), "Expected function identifier");
 
     std::string func_name = current_token.get_value<std::string>();
     std::vector<std::unique_ptr<FuncParam>> params;
 
     if (!is_next_token(TokenType::T_FUNC_SIGN)) {
-        if (!is_token(TokenType::T_LBLOCK)) throw ParserError(get_position(), "Expected '::'");
+        shall(is_token(TokenType::T_LBLOCK), "Expected '::'");
         return std::make_unique<FuncSignature>(pos, std::move(ret_type), std::move(params),
                                                func_name);
     }
 
-    TypePtr current_arg_type;
-    std::string current_arg_name;
+    ParamPtr param;
     do {
         next_token();
-        current_arg_type = parse_type();
-        if (!current_arg_type) throw ParserError(get_position(), "Expected type");
-        if (!is_token(TokenType::T_IDENTIFIER))
-            throw ParserError(get_position(), "Expected parameter name");
-        current_arg_name = current_token.get_value<std::string>();
-        params.push_back(
-            std::make_unique<FuncParam>(std::move(current_arg_type), current_arg_name));
+        if ((param = shall(parse_func_param(), "Expected parameter")))
+            params.push_back(std::move(param));
     } while (is_next_token(TokenType::T_COMMA));
 
     return std::make_unique<FuncSignature>(pos, std::move(ret_type), std::move(params), func_name);
+}
+
+/*
+ *      func_param = type_non_void, identifier
+ */
+
+ParamPtr Parser::parse_func_param() {
+    TypePtr current_arg_type = shall(parse_type(), "Expected type");
+    shall(is_token(TokenType::T_IDENTIFIER), "Expected parameter name");
+    std::string current_arg_name = current_token.get_value<std::string>();
+    return std::make_unique<FuncParam>(std::move(current_arg_type), current_arg_name);
 }
 
 /*
@@ -84,16 +85,16 @@ FuncSignPtr Parser::parse_func_signature() {
  */
 
 BlockPtr Parser::parse_block() {
-    if (!is_token(TokenType::T_LBLOCK)) throw ParserError(get_position(), "Expected '{'");
+    if (!is_token(TokenType::T_LBLOCK)) return nullptr;
 
     std::vector<StatementPtr> statements;
 
     next_token();
-    while (!is_token(TokenType::T_RBLOCK)) {
-        StatementPtr statement = parse_statement();
-        if (!statement) throw ParserError(get_position(), "Expected statement or }");
+    while (auto statement = parse_statement()) {
         statements.push_back(std::move(statement));
     }
+    shall(is_token(TokenType::T_RBLOCK), "Expected }");
+
     next_token();
     return std::make_unique<Block>(std::move(statements));
 }
@@ -140,24 +141,18 @@ StatementPtr Parser::parse_assign_or_call() {
 
     TokenType op_type = current_token.get_type();
     if (op_type != TokenType::T_ASSIGN) {
-        if (was_last_token(TokenType::T_SEMICOLON))
-            // if statement ends here, we have a ready CallStatement (expression
-            // statement)
-            return std::make_unique<CallStatement>(pos, std::move(expr));
-        throw ParserError(get_position(), "Expected '=>'");
+        shall(was_last_token(TokenType::T_SEMICOLON), "Expected '=>'");
+        return std::make_unique<CallStatement>(pos, std::move(expr));
     }
 
     next_token();
-    TypePtr type = parse_type();
-    if (!type) throw ParserError(get_position(), "Expected type");
+    TypePtr type = shall(parse_type(), "Expected type");
 
-    if (!is_token(TokenType::T_IDENTIFIER))
-        throw ParserError(get_position(), "Expected identifier");
-
+    shall(is_token(TokenType::T_IDENTIFIER), "Expected identifier");
     ExprPtr identifier =
         std::make_unique<IdentifierExpr>(get_position(), current_token.get_value<std::string>());
 
-    if (!is_next_token(TokenType::T_SEMICOLON)) throw ParserError(get_position(), "Expected ;");
+    shall(is_next_token(TokenType::T_SEMICOLON), "Expected ';'");
     next_token();
 
     return std::make_unique<AssignStatement>(pos, std::move(expr), std::move(type),
@@ -177,8 +172,7 @@ StatementPtr Parser::parse_while_loop() {
     ExprPtr condition = parse_condition();
 
     next_token();
-    BlockPtr block = parse_block();
-    if (!block) throw ParserError(get_position(), "Expected block");
+    BlockPtr block = shall(parse_block(), "Expected block");
 
     return std::make_unique<WhileLoopStatement>(pos, std::move(condition), std::move(block));
 }
@@ -192,19 +186,17 @@ StatementPtr Parser::parse_for_loop() {
     const Position pos = get_position();
 
     next_token();
-    ForLoopArgsPtr args = parse_for_loop_args();
-    if (!args) throw ParserError(get_position(), "Expected arguments");
 
-    BlockPtr block = parse_block();
-    if (!block) throw ParserError(get_position(), "Expected block");
+    ForLoopArgsPtr args = shall(parse_for_loop_args(), "Expected arguments");
 
-    if (!is_token(TokenType::T_CALL)) throw ParserError(get_position(), "Expected '->'");
+    BlockPtr block = shall(parse_block(), "Expected block");
+
+    shall(is_token(TokenType::T_CALL), "Expected ->");
     next_token();
 
-    ExprPtr on_iter = parse_bind_front();
-    if (!on_iter) throw ParserError(get_position(), "Expected bind front or identifier");
+    ExprPtr on_iter = shall(parse_bind_front(), "Expected bind front or identifier");
 
-    if (!was_last_token(TokenType::T_SEMICOLON)) throw ParserError(get_position(), "Expected ;");
+    shall(was_last_token(TokenType::T_SEMICOLON), "Expected ';'");
 
     return std::make_unique<ForLoopStatement>(pos, std::move(args), std::move(block),
                                               std::move(on_iter));
@@ -215,23 +207,21 @@ StatementPtr Parser::parse_for_loop() {
  */
 
 ForLoopArgsPtr Parser::parse_for_loop_args() {
-    if (!is_token(TokenType::T_LPAREN)) throw ParserError(get_position(), "Expected (");
+    shall(is_token(TokenType::T_LPAREN), "Expected (");
 
     next_token();
     StatementPtr assign = parse_assign_or_call();
     std::variant<std::monostate, StatementPtr, ExprPtr> iterator;
     if (!assign) {
-        ExprPtr identifier = parse_identifier();
-        if (!identifier) throw ParserError(get_position(), "Expected assign or identifier");
-        if (!is_token(TokenType::T_SEMICOLON)) throw ParserError(get_position(), "Expected ';'");
+        ExprPtr identifier = shall(parse_identifier(), "Expected assign or identifier");
+        shall(is_token(TokenType::T_SEMICOLON), "Expected ';'");
     } else {
         iterator = std::move(assign);
     }
 
-    ExprPtr condition = parse_expression();
-    if (!condition) throw ParserError(get_position(), "Expected expression");
+    ExprPtr condition = shall(parse_expression(), "Expected expression");
 
-    if (!is_token(TokenType::T_RPAREN)) throw ParserError(get_position(), "Expected )");
+    shall(is_token(TokenType::T_RPAREN), "Expected ')'");
 
     ForLoopArgsPtr args = std::make_unique<ForLoopArgs>();
     args->iterator = std::move(iterator);
@@ -251,8 +241,7 @@ StatementPtr Parser::parse_ret_statement() {
     next_token();
     ExprPtr expression = parse_expression();
 
-    if (!is_token(TokenType::T_SEMICOLON)) throw ParserError(get_position(), "Expected ';'");
-    next_token();
+    shall(was_last_token(TokenType::T_SEMICOLON), "Expected ';'");
 
     return std::make_unique<RetStatement>(pos, std::move(expression));
 }
@@ -270,8 +259,7 @@ StatementPtr Parser::parse_conditional_statement(TokenType st_type) {
     ExprPtr condition = parse_condition();
 
     next_token();
-    BlockPtr block = parse_block();
-    if (!block) throw ParserError(get_position(), "Expected block after conditional statement");
+    BlockPtr block = shall(parse_block(), "Expected block after conditional statement");
 
     StatementPtr else_st = parse_conditional_statement(TokenType::T_ELIF);
     if (!else_st) else_st = parse_else_statement();
@@ -290,8 +278,7 @@ StatementPtr Parser::parse_else_statement() {
     const Position pos = get_position();
     next_token();
 
-    BlockPtr block = parse_block();
-    if (!block) throw ParserError(get_position(), "Expected block after else");
+    BlockPtr block = shall(parse_block(), "Expected block");
 
     return std::make_unique<ElseStatement>(pos, std::move(block));
 }
@@ -301,14 +288,11 @@ StatementPtr Parser::parse_else_statement() {
  */
 
 ExprPtr Parser::parse_condition() {
-    if (!is_token(TokenType::T_LPAREN)) throw ParserError(get_position(), "Expected '('");
-
+    shall(is_token(TokenType::T_LPAREN), "Expected '('");
     next_token();
-    ExprPtr condition = parse_expression();
+    ExprPtr condition = shall(parse_expression(), "Expected expression");
 
-    if (!condition) throw ParserError(get_position(), "Expected expression");
-
-    if (!is_token(TokenType::T_RPAREN)) throw ParserError(get_position(), "Expected ')'");
+    shall(is_token(TokenType::T_RPAREN), "Expected ')'");
 
     return condition;
 }
@@ -333,10 +317,7 @@ ExprPtr Parser::parse_binary_expr(ConditionFunc condition, NextFunc next, bool l
     while (condition()) {
         op = *token_to_binary_op(current_token.get_type());
         next_token();
-        ExprPtr right = next();
-        if (!right)
-            throw ParserError(get_position(),
-                              "Error while parsing binary expression. Expected right-hand side.");
+        ExprPtr right = shall(next(), "Expected expression");
         left = std::make_unique<BinaryExpr>(left->get_position(), std::move(left), op,
                                             std::move(right));
         if (limited) break;
@@ -450,18 +431,20 @@ ExprPtr Parser::parse_factor() {
  */
 
 ExprPtr Parser::parse_func_call_or_parens() {
-    std::optional<std::vector<ExprPtr>> args = parse_func_args();
+    auto args = parse_func_args();
     if (!args) return nullptr;
 
     ArgOrExpr bindfrt = parse_bindfrt_or_call(std::move(*args));
-    if (!bindfrt.index()) return std::get<ExprPtr>(std::move(bindfrt));
+    if (ExprPtr* expr = std::get_if<ExprPtr>(&bindfrt)) {
+        return std::move(*expr);
+    }
 
     // move args back
-    args = std::get<std::vector<ExprPtr>>(std::move(bindfrt));
+    args = std::move(std::get<std::vector<ExprPtr>>(bindfrt));
 
-    if (args->size() != 1) throw ParserError(get_position(), "Expected expression");
+    if (args->empty()) throw ParserError(get_position(), "Expected expression");
 
-    return std::move((*args)[0]);
+    return std::move(args->front());
 }
 
 /*
@@ -477,7 +460,7 @@ ArgOrExpr Parser::parse_bindfrt_or_call(std::vector<ExprPtr> args) {
     const Position pos = get_position();
 
     // move args back
-    args = std::get<std::vector<ExprPtr>>(std::move(bindfrt));
+    args = std::move(std::get<std::vector<ExprPtr>>(bindfrt));
 
     if (!is_token(TokenType::T_CALL)) return args;  // fail, return ownership of args
     next_token();
@@ -496,8 +479,7 @@ ArgOrExpr Parser::parse_bind_front_right(std::vector<ExprPtr> args) {
     const Position pos = get_position();
 
     next_token();
-    ExprPtr decorator = parse_decorator();
-    if (!decorator) throw ParserError(get_position(), "Expected identifier or decorator");
+    ExprPtr decorator = shall(parse_decorator(), "Expected identifier or decorator");
     return std::make_unique<BindFrtExpr>(pos, std::move(decorator), std::move(args));
 }
 
@@ -525,8 +507,7 @@ ExprPtr Parser::parse_decorator() {
     if (!is_token(TokenType::T_DECORATE)) return left;
     next_token();
 
-    ExprPtr right = parse_identifier();
-    if (!right) throw ParserError(get_position(), "Expected identifier");
+    ExprPtr right = shall(parse_identifier(), "Expected identifier");
 
     return std::make_unique<BinaryExpr>(left->get_position(), std::move(left), BinaryOp::DECORATE,
                                         std::move(right));
@@ -557,7 +538,7 @@ std::optional<std::vector<ExprPtr>> Parser::parse_func_args() {
         args.push_back(std::move(arg));
     } while (is_token(TokenType::T_COMMA));
 
-    if (!is_token(TokenType::T_RPAREN)) throw ParserError(get_position(), "Expected ')'");
+    shall(is_token(TokenType::T_RPAREN), "Expected ')'");
 
     next_token();
     return args;
@@ -595,7 +576,7 @@ TypePtr Parser::parse_var_type(bool allow_void) {
     std::optional<BaseType> type;
 
     if (!(type = translate_token_to_type(current_token.get_type()))) {
-        if (mut) throw ParserError(get_position(), "Expected type");
+        shall(!mut, "Expected type");
         return nullptr;
     }
 
@@ -616,10 +597,9 @@ TypePtr Parser::parse_func_type() {
     if (!is_token(TokenType::T_LFTYPE)) return nullptr;
 
     next_token();
-    TypePtr ret_type = parse_type(true);
-    if (!ret_type) throw ParserError(get_position(), "Expected type");
+    TypePtr ret_type = shall(parse_type(true), "Expected type");
 
-    if (!is_token(TokenType::T_FUNC_SIGN)) throw ParserError(get_position(), "Expected '::'");
+    shall(is_token(TokenType::T_FUNC_SIGN), "Expected '::'");
 
     std::vector<std::unique_ptr<Type>> params;
     TokenType separator;

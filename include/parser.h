@@ -3,6 +3,7 @@
 #include <optional>
 
 #include "block.h"
+#include "exceptions.h"
 #include "expression.h"
 #include "function.h"
 #include "lexer.h"
@@ -22,6 +23,7 @@ using FuncPtr = std::unique_ptr<Function>;
 using TypePtr = std::unique_ptr<Type>;
 using FuncSignPtr = std::unique_ptr<FuncSignature>;
 using ProgramPtr = std::unique_ptr<Program>;
+using ParamPtr = std::unique_ptr<FuncParam>;
 
 /**
  * @brief A class responsible for parsing source code into an program tree.
@@ -59,6 +61,13 @@ class Parser {
      * @return A unique pointer to the parsed function signature.
      */
     FuncSignPtr parse_func_signature();
+
+    /**
+     * @brief Parses a function parameter.
+     * `func_param  = type_non_void, identifier`
+     * @return A unique pointer to the parsed function parameter.
+     */
+    ParamPtr parse_func_param();
 
     /**
      * @brief Parses a block of code.
@@ -347,6 +356,12 @@ class Parser {
     bool is_token(TokenType type) const;
 
     const Position get_position() const { return current_token.get_position(); };
+
+    template<typename T>
+    T shall(T arg, std::string error) {
+        if (!arg) throw ParserError(get_position(), error);
+        return std::move(arg);
+    }
 
    public:
     /**
