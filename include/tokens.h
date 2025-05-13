@@ -61,4 +61,4 @@ enum class TokenType {
     T_EOF
 };
 
-std::ostream& operator<<(std::ostream& os, const TokenType type);
+std::ostream &operator<<(std::ostream &os, const TokenType type);

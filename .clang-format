@@ -1,3 +1,9 @@
-BasedOnStyle: LLVM
+BasedOnStyle: Google
 IndentWidth: 4
+ContinuationIndentWidth: 4
+TabWidth: 4
+UseTab: Never
 ColumnLimit: 100
+Language: Cpp
+PointerAlignment: Right
+NamespaceIndentation: All

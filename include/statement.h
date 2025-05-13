@@ -1,9 +1,9 @@
 #pragma once
 /**
  * @file statement.h
- * 
+ *
  * @brief Contains the definition of the Statement class and related structures.
- * 
+ *
  * This file defines the `Statement` class, which serves as the base class for various types of
  * statements in the abstract syntax tree (AST).
  * and type aliases used for working with statements. Each type of statement (e.g., assignment,
@@ -11,11 +11,12 @@
  * method for interacting with a `ParserVisitor`.
  */
 
+#include <memory>
+#include <string>
+
 #include "expression.h"
 #include "node.h"
 #include "type.h"
-#include <memory>
-#include <string>
 
 class Expression;
 class Block;
@@ -29,18 +30,18 @@ using BlockPtr = std::unique_ptr<Block>;
 
 /**
  * @brief Abstract base class for all statement types in the program tree.
- * 
+ *
  * The `Statement` class represents a statement in program tree. It is the
  * base class for all specific statement types such as conditionals, loops, assignments, and
  * return statements. The `Statement` class provides an abstract `accept` method, which must
  * be implemented by each derived class to interact with a `ParserVisitor`.
  */
 class Statement : public Node {
-    protected:
-        static std::string indent_str(int amount);
-    public:
-        Statement(const Position pos) : Node(pos) {}
+   protected:
+    static std::string indent_str(int amount);
 
-        virtual void accept(ParserVisitor& visitor) const = 0;
+   public:
+    Statement(const Position pos) : Node(pos) {}
+
+    virtual void accept(ParserVisitor &visitor) const = 0;
 };
-

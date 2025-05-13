@@ -1,11 +1,12 @@
 #include "tokenizer.h"
 
-#include <cmath>
 #include <unistd.h>
+
+#include <cmath>
+
 #include "exceptions.h"
 
 Tokenizer::Tokenizer(std::shared_ptr<InputManager> input) : input(input) {}
-
 
 Token Tokenizer::get_token() {
     Position pos = input->save_position();
@@ -14,7 +15,7 @@ Token Tokenizer::get_token() {
     return token;
 }
 
-Token Tokenizer::build_token(Position& pos) {
+Token Tokenizer::build_token(Position &pos) {
     char current_char = input->get_next_char();
     while (current_char != EOF) {
         if (std::isspace(current_char)) {
@@ -23,9 +24,9 @@ Token Tokenizer::build_token(Position& pos) {
             continue;
         } else if (std::isalpha(current_char)) {
             return build_identifier(current_char);
-        } else if (std::isdigit(current_char)){
+        } else if (std::isdigit(current_char)) {
             return build_number(current_char);
-        } else if (current_char == '"'){
+        } else if (current_char == '"') {
             return build_string(current_char);
         } else if (operator_tokens.count(current_char)) {
             return build_short_operator(current_char);
@@ -135,7 +136,7 @@ Token Tokenizer::build_long_operator(TokenType type) const {
         current_char = input->get_next_char();
         type = std::get<TokenType>(new_type);
         new_type = get_type_for_long_op(current_char, type);
-    } while(new_type.index());
+    } while (new_type.index());
     if (type == TokenType::T_COMMENT) input->skip_line();
     input->unget();
     return Token(type);
@@ -144,7 +145,7 @@ Token Tokenizer::build_long_operator(TokenType type) const {
 MapTokenType Tokenizer::get_type_for_operator(char c) const {
     auto it = operator_tokens.find(c);
     if (it != operator_tokens.end()) {
-            return it->second;
+        return it->second;
     } else {
         return MapTokenType(std::monostate());
     }
@@ -153,7 +154,7 @@ MapTokenType Tokenizer::get_type_for_operator(char c) const {
 MapTokenType Tokenizer::get_type_for_first_op_char(char c) const {
     auto it = first_char_tokens.find(c);
     if (it != first_char_tokens.end()) {
-            return it->second;
+        return it->second;
     } else {
         return MapTokenType(std::monostate());
     }
@@ -178,13 +179,16 @@ MapTokenType Tokenizer::get_keyword_for_string(std::string value) const {
 
 char Tokenizer::get_char_for_escape(char c) const {
     switch (c) {
-        case 'n': return '\n';
-        case 't': return '\t';
-        default: return c;
+        case 'n':
+            return '\n';
+        case 't':
+            return '\t';
+        default:
+            return c;
     }
 }
 
-const std::unordered_map<std::string, TokenType> Tokenizer::keyword_tokens {
+const std::unordered_map<std::string, TokenType> Tokenizer::keyword_tokens{
     {"int", TokenType::T_INT_TYPE},
     {"flt", TokenType::T_FLT_TYPE},
     {"string", TokenType::T_STRING_TYPE},
@@ -202,28 +206,15 @@ const std::unordered_map<std::string, TokenType> Tokenizer::keyword_tokens {
     {"false", TokenType::T_BOOL},
 };
 
-const std::unordered_map<char, TokenType> Tokenizer::operator_tokens {
-    {'-', TokenType::T_MINUS},
-    {'+', TokenType::T_PLUS},
-    {'*', TokenType::T_MULT},
-    {'/', TokenType::T_DIV},
-    {'@', TokenType::T_DECORATE},
-    {'-', TokenType::T_MINUS},
-    {'!', TokenType::T_NOT},
-    {'>', TokenType::T_GT},
-    {'<', TokenType::T_LT},
-    {'(', TokenType::T_LPAREN},
-    {')', TokenType::T_RPAREN},
-    {'{', TokenType::T_LBLOCK},
-    {'}', TokenType::T_RBLOCK},
-    {';', TokenType::T_SEMICOLON},
-    {',', TokenType::T_COMMA},
-    {'_', TokenType::T_WILDCARD},
-    {'[', TokenType::T_LFTYPE},
-    {']', TokenType::T_RFTYPE}
-};
+const std::unordered_map<char, TokenType> Tokenizer::operator_tokens{
+    {'-', TokenType::T_MINUS},    {'+', TokenType::T_PLUS},      {'*', TokenType::T_MULT},
+    {'/', TokenType::T_DIV},      {'@', TokenType::T_DECORATE},  {'-', TokenType::T_MINUS},
+    {'!', TokenType::T_NOT},      {'>', TokenType::T_GT},        {'<', TokenType::T_LT},
+    {'(', TokenType::T_LPAREN},   {')', TokenType::T_RPAREN},    {'{', TokenType::T_LBLOCK},
+    {'}', TokenType::T_RBLOCK},   {';', TokenType::T_SEMICOLON}, {',', TokenType::T_COMMA},
+    {'_', TokenType::T_WILDCARD}, {'[', TokenType::T_LFTYPE},    {']', TokenType::T_RFTYPE}};
 
-const std::map<std::pair<char, TokenType>, TokenType> Tokenizer::long_operator_tokens {
+const std::map<std::pair<char, TokenType>, TokenType> Tokenizer::long_operator_tokens{
     {std::pair<char, TokenType>('>', TokenType::T_MINUS), TokenType::T_CALL},
     {std::pair<char, TokenType>('>', TokenType::T_CALL), TokenType::T_BINDFRT},
     {std::pair<char, TokenType>('=', TokenType::T_NOT), TokenType::T_NEQ},
@@ -237,7 +228,7 @@ const std::map<std::pair<char, TokenType>, TokenType> Tokenizer::long_operator_t
     {std::pair<char, TokenType>(':', TokenType::T_FUNC_SIGN), TokenType::T_FUNC_SIGN},
 };
 
-const std::unordered_map<char, TokenType> Tokenizer::first_char_tokens {
+const std::unordered_map<char, TokenType> Tokenizer::first_char_tokens{
     {'=', TokenType::T_EQ},
     {'|', TokenType::T_OR},
     {'&', TokenType::T_AND},

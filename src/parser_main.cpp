@@ -1,11 +1,12 @@
-#include "exceptions.h"
-#include "parser_visitor.h"
-#include "lexer.h"
-#include "print_error.h"
-#include "parser.h"
 #include <boost/program_options.hpp>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+
+#include "exceptions.h"
+#include "lexer.h"
+#include "parser.h"
+#include "parser_visitor.h"
+#include "print_error.h"
 
 namespace po = boost::program_options;
 
@@ -14,23 +15,17 @@ int main(int argc, char **argv) {
     bool verbose = false;
 
     po::options_description desc("Allowed options");
-    desc.add_options()
-        ("verbose,V", po::bool_switch(&verbose), "enable verbose output")
-        ("input", po::value<std::string>(&input_file), "input file")
-        ("help,h", "show help message");
+    desc.add_options()("verbose,V", po::bool_switch(&verbose), "enable verbose output")(
+        "input", po::value<std::string>(&input_file), "input file")("help,h", "show help message");
 
     po::positional_options_description pos_desc;
     pos_desc.add("input", 1);
 
     po::variables_map vm;
     try {
-        po::store(po::command_line_parser(argc, argv)
-                .options(desc)
-                .positional(pos_desc)
-                .run(),
-            vm);
+        po::store(po::command_line_parser(argc, argv).options(desc).positional(pos_desc).run(), vm);
         po::notify(vm);
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         std::cerr << "Error parsing options: " << e.what() << std::endl;
         return 1;
     }
@@ -40,21 +35,23 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    std::shared_ptr<std::fstream> input = std::make_unique<std::fstream>(input_file, std::fstream::in);
+    std::shared_ptr<std::fstream> input =
+        std::make_unique<std::fstream>(input_file, std::fstream::in);
     std::shared_ptr<Lexer> lexer = std::make_shared<Lexer>(input, verbose);
     Parser parser = Parser(std::move(lexer));
     std::unique_ptr<Program> program;
     if (verbose)
-        std::cout << "--------------------------------\033[36m" << input_file << "\033[0m-------------------------------" << std::endl;
+        std::cout << "--------------------------------\033[36m" << input_file
+                  << "\033[0m-------------------------------" << std::endl;
 
     try {
         program = parser.parse();
-    } catch (const ParserError& e) {
+    } catch (const ParserError &e) {
         std::cerr << "\033[1;31mError:\033[0m " << e.what() << std::endl;
 
         print_error(e, input_file);
         return 1;
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         std::cerr << "\033[1;31mUnhandled Error:\033[0m " << e.what() << std::endl;
         return 1;
     }
@@ -62,12 +59,9 @@ int main(int argc, char **argv) {
     if (verbose) {
         ParserPrinter printer = ParserPrinter(std::cout);
         printer.visit(*program);
-        std::cout << "-------------------------------\033[36m/" << input_file << "\033[0m-------------------------------" << std::endl;
+        std::cout << "-------------------------------\033[36m/" << input_file
+                  << "\033[0m-------------------------------" << std::endl;
     }
 
     return 0;
-
 }
-
-
-
