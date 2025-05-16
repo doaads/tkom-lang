@@ -1,4 +1,5 @@
 #include "lexer.h"
+
 #include "exceptions.h"
 
 Lexer::Lexer(std::shared_ptr<std::istream> input_stream) {
@@ -7,7 +8,7 @@ Lexer::Lexer(std::shared_ptr<std::istream> input_stream) {
     tokenizer = std::make_unique<Tokenizer>(input);
 }
 
-Lexer::Lexer(std::shared_ptr<std::istream> input_stream, bool verbose) : Lexer(input_stream){
+Lexer::Lexer(std::shared_ptr<std::istream> input_stream, bool verbose) : Lexer(input_stream) {
     this->verbose = verbose;
 }
 
@@ -15,7 +16,7 @@ Token Lexer::get_token() {
     Token result;
     try {
         result = tokenizer->get_token();
-    } catch (CompilerException& e) {
+    } catch (CompilerException &e) {
         e.set_position(*position);
         throw;
     }
@@ -26,6 +27,4 @@ Token Lexer::get_token() {
     return result;
 }
 
-bool Lexer::end() const {
-    return eof;
-}
+bool Lexer::end() const { return eof; }

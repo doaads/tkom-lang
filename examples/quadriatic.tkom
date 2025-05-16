@@ -1,0 +1,21 @@
+int main:: { 
+    ("Enter a")->stdin => flt a;
+    ("Enter b")->stdin => flt b;
+    ("Enter c")->stdin => flt c;
+
+    b * b - 4 * a * c => flt delta;
+
+    if (delta > 0) {
+        (-b - (delta)->sqrt) / (2 * a) => flt x1;
+        (-b + (delta)->sqrt) / (2 * a) => flt x2;
+
+        ("Result: ") -> stdout;
+        (x1 + " and " + x2) -> stdout;
+    } elif (delta == 0) {
+        -b / 2 * a => flt x1;
+        ("Result: ") -> stdout;
+        (x1) -> stdout;
+    } else {
+        ("No real solution") -> stdout;
+    }
+}

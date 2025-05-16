@@ -1,0 +1,5 @@
+int main :: int a {
+    for (a; a < 10) {
+        a => mut int test
+    } -> increment;
+}

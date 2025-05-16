@@ -4,6 +4,9 @@
 
 #include "exceptions.h"
 #include "lexer.h"
+#include "parser.h"
+#include "parser_visitor.h"
+#include "print_error.h"
 
 namespace po = boost::program_options;
 
@@ -34,23 +37,31 @@ int main(int argc, char **argv) {
 
     std::shared_ptr<std::fstream> input =
         std::make_unique<std::fstream>(input_file, std::fstream::in);
-    Lexer lexer = Lexer(input, verbose);
+    std::shared_ptr<Lexer> lexer = std::make_shared<Lexer>(input, verbose);
+    Parser parser = Parser(std::move(lexer));
+    std::unique_ptr<Program> program;
     if (verbose)
         std::cout << "--------------------------------\033[36m" << input_file
                   << "\033[0m-------------------------------" << std::endl;
 
-    while (!lexer.end()) {
-        try {
-            lexer.get_token();
-        } catch (CompilerException &e) {
-            std::cerr << e.what() << " at " << e.get_position() << std::endl;
-            return 1;
-        }
+    try {
+        program = parser.parse();
+    } catch (const ParserError &e) {
+        std::cerr << "\033[1;31mError:\033[0m " << e.what() << std::endl;
+
+        print_error(e, input_file);
+        return 1;
+    } catch (const std::exception &e) {
+        std::cerr << "\033[1;31mUnhandled Error:\033[0m " << e.what() << std::endl;
+        return 1;
     }
 
-    if (verbose)
+    if (verbose) {
+        ParserPrinter printer = ParserPrinter(std::cout);
+        printer.visit(*program);
         std::cout << "-------------------------------\033[36m/" << input_file
                   << "\033[0m-------------------------------" << std::endl;
+    }
 
     return 0;
 }
