@@ -224,7 +224,7 @@ class Parser {
      * previous owner
      *
      */
-    ArgOrExpr parse_bindfrt_or_call(std::vector<ExprPtr> args);
+    ExprPtr parse_bindfrt_or_call(std::vector<ExprPtr>& args);
 
     /**
      * @brief Parses a bind front-right expression.
@@ -234,7 +234,7 @@ class Parser {
      * @return ExprPtr if function succeeds, if it does not - it returns the argument vector to
      * previous owner
      */
-    ArgOrExpr parse_bind_front_right(std::vector<ExprPtr> args);
+    ExprPtr parse_bind_front_right(std::vector<ExprPtr>& args);
 
     /**
      * @brief Parses a bind front expression.

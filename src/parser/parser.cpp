@@ -434,13 +434,8 @@ ExprPtr Parser::parse_func_call_or_parens() {
     auto args = parse_func_args();
     if (!args) return nullptr;
 
-    ArgOrExpr bindfrt = parse_bindfrt_or_call(std::move(*args));
-    if (ExprPtr* expr = std::get_if<ExprPtr>(&bindfrt)) {
-        return std::move(*expr);
-    }
-
-    // move args back
-    args = std::move(std::get<std::vector<ExprPtr>>(bindfrt));
+    ExprPtr bindfrt = parse_bindfrt_or_call(*args);
+    if (bindfrt) return bindfrt;
 
     if (args->empty()) throw ParserError(get_position(), "Expected expression");
 
@@ -448,21 +443,17 @@ ExprPtr Parser::parse_func_call_or_parens() {
 }
 
 /*
- * we have parsed the arguments, now
- * after parsing args, parse either call or bind front
- * if function returns the ownership of arguments, it means it failed.
+ *      we have parsed the arguments, now
+ *      after parsing args, parse either call or bind front
  */
 
-ArgOrExpr Parser::parse_bindfrt_or_call(std::vector<ExprPtr> args) {
-    ArgOrExpr bindfrt = parse_bind_front_right(std::move(args));
-    if (!bindfrt.index()) return std::get<ExprPtr>(std::move(bindfrt));
+ExprPtr Parser::parse_bindfrt_or_call(std::vector<ExprPtr>& args) {
+    ExprPtr bindfrt = parse_bind_front_right(args);
+    if (bindfrt) return bindfrt;
 
     const Position pos = get_position();
 
-    // move args back
-    args = std::move(std::get<std::vector<ExprPtr>>(bindfrt));
-
-    if (!is_token(TokenType::T_CALL)) return args;  // fail, return ownership of args
+    if (!is_token(TokenType::T_CALL)) return nullptr;
     next_token();
 
     ExprPtr right = parse_bind_front();
@@ -473,8 +464,8 @@ ArgOrExpr Parser::parse_bindfrt_or_call(std::vector<ExprPtr> args) {
  *      bind_front = [func_args, bindfrt_op], decorator
  */
 
-ArgOrExpr Parser::parse_bind_front_right(std::vector<ExprPtr> args) {
-    if (!is_token(TokenType::T_BINDFRT)) return args;
+ExprPtr Parser::parse_bind_front_right(std::vector<ExprPtr>& args) {
+    if (!is_token(TokenType::T_BINDFRT)) return nullptr;
 
     const Position pos = get_position();
 
@@ -490,10 +481,10 @@ ExprPtr Parser::parse_bind_front() {
     std::optional<std::vector<ExprPtr>> args = parse_func_args();
     if (!args) return nullptr;
 
-    ArgOrExpr bind_front = parse_bind_front_right(std::move(*args));
-    if (bind_front.index()) return nullptr;
+    ExprPtr bind_front = parse_bind_front_right(*args);
+    if (!bind_front) return nullptr;
 
-    return std::get<ExprPtr>(std::move(bind_front));
+    return bind_front;
 }
 
 /*
