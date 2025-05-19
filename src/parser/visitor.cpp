@@ -1,4 +1,4 @@
-#include "parser_visitor.h"
+#include "visitor.h"
 
 #include "block.h"
 #include "expression.h"

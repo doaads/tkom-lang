@@ -1,4 +1,4 @@
-int main:: { 
+int main { 
     ("Enter a")->stdin => flt a;
     ("Enter b")->stdin => flt b;
     ("Enter c")->stdin => flt c;

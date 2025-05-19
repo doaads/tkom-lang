@@ -1,14 +1,14 @@
 #pragma once
 
 #include "function.h"
-#include "parser_visitor.h"
+#include "visitor.h"
 #include "type.h"
 #include "variable.h"
 #include "statement_specific.h"
 
 #pragma once
 
-class ParserTestCounter : public ParserVisitor {
+class ParserTestCounter : public Visitor {
 public:
     // Expression counters
     int literal_expr_count = 0;

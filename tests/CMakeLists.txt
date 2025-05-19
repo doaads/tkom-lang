@@ -40,7 +40,7 @@ target_link_libraries(lexer_all_tokens_test PRIVATE
 target_link_libraries(parser_test_lib INTERFACE
     lexer
     parser
-    parser_visitor
+    visitor
     program
     block
     tokenizer

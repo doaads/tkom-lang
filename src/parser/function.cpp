@@ -1,7 +1,7 @@
 #include "function.h"
 
 #include "block.h"
-#include "parser_visitor.h"
+#include "visitor.h"
 #include "statement.h"
 #include "type.h"
 
@@ -9,7 +9,7 @@ FuncSignature::FuncSignature(Position pos, std::unique_ptr<Type> ret,
                              std::vector<std::unique_ptr<FuncParam>> args, std::string name)
     : Node(pos), ret_type(std::move(ret)), args(std::move(args)), name(name) {}
 
-void FuncSignature::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void FuncSignature::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const Type *FuncSignature::get_type() const { return ret_type.get(); }
 std::string FuncSignature::get_name() const { return name; }
@@ -27,7 +27,7 @@ Function::Function(std::unique_ptr<FuncSignature> signature, std::unique_ptr<Blo
     Function::Node(Function::signature->get_position());
 }
 
-void Function::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void Function::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const FuncSignature *Function::get_signature() const { return signature.get(); }
 

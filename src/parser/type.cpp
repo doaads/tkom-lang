@@ -1,6 +1,6 @@
 #include "type.h"
 
-#include "parser_visitor.h"
+#include "visitor.h"
 
 std::ostream &operator<<(std::ostream &os, const BaseType &type) {
     switch (type) {
@@ -61,7 +61,7 @@ VarType::VarType(BaseType type, bool mut) : type(type), mut(mut) {}
 
 BaseType VarType::get_type() const { return type; }
 bool VarType::get_mut() const { return mut; }
-void VarType::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void VarType::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 FuncType::FuncType(std::unique_ptr<Type> ret_type, std::vector<std::unique_ptr<Type>> params)
     : ret_type(std::move(ret_type)), params(std::move(params)) {}
@@ -77,4 +77,4 @@ const std::vector<const Type *> FuncType::get_params() const {
     return result;
 }
 
-void FuncType::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void FuncType::accept(Visitor &visitor) const { visitor.visit(*this); }

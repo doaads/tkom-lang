@@ -7,7 +7,7 @@
 #include "statement.h"
 
 class ParserPrinter;
-class ParserVisitor;
+class Visitor;
 
 class Block : public Node {
    private:
@@ -17,7 +17,7 @@ class Block : public Node {
     Block(std::vector<std::unique_ptr<Statement>> statements);
     ~Block() = default;
 
-    void accept(ParserVisitor &visitor) const;
+    void accept(Visitor &visitor) const;
 
     std::vector<const Statement *> get_statements() const;
 };

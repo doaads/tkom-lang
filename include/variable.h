@@ -4,7 +4,7 @@
 
 #include "type.h"
 
-class ParserVisitor;
+class Visitor;
 
 class FuncParam {
     std::unique_ptr<Type> type;
@@ -13,6 +13,6 @@ class FuncParam {
    public:
     FuncParam(std::unique_ptr<Type> type, std::string name);
 
-    void accept(ParserVisitor &visitor) const;
+    void accept(Visitor &visitor) const;
     const Type *get_type() const;
 };

@@ -26,7 +26,7 @@ add_library(variable src/parser/variable.cpp)
 add_library(block src/parser/block.cpp)
 add_library(operators src/parser/operators.cpp)
 add_library(program src/parser/program.cpp)
-add_library(parser_visitor src/parser/parser_visitor.cpp)
+add_library(visitor src/parser/visitor.cpp)
 add_library(print_error src/exceptions/print_error.cpp)
 add_library(parser src/parser/parser.cpp)
 
@@ -45,7 +45,7 @@ target_include_directories(variable PUBLIC include)
 target_include_directories(operators PUBLIC include)
 target_include_directories(block PUBLIC include)
 target_include_directories(program PUBLIC include)
-target_include_directories(parser_visitor PUBLIC include)
+target_include_directories(visitor PUBLIC include)
 target_include_directories(print_error PUBLIC include)
 target_include_directories(parser PUBLIC include)
 
@@ -56,7 +56,7 @@ target_link_libraries(tkom PRIVATE
     lexer
     parser
     print_error
-    parser_visitor
+    visitor
     program
     block
     tokenizer
