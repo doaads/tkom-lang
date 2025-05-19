@@ -8,6 +8,7 @@
 
 class Visitor;
 
+
 class FuncSignature : public Node {
     std::unique_ptr<Type> ret_type;
     std::vector<std::unique_ptr<FuncParam>> args;

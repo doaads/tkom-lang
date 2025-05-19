@@ -3,12 +3,12 @@
 #include "visitor.h"
 
 using ValueType = std::variant<std::monostate, std::string, int, double, bool>;
-class Callable;
 
 class InterpreterVisitor : public Visitor {
     private:
         ValueType current_value;
         ValueType decorate(ValueType decorator, ValueType decoratee);
+        std::vector<const Function*> functions;
     public:
         void visit(const Program &program);
 
@@ -35,6 +35,15 @@ class InterpreterVisitor : public Visitor {
         void visit(const FuncSignature &sign);
         void visit(const Function &func);
 };
+
+void InterpreterVisitor::visit(const Program &program) {
+    for (auto& fn : functions = program.get_functions()) {
+        if (fn->get_signature()->get_name() == "main") {
+            fn->accept(*this);
+        }
+    }
+    functions.clear();
+}
 
 
 void InterpreterVisitor::visit(const LiteralExpr &expr) {
