@@ -69,7 +69,7 @@ class InterpreterVisitor : public Visitor {
         void visit(const ElseStatement &stmt) {(void)stmt; return;}
         void visit(const RetStatement &stmt) {(void)stmt; return;}
         void visit(const CallStatement &stmt) {(void)stmt; return;}
-        void visit(const AssignStatement &stmt) {(void)stmt; return;}
+        void visit(const AssignStatement &stmt);
 
         void visit(const Block &block);
         void visit(const VarType &var) {(void)var; return;}

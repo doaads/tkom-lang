@@ -121,7 +121,7 @@ public:
         assign_stmt_count++;
         stmt.get_value()->accept(*this);
         stmt.get_type()->accept(*this);
-        stmt.get_identifier()->accept(*this);
+        identifier_expr_count++;
     }
 
     // Other visitors

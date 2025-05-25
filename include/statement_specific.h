@@ -152,5 +152,5 @@ class AssignStatement : public Statement {
 
     const Expression *get_value() const;
     const Type *get_type() const;
-    const Expression *get_identifier() const;
+    const std::string get_identifier() const;
 };

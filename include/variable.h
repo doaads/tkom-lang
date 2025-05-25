@@ -7,14 +7,14 @@ class Visitor;
 
 class VariableSignature {
     std::unique_ptr<Type> type;
-    std::unique_ptr<Expression> identifier;
+    const std::string name;
     Position pos;
 
    public:
-    VariableSignature(std::unique_ptr<Type> type, std::unique_ptr<Expression> name);
-    VariableSignature(std::unique_ptr<Type> type, std::unique_ptr<Expression> name, Position pos);
+    VariableSignature(std::unique_ptr<Type> type, std::string name);
+    VariableSignature(std::unique_ptr<Type> type, std::string name, Position pos);
 
     void accept(Visitor &visitor) const;
     const Type *get_type() const;
-    const Expression *get_name() const;
+    const std::string get_name() const;
 };

@@ -35,18 +35,17 @@ void InterpreterVisitor::visit(const CallExpr& expr) { (void)expr; }
 
 std::weak_ptr<Variable> InterpreterVisitor::find_var_in_frame(const std::string& name) {
     CallStackFrame frame = call_stack.back();
-    ValType name_valtype = name;
 
     // find in local vars
     auto local_var = std::find_if(frame.vars.begin(), frame.vars.end(),
-            [&name_valtype, this](const std::shared_ptr<Variable>& var) {
-                });
+            [name](const std::shared_ptr<Variable>& var) {
+                return var->signature->get_name() == name;});
 
     if (local_var < frame.vars.end()) return *local_var;
 
     // find in function args (references)
     auto ref_var = std::find_if(frame.args.begin(), frame.args.end(),
-            [&name](const std::shared_ptr<VarRef>& arg) {
+            [&name](const auto& arg) {
                 return arg->curr_name == name;});
 
     if (ref_var < frame.args.end()) return ref_var->get()->ref;
@@ -56,7 +55,7 @@ std::weak_ptr<Variable> InterpreterVisitor::find_var_in_frame(const std::string&
 
 std::shared_ptr<Callable> InterpreterVisitor::find_func(const std::string& name) {
     auto func = std::find_if(functions.begin(), functions.end(),
-            [&name](const std::shared_ptr<GlobalFunction>& func) {
+            [&name](const auto& func) {
                 return func->get_func()->get_signature()->get_name() == name;
             });
 
@@ -71,5 +70,41 @@ void InterpreterVisitor::visit(const IdentifierExpr &expr) {
         current_value = var_val->value;
     } else {
         throw std::runtime_error("Unknown identifier");
+    }
+}
+
+struct TypeCast {
+    template <typename T>
+    ValType operator()(T a, T) { return a;}
+
+    ValType operator()(int a, double) {return static_cast<double>(a);}
+    ValType operator()(double a, int) {return static_cast<int>(a);}
+
+    ValType operator()(std::string, int) {throw std::runtime_error("int type cannot hold a string");}
+    ValType operator()(int a, std::string) {return std::to_string(a);}
+
+    ValType operator()(std::string, double) {throw std::runtime_error("flt type cannot hold a string");}
+    ValType operator()(double a, std::string) {return std::to_string(a);}
+
+    ValType operator()(bool a, int) {return a ? 1 : 0;}
+    ValType operator()(int a, bool) {return static_cast<bool>(a);}
+
+    ValType operator()(bool a, double) {return a ? 1.0 : 0.0;}
+    ValType operator()(double a, bool) {return static_cast<bool>(a);}
+
+    ValType operator()(auto, auto) {throw std::runtime_error("Cannot cast type");}
+};
+
+void InterpreterVisitor::visit(const AssignStatement &stmt) {
+    stmt.get_value()->accept(*this);
+    ValType value = current_value;
+
+    auto type = stmt.get_type();
+    const std::string identifier = stmt.get_identifier();
+
+    if (type == nullptr) {  // we have a variable mutation
+        auto var = find_var_in_frame(identifier).lock();
+        if (!var) throw std::runtime_error("Variable not in scope");
+        var->value = std::visit(TypeCast(), value, var->value);
     }
 }

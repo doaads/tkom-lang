@@ -16,17 +16,6 @@ std::string to_string(const T& v) {
     }
 }
 
-/*
- * @brief: overload template for expression parsing
- *
- * Inspired by: https://www.modernescpp.com/index.php/smart-tricks-with-fold-expressions/
- */
-template <typename... Ts>
-struct Overload : Ts... {
-    using Ts::operator()...;
-};
-template <class... Ts>
-Overload(Ts...) -> Overload<Ts...>;
 
 /*
  * @brief: function for checking if types are of arithmetic rank for 2-argument functions
@@ -48,6 +37,18 @@ ValType get_val_for_arithmetic(ValType l, ValType r, OpFunc func) {
         },
         l, r);
 }
+
+/*
+ * @brief: overload template for expression parsing
+ *
+ * Inspired by: https://www.modernescpp.com/index.php/smart-tricks-with-fold-expressions/
+ */
+template <typename... Ts>
+struct Overload : Ts... {
+    using Ts::operator()...;
+};
+template <class... Ts>
+Overload(Ts...) -> Overload<Ts...>;
 
 /*
  * @brief: function for handling the '+' operator
