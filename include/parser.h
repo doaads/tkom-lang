@@ -23,7 +23,7 @@ using FuncPtr = std::unique_ptr<Function>;
 using TypePtr = std::unique_ptr<Type>;
 using FuncSignPtr = std::unique_ptr<FuncSignature>;
 using ProgramPtr = std::unique_ptr<Program>;
-using ParamPtr = std::unique_ptr<FuncParam>;
+using ParamPtr = std::unique_ptr<VariableSignature>;
 
 /**
  * @brief A class responsible for parsing source code into an program tree.

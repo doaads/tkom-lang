@@ -78,3 +78,36 @@ const std::vector<const Type *> FuncType::get_params() const {
 }
 
 void FuncType::accept(Visitor &visitor) const { visitor.visit(*this); }
+
+bool VarType::is_equal_to(const Type* other) const {
+    if (other == nullptr) return false;
+    if (!other->is_func) {
+        const VarType* var_other = static_cast<const VarType*>(other);
+        return type == var_other->type && mut == var_other->mut;
+    }
+    return false;
+}
+
+bool FuncType::is_equal_to(const Type* other) const {
+    if (other == nullptr) return false;
+    if (other->is_func) {
+        const FuncType* func_other = static_cast<const FuncType*>(other);
+        
+        if (!ret_type->is_equal_to(func_other->ret_type.get())) {
+            return false;
+        }
+        
+        if (params.size() != func_other->params.size()) {
+            return false;
+        }
+        
+        for (size_t i = 0; i < params.size(); ++i) {
+            if (!params[i]->is_equal_to(func_other->params[i].get())) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    return false;
+}

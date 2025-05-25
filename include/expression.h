@@ -52,6 +52,10 @@ class LiteralExpr : public Expression {
     T get_value() const {
             return std::get<T>(value);
     }
+    ValueType get_value() const {
+            return value;
+    }
+
     LiteralExpr(const Position pos, Token token);
     void accept(Visitor &visitor) const override;
     std::string get_value_string() const;

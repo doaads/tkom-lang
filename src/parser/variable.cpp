@@ -1,14 +1,13 @@
 #include "variable.h"
 
-#include <stdexcept>
-
 #include "visitor.h"
 
-FuncParam::FuncParam(std::unique_ptr<Type> type, std::string name) : name(name) {
-    if (type->is_func) throw std::runtime_error("Expected variable type");
-    this->type = std::move(type);
-}
+VariableSignature::VariableSignature(std::unique_ptr<Type> type, std::unique_ptr<Expression> name) : type(std::move(type)), name(std::move(name)) {}
 
-void FuncParam::accept(Visitor &visitor) const { return visitor.visit(*this); }
+VariableSignature::VariableSignature(std::unique_ptr<Type> type, std::unique_ptr<Expression> name, Position pos) : type(std::move(type)), name(std::move(name)), pos(pos) {}
 
-const Type *FuncParam::get_type() const { return type.get(); }
+void VariableSignature::accept(Visitor &visitor) const { return visitor.visit(*this); }
+
+const Type *VariableSignature::get_type() const { return type.get(); }
+
+const Expression *VariableSignature::get_name() const { return name.get(); }

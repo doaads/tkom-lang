@@ -12,6 +12,7 @@
 
 #include "block.h"
 #include "statement.h"
+#include "variable.h"
 
 class Expression;
 class Visitor;
@@ -142,12 +143,10 @@ class CallStatement : public Statement {
 class AssignStatement : public Statement {
    private:
     std::unique_ptr<Expression> value;
-    std::unique_ptr<Type> type;
-    std::unique_ptr<Expression> identifier;
+    std::unique_ptr<VariableSignature> var_sign;
 
    public:
-    AssignStatement(Position pos, std::unique_ptr<Expression> value, std::unique_ptr<Type> type,
-                    std::unique_ptr<Expression>);
+    AssignStatement(Position pos, std::unique_ptr<Expression> value, std::unique_ptr<VariableSignature> sign);
 
     void accept(Visitor &visitor) const override;
 

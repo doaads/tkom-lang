@@ -11,15 +11,15 @@ class Visitor;
 
 class FuncSignature : public Node {
     std::unique_ptr<Type> ret_type;
-    std::vector<std::unique_ptr<FuncParam>> args;
+    std::vector<std::unique_ptr<VariableSignature>> args;
     std::string name;
 
    public:
     FuncSignature(Position pos, std::unique_ptr<Type> ret,
-                  std::vector<std::unique_ptr<FuncParam>> args, std::string name);
+                  std::vector<std::unique_ptr<VariableSignature>> args, std::string name);
     void accept(Visitor &visitor) const;
     const Type *get_type() const;
-    const std::vector<const FuncParam *> get_params() const;
+    const std::vector<const VariableSignature *> get_params() const;
     std::string get_name() const;
 };
 

@@ -6,7 +6,7 @@
 #include "type.h"
 
 FuncSignature::FuncSignature(Position pos, std::unique_ptr<Type> ret,
-                             std::vector<std::unique_ptr<FuncParam>> args, std::string name)
+                             std::vector<std::unique_ptr<VariableSignature>> args, std::string name)
     : Node(pos), ret_type(std::move(ret)), args(std::move(args)), name(name) {}
 
 void FuncSignature::accept(Visitor &visitor) const { visitor.visit(*this); }
@@ -14,8 +14,8 @@ void FuncSignature::accept(Visitor &visitor) const { visitor.visit(*this); }
 const Type *FuncSignature::get_type() const { return ret_type.get(); }
 std::string FuncSignature::get_name() const { return name; }
 
-const std::vector<const FuncParam *> FuncSignature::get_params() const {
-    std::vector<const FuncParam *> params;
+const std::vector<const VariableSignature *> FuncSignature::get_params() const {
+    std::vector<const VariableSignature *> params;
     for (auto &param : args) {
         params.push_back(param.get());
     }

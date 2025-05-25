@@ -91,14 +91,13 @@ const Expression *CallStatement::get_call() const { return call.get(); }
 /* ------------------------------[ASSIGN]--------------------------------*/
 
 AssignStatement::AssignStatement(Position pos, std::unique_ptr<Expression> value,
-                                 std::unique_ptr<Type> type, std::unique_ptr<Expression> identifier)
+                                 std::unique_ptr<VariableSignature> signature)
     : Statement(pos),
       value(std::move(value)),
-      type(std::move(type)),
-      identifier(std::move(identifier)) {}
+      var_sign(std::move(signature)) {}
 
 void AssignStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const Expression *AssignStatement::get_value() const { return value.get(); }
-const Type *AssignStatement::get_type() const { return type.get(); }
-const Expression *AssignStatement::get_identifier() const { return identifier.get(); }
+const Type *AssignStatement::get_type() const { return var_sign->get_type(); }
+const Expression *AssignStatement::get_identifier() const { return var_sign->get_name(); }

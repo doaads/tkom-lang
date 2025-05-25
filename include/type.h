@@ -26,6 +26,8 @@ class Type : public Node {
     static const bool is_func = false;
     virtual ~Type() = default;
     virtual void accept(Visitor &visitor) const = 0;
+
+    virtual bool is_equal_to(const Type* other) const = 0;
 };
 
 class VarType : public Type {
@@ -39,6 +41,7 @@ class VarType : public Type {
 
     BaseType get_type() const;
     bool get_mut() const;
+    bool is_equal_to(const Type* other) const override;
 };
 
 class FuncType : public Type {
@@ -53,4 +56,5 @@ class FuncType : public Type {
 
     const Type *get_ret_type() const;
     const std::vector<const Type *> get_params() const;
+    bool is_equal_to(const Type* other) const override;
 };

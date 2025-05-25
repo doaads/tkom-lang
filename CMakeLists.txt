@@ -30,6 +30,9 @@ add_library(visitor src/parser/visitor.cpp)
 add_library(print_error src/exceptions/print_error.cpp)
 add_library(parser src/parser/parser.cpp)
 
+add_library(interpreter src/interpreter/interpreter_expr.cpp src/interpreter/interpreter.cpp)
+add_library(local_function src/interpreter/local_function.cpp)
+
 target_include_directories(tokenizer PUBLIC include)
 target_include_directories(token PUBLIC include)
 target_include_directories(input PUBLIC include)
@@ -48,6 +51,9 @@ target_include_directories(program PUBLIC include)
 target_include_directories(visitor PUBLIC include)
 target_include_directories(print_error PUBLIC include)
 target_include_directories(parser PUBLIC include)
+
+target_include_directories(interpreter PUBLIC include)
+target_include_directories(local_function PUBLIC include)
 
 add_executable(tkom src/parser_main.cpp)
 target_include_directories(tkom PRIVATE include)

@@ -169,7 +169,7 @@ void ParserPrinter::visit(const FuncType &type) {
     os << "]";
 }
 
-void ParserPrinter::visit(const FuncParam &var) { var.get_type()->accept(*this); }
+void ParserPrinter::visit(const VariableSignature &var) { var.get_type()->accept(*this); }
 
 void ParserPrinter::visit(const FuncSignature &sign) {
     os << "┏━━━FUNCTION: \033[1;33m";

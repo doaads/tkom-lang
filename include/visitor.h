@@ -41,7 +41,7 @@ class Visitor {
     virtual void visit(const VarType &var) = 0;
     virtual void visit(const FuncType &func) = 0;
 
-    virtual void visit(const FuncParam &var) = 0;
+    virtual void visit(const VariableSignature &var) = 0;
     virtual void visit(const FuncSignature &sign) = 0;
     virtual void visit(const Function &func) = 0;
 };
@@ -105,7 +105,7 @@ class ParserPrinter : public Visitor {
     void visit(const VarType &type) override;
     void visit(const FuncType &type) override;
 
-    void visit(const FuncParam &var) override;
+    void visit(const VariableSignature &var) override;
     void visit(const FuncSignature &sign) override;
     void visit(const Function &func) override;
 };

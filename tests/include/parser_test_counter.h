@@ -134,7 +134,7 @@ public:
     void visit(const VarType&) override { var_type_count++; }
     void visit(const FuncType&) override { func_type_count++; }
 
-    void visit(const FuncParam& var) override {
+    void visit(const VariableSignature& var) override {
         func_param_count++;
         var.get_type()->accept(*this);
     }

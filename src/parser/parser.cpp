@@ -51,7 +51,7 @@ FuncSignPtr Parser::parse_func_signature() {
     shall(is_token(TokenType::T_IDENTIFIER), "Expected function identifier");
 
     std::string func_name = current_token.get_value<std::string>();
-    std::vector<std::unique_ptr<FuncParam>> params;
+    std::vector<std::unique_ptr<VariableSignature>> params;
 
     if (!is_next_token(TokenType::T_FUNC_SIGN)) {
         shall(is_token(TokenType::T_LBLOCK), "Expected '::'");
@@ -75,9 +75,8 @@ FuncSignPtr Parser::parse_func_signature() {
 
 ParamPtr Parser::parse_func_param() {
     TypePtr current_arg_type = shall(parse_type(), "Expected type");
-    shall(is_token(TokenType::T_IDENTIFIER), "Expected parameter name");
-    std::string current_arg_name = current_token.get_value<std::string>();
-    return std::make_unique<FuncParam>(std::move(current_arg_type), current_arg_name);
+    auto identifier = shall(parse_identifier(), "Expected parameter name");
+    return std::make_unique<VariableSignature>(std::move(current_arg_type), std::move(identifier));
 }
 
 /*
@@ -148,15 +147,15 @@ StatementPtr Parser::parse_assign_or_call() {
     next_token();
     TypePtr type = shall(parse_type(), "Expected type");
 
-    shall(is_token(TokenType::T_IDENTIFIER), "Expected identifier");
-    ExprPtr identifier =
-        std::make_unique<IdentifierExpr>(get_position(), current_token.get_value<std::string>());
+    auto identifier = shall(parse_identifier(), "Expected identifier");
 
-    shall(is_next_token(TokenType::T_SEMICOLON), "Expected ';'");
+    ParamPtr signature =
+        std::make_unique<VariableSignature>(std::move(type), std::move(identifier));
+
+    shall(is_token(TokenType::T_SEMICOLON), "Expected ';'");
     next_token();
 
-    return std::make_unique<AssignStatement>(pos, std::move(expr), std::move(type),
-                                             std::move(identifier));
+    return std::make_unique<AssignStatement>(pos, std::move(expr), std::move(signature));
 }
 
 /*
