@@ -30,8 +30,12 @@ add_library(visitor src/parser/visitor.cpp)
 add_library(print_error src/exceptions/print_error.cpp)
 add_library(parser src/parser/parser.cpp)
 
-add_library(interpreter src/interpreter/interpreter_expr.cpp src/interpreter/interpreter.cpp)
 add_library(local_function src/interpreter/local_function.cpp)
+add_library(interpreter
+    src/interpreter/interpreter_expr.cpp
+    src/interpreter/interpreter.cpp
+    src/interpreter/interpreter_helpers.cpp
+)
 
 target_include_directories(tokenizer PUBLIC include)
 target_include_directories(token PUBLIC include)

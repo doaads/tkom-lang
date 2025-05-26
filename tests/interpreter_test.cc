@@ -4,7 +4,7 @@
 #include "parser.h"
 #include "interpreter.h"
 
-#define VERBOSE true
+#define VERBOSE false
 
 Lexer get_lexer_for_string(std::string string) {
     std::shared_ptr<std::stringstream> input = std::make_unique<std::stringstream>(string);
@@ -53,6 +53,45 @@ TEST(InterpreterTest, InterpreterAddDoubleInt) {
 
     ASSERT_TRUE(std::holds_alternative<double>(value));
     EXPECT_EQ(std::get<double>(value), 3.0);
+}
+
+TEST(InterpreterTest, InterpreterAssignBasic) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser("1 => int a;", true);
+    interpreter->push_call_stack(CallStackFrame({}, {BlockScope{}}));
+    auto stmt = parser->parse_statement();
+    stmt->accept(*interpreter);
+
+    std::weak_ptr<Variable> var = interpreter->find_var_in_frame("a");
+    ValType value = var.lock()->value;
+
+    VarType type = VarType(BaseType::INT, false);
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 1);
+    EXPECT_TRUE(type.is_equal_to(var.lock()->signature.get_type()));
+}
+
+TEST(InterpreterTest, InterpreterReAssignBasic) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser_assign = get_parser("1 => mut int a;", true);
+    auto parser_reassign = get_parser("2 => a;", true);
+    interpreter->push_call_stack(CallStackFrame({}, {BlockScope{}}));
+
+    auto stmt = parser_assign->parse_statement();
+    auto stmt_reassign = parser_reassign->parse_statement();
+
+    stmt->accept(*interpreter);
+    stmt_reassign->accept(*interpreter);
+
+    std::weak_ptr<Variable> var = interpreter->find_var_in_frame("a");
+    ValType value = var.lock()->value;
+
+    VarType type = VarType(BaseType::INT, true);
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 2);
+    EXPECT_TRUE(type.is_equal_to(var.lock()->signature.get_type()));
 }
 
 enum class ValKind {
@@ -119,6 +158,8 @@ INSTANTIATE_TEST_SUITE_P(
         InterpreterAddParam{"5 - 1", 4, ValKind::Int},
         InterpreterAddParam{"5.0 - 1.0", 4.0, ValKind::Double},
         InterpreterAddParam{"5.0 - 1", 4.0, ValKind::Double},
+        InterpreterAddParam{"5.0 - 1 * 2", 3.0, ValKind::Double},
+        InterpreterAddParam{"(5.0 - 1) * 2", 8.0, ValKind::Double},
 
         InterpreterAddParam{"3 * 4", 12, ValKind::Int},
         InterpreterAddParam{"2.5 * 4.0", 10.0, ValKind::Double},

@@ -5,6 +5,7 @@
 #include "function.h"
 
 struct Variable;
+struct VarRef;
 class Callable;
 class InterpreterVisitor;
 
@@ -18,7 +19,7 @@ class Callable {
    public:
     ~Callable() = default;
     virtual void call(InterpreterVisitor& interpreter,
-                      std::vector<std::weak_ptr<Variable>>& params) = 0;
+                      std::vector<std::shared_ptr<VarRef>>& params) = 0;
     virtual const Function* get_func() const = 0;
 };
 
@@ -35,7 +36,7 @@ class GlobalFunction : public Callable {
    public:
     GlobalFunction(const Function* func);
     void call(InterpreterVisitor& interpreter,
-              std::vector<std::weak_ptr<Variable>>& params) override;
+              std::vector<std::shared_ptr<VarRef>>& params) override;
     const Function* get_func() const override;
 };
 
@@ -47,12 +48,12 @@ class GlobalFunction : public Callable {
 class LocalFunction : public Callable {
    private:
     std::shared_ptr<Callable> callee;
-    std::vector<std::weak_ptr<Variable>> bound_args;
+    std::vector<std::shared_ptr<VarRef>> bound_args;
 
    public:
-    LocalFunction(std::shared_ptr<Callable> callee, std::vector<std::weak_ptr<Variable>> bound_args);
+    LocalFunction(std::shared_ptr<Callable> callee, std::vector<std::shared_ptr<VarRef>> bound_args);
     void call(InterpreterVisitor& interpreter,
-              std::vector<std::weak_ptr<Variable>>& params) override;
+              std::vector<std::shared_ptr<VarRef>>& params) override;
     const Function* get_func() const override;
 };
 

@@ -12,10 +12,15 @@ using ValType = std::variant<
     std::shared_ptr<Callable>
 >;
 
+using TypeType = std::variant<
+    const Type*,
+    BaseType
+>;
+
 struct Variable {
-    const VariableSignature* signature;  // variable type and name as parsed by the parser
+    const VariableSignature& signature;  // variable type and name as parsed by the parser
     ValType value;
-    const Type* get_type() { return signature->get_type(); }
+    const Type* get_type() { return signature.get_type(); }
 };
 
 struct VarRef {
@@ -23,15 +28,20 @@ struct VarRef {
     std::string curr_name;
 };
 
+struct BlockScope {
+    std::vector<std::shared_ptr<Variable>> vars;
+};
+
 struct CallStackFrame {
     std::vector<std::shared_ptr<VarRef>> args;   // passed by reference
-    std::vector<std::shared_ptr<Variable>> vars; // originating inside the function
+    std::vector<BlockScope> var_scope; // originating inside the function
 };
+
 
 class InterpreterVisitor : public Visitor {
     private:
         ValType current_value;
-        std::string current_type;
+        TypeType current_type;
         std::vector<ValType> call_args;
 
         std::vector<std::shared_ptr<GlobalFunction>> functions;
@@ -53,6 +63,12 @@ class InterpreterVisitor : public Visitor {
         template <typename LogicalFunc>
         ValType logical(ValType lhs, ValType rhs, LogicalFunc func);
 
+        ValType init_var(const Type& type);
+        void register_var(const VariableSignature& signature);
+        void modify_var(const std::string& identifier);
+
+        bool eval_condition(const Expression& expr);
+
     public:
         void visit(const Program &program);
 
@@ -64,15 +80,15 @@ class InterpreterVisitor : public Visitor {
         void visit(const BindFrtExpr &expr) {(void) expr; return;}
 
         void visit(const ForLoopStatement &stmt) {(void)stmt; return;}
-        void visit(const WhileLoopStatement &stmt) {(void)stmt; return;}
-        void visit(const ConditionalStatement &stmt) {(void)stmt; return;}
-        void visit(const ElseStatement &stmt) {(void)stmt; return;}
+        void visit(const WhileLoopStatement &stmt);
+        void visit(const ConditionalStatement &stmt);
+        void visit(const ElseStatement &stmt);
         void visit(const RetStatement &stmt) {(void)stmt; return;}
         void visit(const CallStatement &stmt) {(void)stmt; return;}
         void visit(const AssignStatement &stmt);
 
         void visit(const Block &block);
-        void visit(const VarType &var) {(void)var; return;}
+        void visit(const VarType &var);
         void visit(const FuncType &func) {(void)func; return;}
 
         void visit(const VariableSignature &var) {(void)var; return;}

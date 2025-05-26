@@ -101,3 +101,4 @@ void AssignStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 const Expression *AssignStatement::get_value() const { return value.get(); }
 const Type *AssignStatement::get_type() const { return var_sign->get_type(); }
 const std::string AssignStatement::get_identifier() const { return var_sign->get_name(); }
+const VariableSignature *AssignStatement::get_signature() const { return var_sign.get(); }

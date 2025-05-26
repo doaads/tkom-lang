@@ -77,6 +77,7 @@ ParamPtr Parser::parse_func_param() {
     TypePtr current_arg_type = shall(parse_type(), "Expected type");
     shall(is_token(TokenType::T_IDENTIFIER), "Expected parameter name");
     const std::string val = current_token.get_value<std::string>();
+    next_token();
     return std::make_unique<VariableSignature>(std::move(current_arg_type), val);
 }
 
@@ -146,10 +147,11 @@ StatementPtr Parser::parse_assign_or_call() {
     }
 
     next_token();
-    TypePtr type = shall(parse_type(), "Expected type");
+    TypePtr type = parse_type();
 
     shall(is_token(TokenType::T_IDENTIFIER), "Expected identifier");
     const std::string val = current_token.get_value<std::string>();
+    next_token();
 
     ParamPtr signature =
         std::make_unique<VariableSignature>(std::move(type), val);
