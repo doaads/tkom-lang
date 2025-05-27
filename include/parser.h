@@ -26,7 +26,7 @@ using ProgramPtr = std::unique_ptr<Program>;
 using ParamPtr = std::unique_ptr<VariableSignature>;
 
 /**
- * @brief A class responsible for parsing source code into an program tree.
+ * @brief A class responsible for parsing source code into a program tree.
  */
 class Parser {
    private:

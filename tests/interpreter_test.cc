@@ -94,6 +94,107 @@ TEST(InterpreterTest, InterpreterReAssignBasic) {
     EXPECT_TRUE(type.is_equal_to(var.lock()->signature.get_type()));
 }
 
+TEST(InterpreterTest, InterpreterWhileBasic) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser_assign = get_parser("1 => mut int i;", true);
+    auto parser_reassign = get_parser("while (i < 5) { i + 1 => i; }", true);
+    interpreter->push_call_stack(CallStackFrame({}, {BlockScope{}}));
+
+    auto stmt = parser_assign->parse_statement();
+    auto stmt_reassign = parser_reassign->parse_statement();
+
+    stmt->accept(*interpreter);
+    stmt_reassign->accept(*interpreter);
+
+    std::weak_ptr<Variable> var = interpreter->find_var_in_frame("i");
+    ValType value = var.lock()->value;
+
+    VarType type = VarType(BaseType::INT, true);
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 5);
+    EXPECT_TRUE(type.is_equal_to(var.lock()->signature.get_type()));
+}
+
+TEST(InterpreterTest, InterpreterProgram) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser("int main { ret 5; }", false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 5);
+}
+
+TEST(InterpreterTest, InterpreterProgramReassign) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser("int main { 0 => mut int a; while (a < 5) { a + 1 => a; } ret a;}", false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 5);
+}
+
+TEST(InterpreterTest, InterpreterFuncTest) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser(
+            "int main { (0) -> add_1 => int a; ret a;} "
+            "int add_1 :: int a { ret a + 1; }",
+        false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 1);
+}
+
+TEST(InterpreterTest, InterpreterFuncTestReference) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser(
+            "int main { 0 => mut int a; (a)->add_1; ret a;} "
+            "int add_1 :: mut int a { a + 1 => a; }",
+        false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 1);
+}
+
+TEST(InterpreterTest, InterpreterFuncTestNoReference) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser(
+            "int main { 1 => mut int a; (a + 1)->add_1; ret a;} "
+            "int add_1 :: mut int a { a + 1 => a; }",
+        false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 1);
+}
+
 enum class ValKind {
     Int,
     Double,
@@ -169,7 +270,6 @@ INSTANTIATE_TEST_SUITE_P(
         InterpreterAddParam{"true * 5", 5, ValKind::Int},
         InterpreterAddParam{"false * 5.0", 0.0, ValKind::Double},
 
-        // Division
         InterpreterAddParam{"8 / 2", 4, ValKind::Int},
         InterpreterAddParam{"9.0 / 3.0", 3.0, ValKind::Double},
         InterpreterAddParam{"9 / 2.0", 4.5, ValKind::Double},

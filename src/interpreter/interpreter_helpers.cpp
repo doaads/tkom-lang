@@ -96,3 +96,17 @@ bool InterpreterVisitor::eval_condition(const Expression& expr) {
     expr.accept(*this);
     return std::get<bool>(std::visit(TypeCast(), current_value, ValType{true}));
 }
+
+std::weak_ptr<Variable> InterpreterVisitor::get_for_iterator(const ForLoopArgs& args) {
+    return std::visit(Overload{[this](const std::unique_ptr<Statement>& iterator) {
+                                iterator->accept(*this);
+                                return this->call_stack.back().var_scope.back().vars.back();
+                            },
+                            [this](const std::string& iterator) {
+                                auto var = find_var_in_frame(iterator);
+                                if (!var.lock()) throw std::runtime_error("Invalid iterator");
+                                return var.lock();
+                            }},
+                   args.iterator);
+}
+

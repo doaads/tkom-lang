@@ -1,5 +1,7 @@
+#include "arithmetics.h"
 #include "interpreter.h"
 #include "local_function.h"
+#include "type_cast.h"
 
 void expect_arg_match(std::vector<const Type*>& expected, std::vector<const Type*>& received) {
     if (expected.size() != received.size())
@@ -12,23 +14,35 @@ void expect_arg_match(std::vector<const Type*>& expected, std::vector<const Type
 
 GlobalFunction::GlobalFunction(const Function* func) : func(func) {}
 
-void GlobalFunction::call(InterpreterVisitor& interpreter,
-                          std::vector<std::shared_ptr<VarRef>>& args) {
-    // set up call stack frame
+std::vector<std::shared_ptr<VarRef>> GlobalFunction::prepare_func_args(InterpreterVisitor& interpreter, ArgVector& args) const {
     const auto expected = func->get_signature()->get_params();
-    std::vector<const Type*> arg_types;
-    for (auto& arg_ref : args) {
-        auto weak_arg = arg_ref->ref;
-        if (auto arg = weak_arg.lock()) arg_types.push_back(arg->get_type());  // fix here
+    std::vector<std::shared_ptr<VarRef>> var_refs;
+    for (size_t i = 0; i < expected.size(); ++i) {
+        auto expected_arg = expected[i];
+        std::visit(
+            Overload{[&](std::shared_ptr<Variable> var) {
+                         if (!expected_arg->get_type()->is_equal_to(var->get_type()))
+                             throw std::runtime_error("Type mismatch");
+                         var_refs.push_back(std::make_shared<VarRef>(var, expected[i]->get_name()));
+                     },
+                     [&](ValType value) {
+                         auto type = expected[i]->get_type();
+                         value = std::visit(TypeCast(), value, interpreter.init_var(*type));
+                         auto temp_var = std::make_shared<Variable>(*expected[i], value);
+                         var_refs.push_back(
+                             std::make_shared<VarRef>(temp_var, expected[i]->get_name()));
+                     }},
+            args[i]);
     }
-    std::vector<const Type*> expected_types;
-    for (auto& arg : expected) {
-        expected_types.push_back(arg->get_type());
-    }
+    return var_refs;
+}
 
-    expect_arg_match(arg_types, expected_types);
+void GlobalFunction::call(InterpreterVisitor& interpreter, ArgVector args) {
 
-    CallStackFrame frame = CallStackFrame(args, std::vector<BlockScope>());
+    // turn non-referenced args into temporary variables, and verify type integrity
+    auto prepared_args = prepare_func_args(interpreter, args);
+
+    CallStackFrame frame = CallStackFrame(prepared_args, std::vector<BlockScope>());
 
     // push new call stack frame
     interpreter.push_call_stack(frame);
@@ -43,18 +57,16 @@ void GlobalFunction::call(InterpreterVisitor& interpreter,
 const Function* GlobalFunction::get_func() const { return func; }
 
 LocalFunction::LocalFunction(std::shared_ptr<Callable> callee,
-                             std::vector<std::shared_ptr<VarRef>> bound_args)
+                             ArgVector bound_args)
     : callee(std::move(callee)), bound_args(bound_args) {}
-
 
 /*
  * @brief: bind arguments and call
  */
-void LocalFunction::call(InterpreterVisitor& interpreter,
-                         std::vector<std::shared_ptr<VarRef>>& args) {
+void LocalFunction::call(InterpreterVisitor& interpreter, ArgVector args) {
     if (callee == nullptr) throw std::runtime_error("No function to call");
 
-    std::vector<std::shared_ptr<VarRef>> full_arg_list = bound_args;
+    ArgVector full_arg_list = bound_args;
     full_arg_list.insert(full_arg_list.end(), args.begin(), args.end());
 
     callee->call(interpreter, args);

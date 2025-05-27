@@ -64,7 +64,7 @@ FuncSignPtr Parser::parse_func_signature() {
         next_token();
         if ((param = shall(parse_func_param(), "Expected parameter")))
             params.push_back(std::move(param));
-    } while (is_next_token(TokenType::T_COMMA));
+    } while (is_token(TokenType::T_COMMA));
 
     return std::make_unique<FuncSignature>(pos, std::move(ret_type), std::move(params), func_name);
 }
@@ -214,10 +214,11 @@ ForLoopArgsPtr Parser::parse_for_loop_args() {
 
     next_token();
     StatementPtr assign = parse_assign_or_call();
-    std::variant<std::monostate, StatementPtr, ExprPtr> iterator;
+    std::variant<StatementPtr, std::string> iterator;
     if (!assign) {
-        ExprPtr identifier = shall(parse_identifier(), "Expected assign or identifier");
-        shall(is_token(TokenType::T_SEMICOLON), "Expected ';'");
+        shall(is_token(TokenType::T_IDENTIFIER), "Expected assign or identifier");
+        std::string identifier = current_token.get_value<std::string>();
+        shall(is_next_token(TokenType::T_SEMICOLON), "Expected ';'");
     } else {
         iterator = std::move(assign);
     }
