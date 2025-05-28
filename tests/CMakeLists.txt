@@ -60,8 +60,8 @@ target_link_libraries(parser_test_lib INTERFACE
 )
 
 target_link_libraries(interpreter_test_lib INTERFACE
-    interpreter
     parser_test_lib
+    interpreter
     local_function
     builtins
 )

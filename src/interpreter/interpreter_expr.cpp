@@ -19,6 +19,8 @@ static Logical or_v{[](auto l, auto r) -> bool { return l || r; }};
 static Unary unary_not_v{[](auto l) -> bool { return !l; }};
 static Unary unary_minus_v{[](auto l) -> int { return -l; }};
 
+static Decorate decorator_v{};
+
 void InterpreterVisitor::visit(const LiteralExpr& expr) {
     ValueType expr_val = expr.get_value();
 
@@ -71,8 +73,9 @@ void InterpreterVisitor::visit(const BinaryExpr& expr) {
         case BinaryOp::AND:
             current_value = std::visit(and_v, left, right);
             break;
-        default:  // TODO: DECORATORS
-            throw std::runtime_error("Unimplemented operator");
+        case BinaryOp::DECORATE:
+            current_value = std::visit(decorator_v, left, right);
+            break;
     }
     receiver = ReceivedBy::EXPR;
 }

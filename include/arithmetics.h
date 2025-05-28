@@ -1,8 +1,8 @@
 #pragma once
 #include "interpreter.h"
 
-/*
- * @brief: function for promoting types to string for the purpose of weak-type arithmetics
+/**
+ * @brief function for promoting types to string for the purpose of weak-type arithmetics
  */
 template <typename T>
 std::string to_string(const T& v) {
@@ -17,16 +17,16 @@ std::string to_string(const T& v) {
     }
 }
 
-/*
- * @brief: function for checking if types are of arithmetic rank for 2-argument functions
+/**
+ * @brief function for checking if types are of arithmetic rank for 2-argument functions
  */
 template <typename L, typename R>
 constexpr bool are_of_arithmetic_rank() {
     return std::is_arithmetic_v<L> && std::is_arithmetic_v<R>;
 }
 
-/*
- * @brief: function returning the value of an arithmetic function provided as the third argument
+/**
+ * @brief function returning the value of an arithmetic function provided as the third argument
  */
 template <typename OpFunc>
 ValType get_val_for_arithmetic(const ValType& l, const ValType& r, OpFunc func) {
@@ -38,8 +38,8 @@ ValType get_val_for_arithmetic(const ValType& l, const ValType& r, OpFunc func) 
         l, r);
 }
 
-/*
- * @brief: overload template for expression parsing
+/**
+ * @brief overload template for expression parsing
  *
  * Inspired by: https://www.modernescpp.com/index.php/smart-tricks-with-fold-expressions/
  */
@@ -50,8 +50,8 @@ struct Overload : Ts... {
 template <class... Ts>
 Overload(Ts...) -> Overload<Ts...>;
 
-/*
- * @brief: struct for handling the '+' operator
+/**
+ * @brief struct for handling the '+' operator
  */
 struct Add {
     ValType operator()(const std::string& l, const std::string& r) { return l + r; }
@@ -64,7 +64,7 @@ struct Add {
 };
 
 /*
- * @brief: struct for handling the '-' operator
+ * @brief struct for handling the '-' operator
  *
  * the function returns a value only for arithmetic types
  */
@@ -75,8 +75,8 @@ struct Sub {
     }
 };
 
-/*
- * @brief: struct for handling the '*' operator
+/**
+ * @brief struct for handling the '*' operator
  *
  * arithmetic types are multiplied normally, (string, int) combination returns a n-times multiplied
  * string
@@ -96,8 +96,8 @@ struct Mul {
     }
 };
 
-/*
- * @brief: struct for handling the '/' operator
+/**
+ * @brief struct for handling the '/' operator
  *
  * works only for arithmetic types
  */
@@ -108,8 +108,8 @@ struct Div {
     }
 };
 
-/*
- * @brief: function for handling comparison operators (<, >, <=, >=, ==, !=)
+/**
+ * @brief function for handling comparison operators (<, >, <=, >=, ==, !=)
  *
  * string comparison only compares string length for both arguments
  */
@@ -121,8 +121,8 @@ struct Compare {
     ValType operator()(const auto& l, const auto& r) { return get_val_for_arithmetic(l, r, func); }
 };
 
-/*
- * @brief: function for handling unary operators (!, -)
+/**
+ * @brief function for handling unary operators (!, -)
  */
 template <typename UnaryFunc>
 struct Unary {
@@ -133,8 +133,8 @@ struct Unary {
     }
 };
 
-/*
- * @brief: struct for handling logical operators (&&, ||)
+/**
+ * @brief struct for handling logical operators (&&, ||)
  */
 template <typename LogicalFunc>
 struct Logical {
@@ -146,3 +146,14 @@ struct Logical {
     ValType operator()(const auto& l, const auto& r) { return get_val_for_arithmetic(l, r, func); }
 };
 
+
+struct Decorate {
+    ValType operator()(const std::shared_ptr<Callable>& l, const std::shared_ptr<Callable>& r) {
+        ArgVector args;
+        args.push_back(ValType{l});
+        return std::make_shared<LocalFunction>(r, args);
+    }
+    ValType operator()(auto, auto) {
+        throw std::runtime_error("Unsupported operator: '@'");
+    }
+};

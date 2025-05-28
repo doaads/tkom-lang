@@ -3,6 +3,13 @@
 #include "interpreter.h"
 
 struct TypeCast {
+    ValType operator()(std::shared_ptr<Callable> a, std::shared_ptr<Callable> b) {
+        if (a->get_type()->is_equal_to(b->get_type())) {
+            return a;
+        }
+        throw InterpreterError("Functions have a different number of parameters");
+    }
+
     template <typename T>
     ValType operator()(T a, T) {
         return a;
@@ -11,13 +18,24 @@ struct TypeCast {
     ValType operator()(int a, double) { return static_cast<double>(a); }
     ValType operator()(double a, int) { return static_cast<int>(a); }
 
-    ValType operator()(std::string, int) {
-        throw std::runtime_error("int type cannot hold a string");
+    ValType operator()(std::string a, int) {
+        try {
+            int result = std::stoi(a);
+            return result;
+        } catch (std::exception& e) {
+            throw InterpreterError("Cannot cast " + a + " to int");
+        }
     }
     ValType operator()(int a, std::string) { return std::to_string(a); }
 
-    ValType operator()(std::string, double) {
-        throw std::runtime_error("flt type cannot hold a string");
+    ValType operator()(std::string a, double) {
+        try {
+            int result = std::stod(a);
+            return result;
+        } catch (std::exception& e) {
+            throw InterpreterError("Cannot cast " + a + " to int");
+        }
+        throw InterpreterError("flt type cannot hold a string");
     }
     ValType operator()(double a, std::string) { return std::to_string(a); }
 
@@ -29,6 +47,6 @@ struct TypeCast {
     ValType operator()(std::string a, bool) { return a.empty(); }
 
     template <typename A, typename B>  // we throw if we get 2 type combinations not mentioned here
-    ValType operator()(A, B) { throw std::runtime_error("Cannot cast type"); }
+    ValType operator()(A, B) { throw InterpreterError("Cannot cast type"); }
 };
 

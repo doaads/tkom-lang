@@ -1,4 +1,5 @@
 #include "interpreter.h"
+#include "interpreter_shall.h"
 #include "type_cast.h"
 
 void InterpreterVisitor::register_function(const Function* func) {
@@ -7,6 +8,8 @@ void InterpreterVisitor::register_function(const Function* func) {
 }
 
 ValType InterpreterVisitor::get_value() const { return current_value; }
+
+void InterpreterVisitor::override_value(ValType val) { current_value = val; }
 
 void InterpreterVisitor::push_call_stack(CallStackFrame frame) { call_stack.push_back(frame); }
 
@@ -49,10 +52,10 @@ void InterpreterVisitor::modify_var(const std::string& identifier) {
     ValType value = current_value;
     std::shared_ptr<Variable> var = find_var_in_frame(identifier).lock();
 
-    if (!var) throw std::runtime_error("Variable not in scope");
+    shall(var, "Variable not in scope: " + identifier);
 
     const Type* type = var->signature.get_type();
-    if (!type->get_mut()) throw std::runtime_error("Immutable variables cannot be reassigned");
+    shall(type->get_mut(), "Immutable variables cannot be reassigned");
 
     var->value = std::visit(TypeCast(), value, var->value);
 }
@@ -65,7 +68,7 @@ template <class... Ts>
 Overload(Ts...) -> Overload<Ts...>;
 ValType InterpreterVisitor::init_var(const Type& type) {
     type.accept(*this);
-    return std::visit(Overload{[](const Type*) -> ValType { return ValType{nullptr}; },
+    return std::visit(Overload{[](const Type* type) -> ValType { return std::make_shared<LocalFunction>(type->clone()); },
                                [](BaseType type) -> ValType {
                                    switch (type) {
                                        case BaseType::INT:
@@ -77,9 +80,9 @@ ValType InterpreterVisitor::init_var(const Type& type) {
                                        case BaseType::STRING:
                                            return "";
                                        case BaseType::VOID:
-                                           throw std::runtime_error("Expected non-void type");
+                                           return std::monostate();
                                    }
-                                   throw std::runtime_error("Unable to initalize variable");
+                                   throw InterpreterError("Unable to initialize variable");
                                }},
                       current_type);
 }
@@ -104,7 +107,7 @@ std::weak_ptr<Variable> InterpreterVisitor::get_for_iterator(const ForLoopArgs& 
                             },
                             [this](const std::string& iterator) {
                                 auto var = find_var_in_frame(iterator);
-                                if (!var.lock()) throw std::runtime_error("Invalid iterator");
+                                shall(var.lock(), "Invalid iterator");
                                 return var.lock();
                             }},
                    args.iterator);

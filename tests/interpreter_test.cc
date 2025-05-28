@@ -222,7 +222,7 @@ TEST(InterpreterTest, InterpreterBindFrontTest) {
 TEST(InterpreterTest, InterpreterTestFlt) {
     std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
     auto parser = get_parser(
-        "int main {"
+        "flt main {"
             "1.5 => mut flt a;"
             "(a) -> double;"
             "ret a;"
@@ -269,11 +269,68 @@ TEST(InterpreterTest, InterpreterBindFrontNoRefPass) {
     EXPECT_EQ(std::get<int>(value), 1);
 }
 
+TEST(InterpreterTest, InterpreterBindFrontReturnFunc) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser(
+        "int main {"
+        "    (5) -> bind => [int::int] bound_returned;"
+        "    ret (1) -> bound_returned;"
+        "}"
+
+        "[int::int] bind :: int a {"
+            "(a) ->> add => [int::int] add_bound;"
+            "ret add_bound;"
+        "}"
+
+        "int add :: int a, int b {"
+            "ret a + b;"
+        "}",
+        false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 6);
+}
+
+TEST(InterpreterTest, InterpreterDecoratorTest) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser(
+        "int main {"
+        "    add_1 @ decorator => [int::] decorated;"
+        "    ret () -> decorated;"
+        "}"
+
+        "int decorator :: [int::int] func {"
+            "(5) -> func => int a;"
+            "ret a + 1;"
+        "}"
+
+        "int add_1 :: int a {"
+            "ret a + 1;"
+        "}",
+        false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 7);
+}
+
+
 TEST(InterpreterTest, InterpreterIfElseTest) {
     std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
     auto parser = get_parser(
         "int main {"
-            "1 => int a;"
+            "1 => mut int a;"
             "if (a > 0) {"
             "   ret a;"
             "} elif (a == 0) {"
@@ -314,6 +371,27 @@ TEST(InterpreterTest, InterpreterBuiltinWhile) {
     ASSERT_TRUE(std::holds_alternative<int>(value));
     EXPECT_EQ(std::get<int>(value), 5);
 }
+
+
+TEST(InterpreterTest, InterpreterBuiltinPassValue) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>(builtins);
+    auto parser = get_parser(
+        "int main {"
+        "    (0) -> increment;"
+        "    ret 0;"
+        "}",
+    false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 0);
+}
+
 
 TEST(InterpreterTest, InterpreterBuiltin) {
     std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>(builtins);

@@ -23,12 +23,16 @@ std::ostream &operator<<(std::ostream &os, const BaseType &type);
 
 class Type : public Node {
    public:
-    static const bool is_func = false;
+    virtual bool is_func() const {
+        return false;
+    };
     virtual ~Type() = default;
     virtual void accept(Visitor &visitor) const = 0;
 
     virtual bool get_mut() const = 0;
     virtual bool is_equal_to(const Type* other) const = 0;
+    virtual std::vector<const Type*> get_params() const = 0;
+    virtual const Type* get_ret_type() const = 0;
 
     virtual std::unique_ptr<Type> clone(size_t skip_args = 0) const = 0;
 };
@@ -45,6 +49,8 @@ class VarType : public Type {
     BaseType get_type() const;
     bool get_mut() const override;
     bool is_equal_to(const Type* other) const override;
+    std::vector<const Type*> get_params() const override { throw std::runtime_error("Variable type does not contain parameters");}
+    const Type* get_ret_type() const override { return this; }
 
     std::unique_ptr<Type> clone(size_t = 0) const override;
 };
@@ -56,12 +62,12 @@ class FuncType : public Type {
 
    public:
     FuncType(std::unique_ptr<Type> ret_type, std::vector<std::unique_ptr<Type>> params);
-    static const bool is_func = true;
+    bool is_func() const override { return true; }
     void accept(Visitor &visitor) const override;
 
     bool get_mut() const override { return false; }
-    const Type *get_ret_type() const;
-    const std::vector<const Type *> get_params() const;
+    const Type *get_ret_type() const override;
+    std::vector<const Type *> get_params() const override;
     bool is_equal_to(const Type* other) const override;
 
     std::unique_ptr<Type> clone(size_t skip_args = 0) const override;

@@ -15,8 +15,8 @@ using ValType =
 using Arg = std::variant<std::shared_ptr<Variable>, ValType>;
 using ArgVector = std::vector<Arg>;
 
-/*
- * @brief: general class for registering available functions.
+/**
+ * @brief general class for registering available functions.
  */
 class Callable {
    public:
@@ -29,11 +29,12 @@ class Callable {
 };
 
 
-/*
- * @brief: class for holding a direct reference to parsed functions
+/**
+ * @brief class for holding a direct reference to parsed functions
  */
 class GlobalFunction : public Callable {
    private:
+    std::unique_ptr<Type> type;
     const Function* func;
 
    public:
@@ -42,12 +43,12 @@ class GlobalFunction : public Callable {
               ArgVector params) override;
     const Function* get_func() const override;
     std::vector<std::shared_ptr<VarRef>> prepare_func_args(InterpreterVisitor& interpreter, ArgVector& args) const;
-    const Type* get_type() const override {return func->get_signature()->get_type();}
+    const Type* get_type() const override {return type.get();}
     const std::string get_name() const override { return func->get_signature()->get_name();}
 };
 
-/*
- * @brief: class for holding decorated/bind fronted functions as variables
+/**
+ * @brief class for holding decorated/bind fronted functions as variables
  *
  * Local functions differ from global functions only with their signature.
  */
@@ -60,6 +61,7 @@ class LocalFunction : public Callable {
 
    public:
     LocalFunction(std::shared_ptr<Callable> callee_func, ArgVector bound_args);
+    LocalFunction(std::unique_ptr<Type> type);
     void call(InterpreterVisitor& interpreter,
               ArgVector params) override;
     const Function* get_func() const override;

@@ -68,7 +68,7 @@ FuncType::FuncType(std::unique_ptr<Type> ret_type, std::vector<std::unique_ptr<T
 
 const Type *FuncType::get_ret_type() const { return ret_type.get(); }
 
-const std::vector<const Type *> FuncType::get_params() const {
+std::vector<const Type *> FuncType::get_params() const {
     std::vector<const Type *> result;
     result.reserve(params.size());
     for (const auto &param : params) {
@@ -81,7 +81,7 @@ void FuncType::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 bool VarType::is_equal_to(const Type* other) const {
     if (other == nullptr) return false;
-    if (!other->is_func) {
+    if (!other->is_func()) {
         const VarType* var_other = static_cast<const VarType*>(other);
         return type == var_other->type && mut == var_other->mut;
     }
@@ -90,7 +90,7 @@ bool VarType::is_equal_to(const Type* other) const {
 
 bool FuncType::is_equal_to(const Type* other) const {
     if (other == nullptr) return false;
-    if (other->is_func) {
+    if (other->is_func()) {
         const FuncType* func_other = static_cast<const FuncType*>(other);
         
         if (!ret_type->is_equal_to(func_other->ret_type.get())) {
@@ -123,8 +123,10 @@ std::unique_ptr<Type> FuncType::clone(size_t skip_args) const{
 
     std::vector<std::unique_ptr<Type>> new_params;
     for (size_t i = skip_args; i < params.size(); ++i) {
-        new_params.push_back(params[i]->clone());
+        if (params[i])
+            new_params.push_back(params[i]->clone());
     }
 
-    return std::make_unique<FuncType>(ret_type->clone(), std::move(new_params));
+    auto result = std::make_unique<FuncType>(ret_type->clone(), std::move(new_params));
+    return result;
 }

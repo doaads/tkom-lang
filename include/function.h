@@ -18,7 +18,8 @@ class FuncSignature : public Node {
     FuncSignature(Position pos, std::unique_ptr<Type> ret,
                   std::vector<std::unique_ptr<VariableSignature>> args, std::string name);
     void accept(Visitor &visitor) const;
-    const Type *get_type() const;
+    const Type *get_type() const { return ret_type.get(); };
+    std::unique_ptr<FuncType> clone_type_as_type_obj() const;
     const std::vector<const VariableSignature *> get_params() const;
     std::string get_name() const;
 };

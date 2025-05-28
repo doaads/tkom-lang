@@ -597,14 +597,13 @@ TypePtr Parser::parse_func_type() {
     shall(is_token(TokenType::T_FUNC_SIGN), "Expected '::'");
 
     std::vector<std::unique_ptr<Type>> params;
-    TokenType separator;
-    while (!is_token(TokenType::T_RFTYPE)) {
+    do {
         next_token();
-        params.push_back(parse_type());
-        separator = current_token.get_type();
-        if (separator != TokenType::T_COMMA && separator != TokenType::T_RFTYPE)
-            throw ParserError(get_position(), "Expected ',' or ']'");
-    }
+        auto type = parse_type();
+        if (type) params.push_back(std::move(type));
+    } while (is_token(TokenType::T_COMMA));
+
+    shall(is_token(TokenType::T_RFTYPE), "Expected ']'");
 
     next_token();
 

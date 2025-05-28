@@ -1,6 +1,7 @@
 #include <memory>
 
 #include "interpreter.h"
+#include "interpreter_shall.h"
 
 InterpreterVisitor::InterpreterVisitor(std::vector<std::shared_ptr<Callable>> builtins) : functions(builtins) {}
 
@@ -13,14 +14,14 @@ void InterpreterVisitor::visit(const Program& program) {
 }
 
 void InterpreterVisitor::visit(const Function& func) {
-    func.get_body()->accept(*this);
+    try_visit(func.get_body());
     if (returning) returning = false;
 }
 
 void InterpreterVisitor::visit(const Block& block) {
     call_stack.back().var_scope.push_back(BlockScope());
     for (auto& stmt : block.get_statements()) {
-        stmt->accept(*this);
+        try_visit(stmt);
         if (returning) break;
     }
     call_stack.back().var_scope.pop_back();
@@ -28,11 +29,11 @@ void InterpreterVisitor::visit(const Block& block) {
 
 void InterpreterVisitor::visit(const CallExpr& expr) {
     ArgVector args;
-    expr.get_func_name()->accept(*this);
+    try_visit(expr.get_func_name());
     auto func = current_value;
 
     for (auto& arg : expr.get_args()) {
-        arg->accept(*this);
+        try_visit(arg);
         // we got a identifier expression, pass by ref
         if (receiver == ReceivedBy::VAR) {
             auto var_ptr = var;
@@ -53,14 +54,14 @@ void InterpreterVisitor::visit(const IdentifierExpr& expr) {
         var = found;
     } else {
         auto func = find_func(expr.get_identifier());
-        if (!func) throw std::runtime_error("Unknown identifier");
+        shall(func, "Unknown identifier");
         current_value = func;
     }
     receiver = ReceivedBy::VAR;
 }
 
 void InterpreterVisitor::visit(const AssignStatement& stmt) {
-    stmt.get_value()->accept(*this);
+    try_visit(stmt.get_value());
     ValType value = current_value;
 
     auto type = stmt.get_type();
@@ -80,63 +81,60 @@ void InterpreterVisitor::visit(const FuncType& type) { current_type = &type; }
 void InterpreterVisitor::visit(const WhileLoopStatement& stmt) {
     auto condition = stmt.get_condition();
     while (eval_condition(*condition)) {
-        stmt.get_body()->accept(*this);
+        try_visit(stmt.get_body());
     }
 }
 
 void InterpreterVisitor::visit(const ConditionalStatement& stmt) {
     auto condition = stmt.get_condition();
     if (eval_condition(*condition)) {
-        stmt.get_body()->accept(*this);
+        try_visit(stmt.get_body());
     } else if (auto else_st = stmt.get_else_st()) {
-        else_st->accept(*this);
+        try_visit(else_st);
     }
 }
 
-void InterpreterVisitor::visit(const ElseStatement& stmt) { stmt.get_body()->accept(*this); }
+void InterpreterVisitor::visit(const ElseStatement& stmt) { try_visit(stmt.get_body()); }
 
 void InterpreterVisitor::visit(const ForLoopStatement& stmt) {
     auto& args = *stmt.get_args();
     auto condition = args.condition.get();
     auto iterator = get_for_iterator(args);
 
-    stmt.get_on_iter()->accept(*this);
+    try_visit(stmt.get_on_iter());
     ValType on_iter = current_value;
 
-
-    if (!std::holds_alternative<std::shared_ptr<Callable>>(on_iter))
-        throw std::runtime_error("on iter call identifier is not a valid function");
+    shall(std::holds_alternative<std::shared_ptr<Callable>>(on_iter), "on iter call must be a function");
 
     auto on_iter_func = std::get<std::shared_ptr<Callable>>(on_iter);
     ArgVector on_iter_arg = {iterator.lock()};
 
     for (;eval_condition(*condition); on_iter_func->call(*this, on_iter_arg)){
-        stmt.get_body()->accept(*this);
+        try_visit(stmt.get_body());
     }
 }
 
 void InterpreterVisitor::visit(const RetStatement& stmt) { 
-    stmt.get_retval()->accept(*this);
+    try_visit(stmt.get_retval());
     returning = true;
 }
 
 void InterpreterVisitor::visit(const CallStatement& stmt) {
-    stmt.get_call()->accept(*this);
+    try_visit(stmt.get_call());
 }
 
 void InterpreterVisitor::visit(const BindFrtExpr& expr) {
     // bindfrt can contain a decorator, we visit it first
-    expr.get_func_name()->accept(*this);
+    try_visit(expr.get_func_name());
 
-    if (!std::holds_alternative<std::shared_ptr<Callable>>(current_value))
-        throw std::runtime_error("Expected valid function identifier");
+    shall(std::holds_alternative<std::shared_ptr<Callable>>(current_value), "Expected valid function identifier");
     auto func = std::get<std::shared_ptr<Callable>>(current_value);
 
     // grab arguments
     // pass all by value for bindfront
     ArgVector args;
     for (auto& arg : expr.get_args()) {
-        arg->accept(*this);
+        try_visit(arg);
         if (receiver == ReceivedBy::VAR) {
             auto var_ptr = var;
             args.push_back(var_ptr.lock()->value);
@@ -144,5 +142,7 @@ void InterpreterVisitor::visit(const BindFrtExpr& expr) {
             args.push_back(current_value);
         }
     }
-    current_value = std::make_shared<LocalFunction>(func, args);
+    auto new_func = std::make_shared<LocalFunction>(func, args);
+    current_type = new_func->get_type();
+    current_value = std::move(new_func);
 }

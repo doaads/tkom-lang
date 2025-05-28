@@ -1,18 +1,20 @@
 #include "arithmetics.h"
 #include "interpreter.h"
 #include "local_function.h"
+#include "interpreter_shall.h"
 #include "type_cast.h"
 
 void expect_arg_match(std::vector<const Type*>& expected, std::vector<const Type*>& received) {
-    if (expected.size() != received.size())
-        throw std::runtime_error("Invalid argument vector size");
+    shall(expected.size() == received.size(), "Invalid argument vector size");
 
     for (size_t i = 0; i < expected.size(); ++i) {
-        if (!expected[i]->is_equal_to(received[i])) throw std::runtime_error("Type mismatch");
+        shall(expected[i]->is_equal_to(received[i]), "Type mismatch");
     }
 }
 
-GlobalFunction::GlobalFunction(const Function* func) : func(func) {}
+GlobalFunction::GlobalFunction(const Function* func) : func(func) {
+    type = func->get_signature()->clone_type_as_type_obj();
+}
 
 std::vector<std::shared_ptr<VarRef>> GlobalFunction::prepare_func_args(InterpreterVisitor& interpreter, ArgVector& args) const {
     const auto expected = func->get_signature()->get_params();
@@ -21,8 +23,7 @@ std::vector<std::shared_ptr<VarRef>> GlobalFunction::prepare_func_args(Interpret
         auto expected_arg = expected[i];
         std::visit(
             Overload{[&](std::shared_ptr<Variable> var) {
-                         if (!expected_arg->get_type()->is_equal_to(var->get_type()))
-                             throw std::runtime_error("Type mismatch");
+                         shall(expected_arg->get_type()->is_equal_to(var->get_type()), "Type mismatch");
                          var_refs.push_back(std::make_shared<VarRef>(var, expected[i]->get_name()));
                      },
                      [&](ValType value) {
@@ -37,6 +38,9 @@ std::vector<std::shared_ptr<VarRef>> GlobalFunction::prepare_func_args(Interpret
     return var_refs;
 }
 
+/**
+ * @brief verify argument types, push call frame and call
+ */
 void GlobalFunction::call(InterpreterVisitor& interpreter, ArgVector args) {
 
     // turn non-referenced args into temporary variables, and verify type integrity
@@ -50,6 +54,16 @@ void GlobalFunction::call(InterpreterVisitor& interpreter, ArgVector args) {
     // proper call
     func->accept(interpreter);
 
+    // verify the received type
+    auto current_val = interpreter.get_value();
+    auto ret_type = get_type()->get_ret_type();
+    if (!ret_type->is_equal_to(std::make_unique<VarType>(BaseType::VOID, false).get())) {
+        auto retval = interpreter.init_var(*ret_type);
+        // cast the value into desired return type
+        interpreter.override_value(std::visit(TypeCast(), current_val, retval));
+    }
+
+
     // dispose of the call stack frame
     interpreter.pop_call_stack();
 }
@@ -61,13 +75,15 @@ LocalFunction::LocalFunction(std::shared_ptr<Callable> callee_func,
     : callee(std::move(callee_func)), bound_args(bound_args) {
         // adjust this function's type
         type = callee->get_type()->clone(bound_args.size());
-    }
+}
 
-/*
- * @brief: bind arguments and call
+LocalFunction::LocalFunction(std::unique_ptr<Type> type) : type(std::move(type)) {}
+
+/**
+ * @brief bind arguments and call
  */
 void LocalFunction::call(InterpreterVisitor& interpreter, ArgVector args) {
-    if (callee == nullptr) throw std::runtime_error("No function to call");
+    shall(callee, "No function to call");
 
     ArgVector full_arg_list = bound_args;
     full_arg_list.insert(full_arg_list.end(), args.begin(), args.end());
