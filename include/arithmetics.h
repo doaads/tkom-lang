@@ -1,5 +1,6 @@
 #pragma once
-#include "interpreter.h"
+#include "exceptions.h"
+#include "interpreter_helpers.h"
 
 /**
  * @brief function for promoting types to string for the purpose of weak-type arithmetics
@@ -13,7 +14,7 @@ std::string to_string(const T& v) {
     } else if constexpr (std::is_same_v<T, std::string>) {
         return v;
     } else {
-        throw std::runtime_error("Unsupported type");
+        throw InterpreterError("Unsupported type");
     }
 }
 
@@ -33,7 +34,7 @@ ValType get_val_for_arithmetic(const ValType& l, const ValType& r, OpFunc func) 
     return std::visit(
         [func](auto l, auto r) -> ValType {
             if constexpr (are_of_arithmetic_rank<decltype(l), decltype(r)>()) return func(l, r);
-            throw std::runtime_error("Unsupported operator for type");
+            throw InterpreterError("Unsupported operator for type");
         },
         l, r);
 }
@@ -83,7 +84,7 @@ struct Sub {
  */
 struct Mul {
     ValType mult_string(const std::string& str, int count) {
-        if (count < 0) throw std::runtime_error("Cannot multiply a string by a negative integer");
+        if (count < 0) throw InterpreterError("Cannot multiply a string by a negative integer");
         std::string result;
         for (int i = 0; i < count; ++i) result += str;
         return result;
@@ -129,7 +130,7 @@ struct Unary {
     UnaryFunc func;
     ValType operator()(auto l) {
         if constexpr (std::is_arithmetic_v<decltype(l)>) return func(l);
-        throw std::runtime_error("Unsupported operator for type");
+        throw InterpreterError("Unsupported operator for type");
     }
 };
 
@@ -146,14 +147,11 @@ struct Logical {
     ValType operator()(const auto& l, const auto& r) { return get_val_for_arithmetic(l, r, func); }
 };
 
-
 struct Decorate {
     ValType operator()(const std::shared_ptr<Callable>& l, const std::shared_ptr<Callable>& r) {
         ArgVector args;
         args.push_back(ValType{l});
         return std::make_shared<LocalFunction>(r, args);
     }
-    ValType operator()(auto, auto) {
-        throw std::runtime_error("Unsupported operator: '@'");
-    }
+    ValType operator()(auto, auto) { throw InterpreterError("Unsupported operator: '@'"); }
 };

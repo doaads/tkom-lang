@@ -1,11 +1,12 @@
 // some high order function examples
 void main {
     for (0 => mut int i; i < 20) {
-        (i) -> some_func;
+        (i + "\n") -> stdout;
     } -> increment @ print_current_val;
+    ret 0;
 }
 
-[void] print_current_val :: [void::mut int] func, mut int a {
+void print_current_val :: [void::mut int] func, mut int a {
     (a) -> func;
-    (a + "\n") -> stdout;
+    ("LOG: value: " + a + "\n") -> stdout;
 }

@@ -40,9 +40,8 @@ std::weak_ptr<Variable> InterpreterVisitor::find_var_in_frame(const std::string&
 }
 
 std::shared_ptr<Callable> InterpreterVisitor::find_func(const std::string& name) {
-    auto func = std::find_if(functions.begin(), functions.end(), [&name](const auto& func) {
-        return func->get_name() == name;
-    });
+    auto func = std::find_if(functions.begin(), functions.end(),
+                             [&name](const auto& func) { return func->get_name() == name; });
 
     if (func < functions.end()) return *func;
     return nullptr;
@@ -52,7 +51,7 @@ void InterpreterVisitor::modify_var(const std::string& identifier) {
     ValType value = current_value;
     std::shared_ptr<Variable> var = find_var_in_frame(identifier).lock();
 
-    shall(var, "Variable not in scope: " + identifier);
+    shall(var != nullptr, "Variable not in scope: " + identifier);
 
     const Type* type = var->signature.get_type();
     shall(type->get_mut(), "Immutable variables cannot be reassigned");
@@ -68,7 +67,9 @@ template <class... Ts>
 Overload(Ts...) -> Overload<Ts...>;
 ValType InterpreterVisitor::init_var(const Type& type) {
     type.accept(*this);
-    return std::visit(Overload{[](const Type* type) -> ValType { return std::make_shared<LocalFunction>(type->clone()); },
+    return std::visit(Overload{[](const Type* type) -> ValType {
+                                   return std::make_shared<LocalFunction>(type->clone());
+                               },
                                [](BaseType type) -> ValType {
                                    switch (type) {
                                        case BaseType::INT:
@@ -102,14 +103,13 @@ bool InterpreterVisitor::eval_condition(const Expression& expr) {
 
 std::weak_ptr<Variable> InterpreterVisitor::get_for_iterator(const ForLoopArgs& args) {
     return std::visit(Overload{[this](const std::unique_ptr<Statement>& iterator) {
-                                iterator->accept(*this);
-                                return this->call_stack.back().var_scope.back().vars.back();
-                            },
-                            [this](const std::string& iterator) {
-                                auto var = find_var_in_frame(iterator);
-                                shall(var.lock(), "Invalid iterator");
-                                return var.lock();
-                            }},
-                   args.iterator);
+                                   iterator->accept(*this);
+                                   return this->call_stack.back().var_scope.back().vars.back();
+                               },
+                               [this](const std::string& iterator) {
+                                   auto var = find_var_in_frame(iterator);
+                                   shall(var.lock(), "Invalid iterator");
+                                   return var.lock();
+                               }},
+                      args.iterator);
 }
-

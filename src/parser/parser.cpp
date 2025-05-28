@@ -460,7 +460,12 @@ ExprPtr Parser::parse_bindfrt_or_call(std::vector<ExprPtr>& args) {
     if (!is_token(TokenType::T_CALL)) return nullptr;
     next_token();
 
-    ExprPtr right = parse_bind_front();
+    //ExprPtr right = parse_bind_front();
+    ExprPtr right = parse_func_call_or_parens();
+    if (!right) right = parse_bind_front();
+
+    shall(right != nullptr, "Expected bind front or identifier");
+
     return std::make_unique<CallExpr>(pos, std::move(right), std::move(args));
 }
 

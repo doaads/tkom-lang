@@ -39,6 +39,7 @@ add_library(interpreter
     src/interpreter/interpreter_expr.cpp
     src/interpreter/interpreter.cpp
     src/interpreter/interpreter_helpers.cpp
+    src/interpreter/tkom_interpreter.cpp
 )
 
 target_include_directories(tokenizer PUBLIC include)

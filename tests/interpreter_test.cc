@@ -562,3 +562,28 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
+struct InvalidProgram {
+    std::string program;
+};
+
+class ParserInvalidPrograms : public ::testing::TestWithParam<InvalidProgram> {};
+
+TEST_P(ParserInvalidPrograms, ThrowsOnInvalidCode) {
+    const auto& param = GetParam();
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>(builtins);
+    auto parser = get_parser(param.program, false);
+    std::cout << "Testing: " << param.program << std::endl;
+    auto program = parser->parse();
+    EXPECT_THROW({
+        program->accept(*interpreter);
+    }, GeneralError);
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    InvalidPrograms,
+    ParserInvalidPrograms,
+    ::testing::Values(
+        InvalidProgram{"int main { ret a; }"}
+        )
+);
+

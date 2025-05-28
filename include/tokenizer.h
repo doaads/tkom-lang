@@ -7,6 +7,7 @@
 #include "token.h"
 
 using MapTokenType = std::variant<std::monostate, TokenType>;
+using OptToken = std::optional<Token>;
 
 class Tokenizer {
    private:
@@ -17,15 +18,16 @@ class Tokenizer {
 
     std::shared_ptr<InputManager> input;
 
-    Token build_token(Position &pos);
+    Token start_build_token(Position& pos);
+    Token build_token(char current_token);
 
-    Token build_identifier(char current_char) const;
-    Token build_number(char current_char) const;
-    Token build_string(char current_char) const;
-    Token build_short_operator(char current_char) const;
-    Token start_build_long_operator(char current_char) const;
+    OptToken build_identifier(char current_char) const;
+    OptToken build_number(char current_char) const;
+    OptToken build_string(char current_char) const;
+    OptToken build_short_operator(char current_char) const;
+    OptToken start_build_long_operator(char current_char) const;
 
-    Token build_long_operator(TokenType type) const;
+    OptToken build_long_operator(TokenType type) const;
 
     MapTokenType get_type_for_operator(char c) const;
     MapTokenType get_type_for_first_op_char(char c) const;

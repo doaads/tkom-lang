@@ -44,6 +44,7 @@ void InterpreterVisitor::visit(const CallExpr& expr) {
         }
     }
     std::get<std::shared_ptr<Callable>>(func)->call(*this, args);
+    receiver = ReceivedBy::EXPR;
 }
 
 void InterpreterVisitor::visit(const IdentifierExpr& expr) {
@@ -70,6 +71,7 @@ void InterpreterVisitor::visit(const AssignStatement& stmt) {
     if (!type) {
         modify_var(identifier);
     } else {
+        shall(!find_var_in_frame(identifier).lock(), "Variable " + identifier + " is already defined in this frame");
         register_var(*stmt.get_signature());
     }
 }

@@ -1,14 +1,8 @@
 #include <boost/program_options.hpp>
-#include <fstream>
 #include <iostream>
 
 #include "builtin_defines.h"
-#include "exceptions.h"
-#include "interpreter.h"
-#include "lexer.h"
-#include "parser.h"
-#include "visitor.h"
-#include "print_error.h"
+#include "tkom_interpreter.h"
 
 namespace po = boost::program_options;
 
@@ -37,36 +31,6 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    std::shared_ptr<std::fstream> input =
-        std::make_unique<std::fstream>(input_file, std::fstream::in);
-    std::shared_ptr<Lexer> lexer = std::make_shared<Lexer>(input, verbose);
-    Parser parser = Parser(std::move(lexer));
-    std::unique_ptr<Program> program;
-    InterpreterVisitor interpreter = InterpreterVisitor(builtins);
-    if (verbose)
-        std::cout << "--------------------------------\033[36m" << input_file
-                  << "\033[0m-------------------------------" << std::endl;
-
-    try {
-        program = parser.parse();
-        program->accept(interpreter);
-        return std::get<int>(interpreter.get_value());
-    } catch (const GeneralError &e) {
-        std::cerr << "\033[1;31mError:\033[0m " << e.what() << std::endl;
-
-        print_error(e, input_file);
-        return 1;
-    } catch (const std::exception &e) {
-        std::cerr << "\033[1;31mUnhandled Error:\033[0m " << e.what() << std::endl;
-        return 1;
-    }
-
-    if (verbose) {
-        ParserPrinter printer = ParserPrinter(std::cout);
-        printer.visit(*program);
-        std::cout << "-------------------------------\033[36m/" << input_file
-                  << "\033[0m-------------------------------" << std::endl;
-    }
-
-    return 0;
+    TKOMInterpreter interpreter{input_file, builtins};
+    return interpreter.process();
 }

@@ -143,6 +143,10 @@ std::ostream &operator<<(std::ostream &os, const TokenType type) {
         case TokenType::T_BOOL:
             os << "T_BOOL";
             break;
+        default:
+            os << "UNFINISHED TOKEN!";
+            break;
+
     }
     return os;
 }

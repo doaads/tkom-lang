@@ -125,7 +125,7 @@ void ParserPrinter::visit(const CallStatement &stmt) { stmt.get_call()->accept(*
 void ParserPrinter::visit(const AssignStatement &stmt) {
     os << indent_str() << "[\033[1;36mAssign\033[0m] ";
     os << "\033[1;31m";
-    stmt.get_type()->accept(*this);
+    if (auto type = stmt.get_type()) type->accept(*this);
     os << "\033[0m";
     os << stmt.get_identifier() << " ";
     print_pos(stmt);

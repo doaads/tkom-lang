@@ -202,7 +202,7 @@ class Parser {
 
     /**
      * @brief Parses a return statement.
-     * `ret_statement = ret, expression`
+     * `ret_statement = ret, expression, ";"
      *
      * @return A unique pointer to the parsed return statement.
      */
@@ -271,7 +271,7 @@ class Parser {
 
     /**
      * @brief Parses a variable type.
-     * `var_type_mut      = var_type [mut]`
+     * `var_type_mut      = [mut] var_type`
      * `var_type          = int`
      *                   `| flt`
      *                   `| string`

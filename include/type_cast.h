@@ -30,10 +30,10 @@ struct TypeCast {
 
     ValType operator()(std::string a, double) {
         try {
-            int result = std::stod(a);
+            double result = std::stod(a);
             return result;
         } catch (std::exception& e) {
-            throw InterpreterError("Cannot cast " + a + " to int");
+            throw InterpreterError("Cannot cast " + a + " to double");
         }
         throw InterpreterError("flt type cannot hold a string");
     }
