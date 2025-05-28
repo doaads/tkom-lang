@@ -40,6 +40,7 @@ class BuiltIn : public Callable {
     std::vector<std::shared_ptr<VarRef>> check_types(InterpreterVisitor& interpreter,
                                                      ArgVector& args) const {
         const auto expected = type->get_params();
+        shall(expected.size() == args.size(), "Incorrect number of arguments");
         std::vector<std::shared_ptr<VarRef>> var_refs;
         for (size_t i = 0; i < expected.size(); ++i) {
             auto expected_arg = expected[i];

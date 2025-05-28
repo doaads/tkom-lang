@@ -583,7 +583,17 @@ INSTANTIATE_TEST_SUITE_P(
     InvalidPrograms,
     ParserInvalidPrograms,
     ::testing::Values(
-        InvalidProgram{"int main { ret a; }"}
+        InvalidProgram{"int main { ret a; }"},
+        InvalidProgram{"int main { ret a; }"},
+        InvalidProgram{"int main { ret \"a\" - 1; }"},
+        InvalidProgram{"int main { ret \"a\" / 1; }"},
+        InvalidProgram{"int main { ret \"a\" * 1.2; }"},
+        InvalidProgram{"int main { ()->increment; }"},
+        InvalidProgram{"int main { 1 => int a; (a)->increment; }"},
+        InvalidProgram{"int main { 1 => mut int a; (a)->increment_v; }"},
+        InvalidProgram{"int main { 1 => mut int a; (a)->stdout; }"},
+        InvalidProgram{"int main { \"abds\" => mut int a; ret 0;}"},
+        InvalidProgram{"int main { (1, 2, 3)->some_func; } void some_func :: int i {ret i;}"}
         )
 );
 
