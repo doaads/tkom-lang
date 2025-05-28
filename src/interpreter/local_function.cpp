@@ -56,9 +56,12 @@ void GlobalFunction::call(InterpreterVisitor& interpreter, ArgVector args) {
 
 const Function* GlobalFunction::get_func() const { return func; }
 
-LocalFunction::LocalFunction(std::shared_ptr<Callable> callee,
+LocalFunction::LocalFunction(std::shared_ptr<Callable> callee_func,
                              ArgVector bound_args)
-    : callee(std::move(callee)), bound_args(bound_args) {}
+    : callee(std::move(callee_func)), bound_args(bound_args) {
+        // adjust this function's type
+        type = callee->get_type()->clone(bound_args.size());
+    }
 
 /*
  * @brief: bind arguments and call
@@ -69,7 +72,7 @@ void LocalFunction::call(InterpreterVisitor& interpreter, ArgVector args) {
     ArgVector full_arg_list = bound_args;
     full_arg_list.insert(full_arg_list.end(), args.begin(), args.end());
 
-    callee->call(interpreter, args);
+    callee->call(interpreter, full_arg_list);
 
     return;
 }
@@ -78,3 +81,4 @@ const Function* LocalFunction::get_func() const {
     if (callee == nullptr) return nullptr;
     return callee->get_func();
 }
+

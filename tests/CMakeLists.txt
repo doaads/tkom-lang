@@ -63,6 +63,7 @@ target_link_libraries(interpreter_test_lib INTERFACE
     interpreter
     parser_test_lib
     local_function
+    builtins
 )
 
 target_link_libraries(interpreter_test PRIVATE interpreter_test_lib)

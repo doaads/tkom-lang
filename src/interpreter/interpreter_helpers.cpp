@@ -38,7 +38,7 @@ std::weak_ptr<Variable> InterpreterVisitor::find_var_in_frame(const std::string&
 
 std::shared_ptr<Callable> InterpreterVisitor::find_func(const std::string& name) {
     auto func = std::find_if(functions.begin(), functions.end(), [&name](const auto& func) {
-        return func->get_func()->get_signature()->get_name() == name;
+        return func->get_name() == name;
     });
 
     if (func < functions.end()) return *func;
@@ -65,7 +65,7 @@ template <class... Ts>
 Overload(Ts...) -> Overload<Ts...>;
 ValType InterpreterVisitor::init_var(const Type& type) {
     type.accept(*this);
-    return std::visit(Overload{[](const Type*) -> ValType { return nullptr; },
+    return std::visit(Overload{[](const Type*) -> ValType { return ValType{nullptr}; },
                                [](BaseType type) -> ValType {
                                    switch (type) {
                                        case BaseType::INT:

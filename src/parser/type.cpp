@@ -111,3 +111,20 @@ bool FuncType::is_equal_to(const Type* other) const {
     }
     return false;
 }
+
+std::unique_ptr<Type> VarType::clone(size_t) const {
+    return std::make_unique<VarType>(type, mut);
+}
+
+std::unique_ptr<Type> FuncType::clone(size_t skip_args) const{
+    if (skip_args > params.size()) {
+        throw std::out_of_range("FuncType::clone: skip_args out of range");
+    }
+
+    std::vector<std::unique_ptr<Type>> new_params;
+    for (size_t i = skip_args; i < params.size(); ++i) {
+        new_params.push_back(params[i]->clone());
+    }
+
+    return std::make_unique<FuncType>(ret_type->clone(), std::move(new_params));
+}

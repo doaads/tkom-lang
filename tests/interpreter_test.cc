@@ -3,6 +3,7 @@
 #include "lexer.h"
 #include "parser.h"
 #include "interpreter.h"
+#include "builtin_defines.h"
 
 #define VERBOSE false
 
@@ -188,6 +189,199 @@ TEST(InterpreterTest, InterpreterFuncTestNoReference) {
     auto program = parser->parse();
 
     program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 1);
+}
+
+TEST(InterpreterTest, InterpreterBindFrontTest) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser(
+        "int main {"
+            "(1) ->> add => [int::int] add_bound;"
+            "ret (5) -> add_bound;"
+        "}"
+
+        "int add :: int a, int b {"
+            "ret a + b;"
+        "}",
+        false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 6);
+}
+
+TEST(InterpreterTest, InterpreterTestFlt) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser(
+        "int main {"
+            "1.5 => mut flt a;"
+            "(a) -> double;"
+            "ret a;"
+        "}"
+
+        "void double :: mut flt a {"
+            "2 * a => a;"
+        "}",
+        false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<double>(value));
+    EXPECT_EQ(std::get<double>(value), 3.0);
+}
+
+TEST(InterpreterTest, InterpreterBindFrontNoRefPass) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser(
+        "int main {"
+            "1 => mut int a;"
+            "(a) ->> add => [int::mut int] add_bound;"
+            "(5) -> add_bound;"
+            "ret a;"
+        "}"
+
+        "int add :: mut int a, mut int b {"
+            "a + 2 => a;"
+            "ret a + b;"
+        "}",
+        false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 1);
+}
+
+TEST(InterpreterTest, InterpreterIfElseTest) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser(
+        "int main {"
+            "1 => int a;"
+            "if (a > 0) {"
+            "   ret a;"
+            "} elif (a == 0) {"
+            "   ret 0;"
+            "} else {"
+            "   ret -1;"
+            "}"
+        "}",
+    false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 1);
+}
+TEST(InterpreterTest, InterpreterBuiltinWhile) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>(builtins);
+    auto parser = get_parser(
+        "int main {"
+        "    0 => mut int a;"
+        "    while (a < 5) {"
+        "        (a) -> increment;"
+        "    }"
+        "    ret a;"
+        "}",
+    false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 5);
+}
+
+TEST(InterpreterTest, InterpreterBuiltin) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>(builtins);
+    auto parser = get_parser(
+        "int main {"
+        "    1 => mut int a;"
+        "    (a) -> increment;"
+        "    ret a;"
+        "}",
+    false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 2);
+}
+
+TEST(InterpreterTest, InterpreterIfElseifTest) {
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>();
+    auto parser = get_parser(
+        "int main {"
+            "0 => int a;"
+            "if (a > 0) {"
+            "   ret a;"
+            "} elif (a == 0) {"
+            "   ret -10;"
+            "} else {"
+            "   ret -20;"
+            "}"
+        "}",
+    false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), -10);
+}
+
+TEST(InterpreterTest, InterpreterBuiltinStdout) {
+
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>(builtins);
+    auto parser = get_parser(
+        "int main {"
+        "    1 => int a;"
+        "    (\"HELLO WORLD!\") -> stdout;"
+        "    ret a;"
+        "}",
+    false);
+
+    auto program = parser->parse();
+
+    std::streambuf* original_buf = std::cout.rdbuf();
+    std::stringstream buffer;
+    std::cout.rdbuf(buffer.rdbuf());
+
+    program->accept(*interpreter);
+
+    std::cout.rdbuf(original_buf);
+
+    EXPECT_EQ(buffer.str(), "HELLO WORLD!");
 
     ValType value = interpreter->get_value();
 

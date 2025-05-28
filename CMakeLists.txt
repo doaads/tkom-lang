@@ -31,6 +31,10 @@ add_library(print_error src/exceptions/print_error.cpp)
 add_library(parser src/parser/parser.cpp)
 
 add_library(local_function src/interpreter/local_function.cpp)
+add_library(builtins
+    src/interpreter/builtins.cpp
+    src/interpreter/builtin_helpers.cpp
+)
 add_library(interpreter
     src/interpreter/interpreter_expr.cpp
     src/interpreter/interpreter.cpp
@@ -58,6 +62,7 @@ target_include_directories(parser PUBLIC include)
 
 target_include_directories(interpreter PUBLIC include)
 target_include_directories(local_function PUBLIC include)
+target_include_directories(builtins PUBLIC include)
 
 add_executable(tkom src/parser_main.cpp)
 target_include_directories(tkom PRIVATE include)

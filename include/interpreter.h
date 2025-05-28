@@ -55,7 +55,7 @@ class InterpreterVisitor : public Visitor {
         ReceivedBy receiver;
         bool returning = false;
 
-        std::vector<std::shared_ptr<GlobalFunction>> functions;
+        std::vector<std::shared_ptr<Callable>> functions;
         ValType decorate(ValType decorator, ValType decoratee);
         void register_function(const Function* func);
         std::vector<CallStackFrame> call_stack;
@@ -66,6 +66,8 @@ class InterpreterVisitor : public Visitor {
 
         bool eval_condition(const Expression& expr);
     public:
+        InterpreterVisitor() = default;
+        InterpreterVisitor(std::vector<std::shared_ptr<Callable>> builtins);
         void visit(const Program &program);
 
         void visit(const LiteralExpr &expr);
@@ -73,7 +75,7 @@ class InterpreterVisitor : public Visitor {
         void visit(const UnaryExpr &expr);
         void visit(const BinaryExpr &expr);
         void visit(const CallExpr &expr);
-        void visit(const BindFrtExpr &expr) {(void) expr; return;}
+        void visit(const BindFrtExpr &expr);
 
         void visit(const ForLoopStatement &stmt);
         void visit(const WhileLoopStatement &stmt);
@@ -85,7 +87,7 @@ class InterpreterVisitor : public Visitor {
 
         void visit(const Block &block);
         void visit(const VarType &var);
-        void visit(const FuncType &func) {(void)func; return;}
+        void visit(const FuncType &func);
 
         void visit(const VariableSignature &var) {(void)var; return;}
         void visit(const FuncSignature &sign) {(void)sign; return;}

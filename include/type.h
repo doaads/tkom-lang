@@ -29,6 +29,8 @@ class Type : public Node {
 
     virtual bool get_mut() const = 0;
     virtual bool is_equal_to(const Type* other) const = 0;
+
+    virtual std::unique_ptr<Type> clone(size_t skip_args = 0) const = 0;
 };
 
 class VarType : public Type {
@@ -43,6 +45,8 @@ class VarType : public Type {
     BaseType get_type() const;
     bool get_mut() const override;
     bool is_equal_to(const Type* other) const override;
+
+    std::unique_ptr<Type> clone(size_t = 0) const override;
 };
 
 class FuncType : public Type {
@@ -59,4 +63,6 @@ class FuncType : public Type {
     const Type *get_ret_type() const;
     const std::vector<const Type *> get_params() const;
     bool is_equal_to(const Type* other) const override;
+
+    std::unique_ptr<Type> clone(size_t skip_args = 0) const override;
 };

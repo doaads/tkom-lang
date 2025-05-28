@@ -114,10 +114,10 @@ void ParserPrinter::visit(const ElseStatement &stmt) {
     decrease_indent();
 }
 void ParserPrinter::visit(const RetStatement &stmt) {
-    os << indent_str() << "[\033[1;36mRet\033[0m] ";
-    if (auto retval = stmt.get_retval()) retval->accept(*this);
+    os << indent_str() << "[\033[1;36mRet\033[0m]";
     print_pos(stmt);
     os << std::endl;
+    if (auto retval = stmt.get_retval()) retval->accept(*this);
 }
 
 void ParserPrinter::visit(const CallStatement &stmt) { stmt.get_call()->accept(*this); }
