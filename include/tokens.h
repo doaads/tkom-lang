@@ -58,7 +58,12 @@ enum class TokenType {
     T_COMMENT,
 
     T_ERROR,
-    T_EOF
+    T_EOF,
+
+    T_EQ_ST,
+    T_AND_ST,
+    T_OR_ST,
+    T_FUNC_SIGN_ST
 };
 
 std::ostream &operator<<(std::ostream &os, const TokenType type);

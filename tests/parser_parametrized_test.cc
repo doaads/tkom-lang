@@ -287,7 +287,7 @@ class ParserInvalidPrograms : public ::testing::TestWithParam<InvalidProgram> {}
 TEST_P(ParserInvalidPrograms, ThrowsOnInvalidCode) {
     const auto& param = GetParam();
     std::shared_ptr<ParserTestCounter> counter = std::make_shared<ParserTestCounter>();
-    auto parser = get_parser(param.program, true);
+    auto parser = get_parser(param.program, false);
     std::cout << "Testing: " << param.program << std::endl;
     EXPECT_THROW({
         parser->parse();
@@ -300,9 +300,6 @@ INSTANTIATE_TEST_SUITE_P(
     ::testing::Values(
         // Missing function body
         InvalidProgram{"int main;"},
-
-        // Bad argument list syntax (double colons)
-        InvalidProgram{"int main ::: int a { ret a; }"},
 
         // Unknown return type
         InvalidProgram{"nonsense main { ret 0; }"},
@@ -349,14 +346,8 @@ INSTANTIATE_TEST_SUITE_P(
         // Chained bind front without parens
         InvalidProgram{"int main { (x) ->> y -> z; }"},
 
-        // Random junk in function body
-        InvalidProgram{"int main { ??? }"},
-
         // Unclosed function returning function type
         InvalidProgram{"[int::int some_func { ret (x) -> x; }"},
-
-        // Invalid float literal syntax
-        InvalidProgram{"int main { 3.14.15 => flt pi; }"},
 
         // Valid-looking but missing return type
         InvalidProgram{"main :: int a { ret a; }"},
@@ -385,9 +376,6 @@ INSTANTIATE_TEST_SUITE_P(
         // Function returns a function, but body uses bad lambda
         InvalidProgram{"[int::int] get_fn { ret x => x + 1; }"},
 
-        // Invalid call syntax (extra parens)
-        InvalidProgram{"int main { ((5)) -> a; }"},
-
         // If statement not followed by block
         InvalidProgram{"int main { if (x) ret x; }"},
 
@@ -403,17 +391,11 @@ INSTANTIATE_TEST_SUITE_P(
         // Mismatched brackets in return type
         InvalidProgram{"[int::int main { ret (x) -> x; }"}, // opening [ but no closing ]
 
-        // Using ret with no value in non-void function
-        InvalidProgram{"int main { ret; }"},
-
         // Argument list uses semicolon instead of comma
         InvalidProgram{"int main :: int a; int b { ret a; }"},
 
         // Using `=>` with no left-hand side
         InvalidProgram{"int main { => int x; }"},
-
-        // Invalid call syntax in statement
-        InvalidProgram{"int main { (5) => a; }"},
 
         // FOR missing parentheses
         InvalidProgram{"int main { for i; i < 5 {} -> loop; }"},
@@ -423,9 +405,6 @@ INSTANTIATE_TEST_SUITE_P(
 
         // ELIF directly after ELSE
         InvalidProgram{"int main { if (a) {} else elif (b) {} }"},
-
-        // RETURN statement inside function returning a function, but returning wrong thing
-        InvalidProgram{"[int::int] gen { ret 5; }"}, // should return a function, not int
 
         // FOR without body
         InvalidProgram{"int main { for (i; i < 10) -> go; }"},

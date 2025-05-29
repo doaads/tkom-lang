@@ -1,0 +1,11 @@
+void main {
+    // passing by value (sqrt_v)
+    ("Pick a number: ")->stdin => flt a;
+    ("Square root: " + (a)->sqrt_v + "\n")->stdout;
+
+    // passing by ref (sqrt)
+    a => mut flt b;
+    (b)->sqrt;
+    ("Square root: " + b + "\n")->stdout;
+    ret 0;
+}

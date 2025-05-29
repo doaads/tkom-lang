@@ -5,7 +5,7 @@
 #include "exceptions.h"
 #include "lexer.h"
 #include "parser.h"
-#include "parser_visitor.h"
+#include "visitor.h"
 #include "print_error.h"
 
 namespace po = boost::program_options;

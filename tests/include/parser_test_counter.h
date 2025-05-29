@@ -1,14 +1,14 @@
 #pragma once
 
 #include "function.h"
-#include "parser_visitor.h"
+#include "visitor.h"
 #include "type.h"
 #include "variable.h"
 #include "statement_specific.h"
 
 #pragma once
 
-class ParserTestCounter : public ParserVisitor {
+class ParserTestCounter : public Visitor {
 public:
     // Expression counters
     int literal_expr_count = 0;
@@ -121,7 +121,7 @@ public:
         assign_stmt_count++;
         stmt.get_value()->accept(*this);
         stmt.get_type()->accept(*this);
-        stmt.get_identifier()->accept(*this);
+        identifier_expr_count++;
     }
 
     // Other visitors
@@ -134,7 +134,7 @@ public:
     void visit(const VarType&) override { var_type_count++; }
     void visit(const FuncType&) override { func_type_count++; }
 
-    void visit(const FuncParam& var) override {
+    void visit(const VariableSignature& var) override {
         func_param_count++;
         var.get_type()->accept(*this);
     }

@@ -12,9 +12,10 @@
 
 #include "block.h"
 #include "statement.h"
+#include "variable.h"
 
 class Expression;
-class ParserVisitor;
+class Visitor;
 class Type;
 enum class TokenType;
 
@@ -23,7 +24,7 @@ enum class TokenType;
  * expression.
  */
 struct ForLoopArgs {
-    std::variant<std::monostate, std::unique_ptr<Statement>, std::unique_ptr<Expression>>
+    std::variant<std::unique_ptr<Statement>, std::string>
         iterator;  // identifier or Assign
     std::unique_ptr<Expression> condition;
     friend std::ostream &operator<<(std::ostream &os, ForLoopArgs args);
@@ -42,7 +43,7 @@ class ForLoopStatement : public Statement {
     ForLoopStatement(Position pos, std::unique_ptr<ForLoopArgs> args, std::unique_ptr<Block> body,
                      std::unique_ptr<Expression> on_iter_call);
 
-    void accept(ParserVisitor &visitor) const override;
+    void accept(Visitor &visitor) const override;
 
     const ForLoopArgs *get_args() const;
     const Block *get_body() const;
@@ -61,7 +62,7 @@ class WhileLoopStatement : public Statement {
     WhileLoopStatement(Position pos, std::unique_ptr<Expression> condition,
                        std::unique_ptr<Block> body);
 
-    void accept(ParserVisitor &visitor) const override;
+    void accept(Visitor &visitor) const override;
 
     const Expression *get_condition() const;
     const Block *get_body() const;
@@ -83,7 +84,7 @@ class ConditionalStatement : public Statement {
     ConditionalStatement(Position pos, TokenType type, std::unique_ptr<Expression> condition,
                          std::unique_ptr<Block> body);
 
-    void accept(ParserVisitor &visitor) const override;
+    void accept(Visitor &visitor) const override;
 
     TokenType get_type() const;
     const Expression *get_condition() const;
@@ -101,7 +102,7 @@ class ElseStatement : public Statement {
    public:
     ElseStatement(Position pos, std::unique_ptr<Block> body);
 
-    void accept(ParserVisitor &visitor) const override;
+    void accept(Visitor &visitor) const override;
 
     const Block *get_body() const;
 };
@@ -116,7 +117,7 @@ class RetStatement : public Statement {
    public:
     RetStatement(Position pos, std::unique_ptr<Expression> retval);
 
-    void accept(ParserVisitor &visitor) const override;
+    void accept(Visitor &visitor) const override;
 
     const Expression *get_retval() const;
 };
@@ -131,7 +132,7 @@ class CallStatement : public Statement {
    public:
     CallStatement(Position pos, std::unique_ptr<Expression> call);
 
-    void accept(ParserVisitor &visitor) const override;
+    void accept(Visitor &visitor) const override;
 
     const Expression *get_call() const;
 };
@@ -142,16 +143,15 @@ class CallStatement : public Statement {
 class AssignStatement : public Statement {
    private:
     std::unique_ptr<Expression> value;
-    std::unique_ptr<Type> type;
-    std::unique_ptr<Expression> identifier;
+    std::unique_ptr<VariableSignature> var_sign;
 
    public:
-    AssignStatement(Position pos, std::unique_ptr<Expression> value, std::unique_ptr<Type> type,
-                    std::unique_ptr<Expression>);
+    AssignStatement(Position pos, std::unique_ptr<Expression> value, std::unique_ptr<VariableSignature> sign);
 
-    void accept(ParserVisitor &visitor) const override;
+    void accept(Visitor &visitor) const override;
 
     const Expression *get_value() const;
     const Type *get_type() const;
-    const Expression *get_identifier() const;
+    const std::string get_identifier() const;
+    const VariableSignature* get_signature() const;
 };

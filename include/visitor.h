@@ -16,9 +16,9 @@
  * The visitor pattern allows actions to be applied to different types of program nodes
  * without modifying their class structures.
  */
-class ParserVisitor {
+class Visitor {
    public:
-    virtual ~ParserVisitor() = default;
+    virtual ~Visitor() = default;
 
     virtual void visit(const Program &program) = 0;
 
@@ -41,18 +41,18 @@ class ParserVisitor {
     virtual void visit(const VarType &var) = 0;
     virtual void visit(const FuncType &func) = 0;
 
-    virtual void visit(const FuncParam &var) = 0;
+    virtual void visit(const VariableSignature &var) = 0;
     virtual void visit(const FuncSignature &sign) = 0;
     virtual void visit(const Function &func) = 0;
 };
 
 /**
- * @brief A concrete implementation of the ParserVisitor that prints program nodes.
+ * @brief A concrete implementation of the Visitor that prints program nodes.
  *
  * This class implements the visit methods to output the structure of the program to
  * an output stream. It supports indentation for readability.
  */
-class ParserPrinter : public ParserVisitor {
+class ParserPrinter : public Visitor {
    private:
     std::ostream &os;  ///< Output stream to print to.
     int indent;        ///< Current indentation level.
@@ -105,7 +105,7 @@ class ParserPrinter : public ParserVisitor {
     void visit(const VarType &type) override;
     void visit(const FuncType &type) override;
 
-    void visit(const FuncParam &var) override;
+    void visit(const VariableSignature &var) override;
     void visit(const FuncSignature &sign) override;
     void visit(const Function &func) override;
 };
