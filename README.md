@@ -11,7 +11,18 @@ Po zbudowaniu, interpreter uruchamialny jest za pomocą:
 ./tkom <nazwa_pliku>
 ```
 
-## 1. Opis Języka
+## 1. Opis Języka, Implementacji
+
+Na potrzeby projektu zaimplementowane zostały:
+- analizator leksykalny (lekser)
+- analizator składniowy (parser)
+- analizator semantyczny + interpreter
+
+Każda z części projektu jest dostępna jako całość w głównym pliku wykonywalnym `./tkom` oraz jako częściowa implementacja, odpowiednio w
+- `./tkom-lexer`
+- `./tkom-parser`
+
+Składnia języka została opisana w poniższych punktach
 
 ### 1.1 Typy danych i Operatory
 
@@ -831,3 +842,8 @@ Złożone konstrukcje obejmują większe programy, takie jak opisany wyżej prog
 ### 5.3 Interpreter
 
 Testy interpretera obejmują zbiór przykładowych programów zawierających wszystkie konstrukcje w języku, sparametryzowane testy wyrażeń oraz przykładowe błędne programy. Sprawdzają one poprawność (lub niepoprawność) wyników zwracanych przez programy.
+
+
+## 6. Funkcje wbudowane
+
+Zgodnie z początkowymi wymaganiami, funkcje wbudowane traktowane są tak samo jak inne funkcje w programie. Aby zdefiniować nowe funkcje wbudowane, należy zdefiniować je jako funkcje przyjmujące `ArgVector& args` jako argument oraz zwracające `ValType` - czyli typ danych obsługiwany przez interpreter. Funkcję możemy następnie opakować konstruktorem `Builtin`. Tak zdefiniowane funkcje, jako wektor `std::shared_ptr<Callable>` możemy następnie przekazać do interpretera. Przykładowe funkcje wbudowane znajdują sie w pliku `src/interpreter/builtins.cpp`
