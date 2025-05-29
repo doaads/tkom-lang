@@ -467,6 +467,51 @@ TEST(InterpreterTest, InterpreterBuiltinStdout) {
     EXPECT_EQ(std::get<int>(value), 1);
 }
 
+TEST(InterpreterTest, InterpreterForLoop) {
+
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>(builtins);
+    auto parser = get_parser(
+        "int main {"
+        "    for (0 => mut int i; i < 5) {"
+        "    } -> increment;"
+        "    ret i;"
+        "}",
+    false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 5);
+}
+
+TEST(InterpreterTest, InterpreterForLoopIdentifier) {
+
+    std::shared_ptr<InterpreterVisitor> interpreter = std::make_shared<InterpreterVisitor>(builtins);
+    auto parser = get_parser(
+        "int main {"
+        "    0 => mut int i;"
+        "    for (i; i < 5) {"
+        "    } -> increment;"
+        "    ret i;"
+        "}",
+    false);
+
+    auto program = parser->parse();
+
+    program->accept(*interpreter);
+
+    ValType value = interpreter->get_value();
+
+    ASSERT_TRUE(std::holds_alternative<int>(value));
+    EXPECT_EQ(std::get<int>(value), 5);
+}
+
+
+
 enum class ValKind {
     Int,
     Double,
@@ -593,7 +638,18 @@ INSTANTIATE_TEST_SUITE_P(
         InvalidProgram{"int main { 1 => mut int a; (a)->increment_v; }"},
         InvalidProgram{"int main { 1 => mut int a; (a)->stdout; }"},
         InvalidProgram{"int main { \"abds\" => mut int a; ret 0;}"},
-        InvalidProgram{"int main { (1, 2, 3)->some_func; } void some_func :: int i {ret i;}"}
+        InvalidProgram{"int main { (1, 2, 3)->some_func; } void some_func :: int i {ret i;}"},
+        InvalidProgram{"int main { for (a; a < 10) {} -> increment; }"},
+        InvalidProgram{"int main { for (a; a < 10) {} -> nonexistent; }"},
+        InvalidProgram{"int main { (1) -> nonexistent; }"},
+        InvalidProgram{"int main { 1 => mut int a; 2 => mut int a; }"},
+        InvalidProgram{"int main { 1 => int a; 2 => string a; }"},
+        InvalidProgram{"int main { 1 => mut int a; (a) -> sqrt_v; }"},
+        InvalidProgram{"int main { 1 => int a; (a) -> sqrt; }"},
+        InvalidProgram{"int main { (1) ->> undefined; }"},
+        InvalidProgram{"int main { 1 => int a; (a) -> sqrt; }"},
+        InvalidProgram{"int main { (1) -> und @ efined; }"},
+        InvalidProgram{"int main { } int main { }"}
         )
 );
 

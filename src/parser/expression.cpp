@@ -16,23 +16,15 @@ LiteralExpr::LiteralExpr(const Position pos, Token token)
 
 void LiteralExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
+struct LiteralString {
+    const std::string operator()(std::monostate) { return "null"; }
+    const std::string operator()(const std::string& rhs) { return rhs; }
+    const std::string operator()(bool rhs) { return rhs ? "true" : "false"; }
+    const std::string operator()(auto rhs) { return std::to_string(rhs); }
+};
+
 std::string LiteralExpr::get_value_string() const {
-    return std::visit(
-        [](auto &&val) -> std::string {
-            using T = std::decay_t<decltype(val)>;
-            if constexpr (std::is_same_v<T, std::monostate>) {
-                return "null";
-            } else if constexpr (std::is_same_v<T, std::string>) {
-                return val;
-            } else if constexpr (std::is_same_v<T, bool>) {
-                return val ? "true" : "false";
-            } else if constexpr (std::is_arithmetic_v<T>) {
-                return std::to_string(val);
-            } else {
-                throw std::runtime_error("Invalid type");
-            }
-        },
-        value);
+    return std::visit(LiteralString(), value);
 }
 
 /* ----------------------------[IDENTIFIER]--------------------------------*/
