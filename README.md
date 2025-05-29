@@ -1,6 +1,16 @@
 # Techniki Kompilacji - Dokumentacja Końcowa
 *Bartosz Nowak, 325201*
 
+## 0. Sposób Budowy/uruchomienia
+
+Do zbudowania programu można wykorzystać narzędzie `cmake` lub skrypt `build.sh`
+
+Po zbudowaniu, interpreter uruchamialny jest za pomocą:
+
+```sh
+./tkom <nazwa_pliku>
+```
+
 ## 1. Opis Języka
 
 ### 1.1 Typy danych i Operatory
