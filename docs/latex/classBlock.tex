@@ -1,0 +1,51 @@
+\doxysection{Block Class Reference}
+\hypertarget{classBlock}{}\label{classBlock}\index{Block@{Block}}
+
+
+class representing a block of code consisting of statements  
+
+
+
+
+{\ttfamily \#include $<$block.\+h$>$}
+
+Inheritance diagram for Block\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classBlock}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classBlock_ab484cd5e16bbf84e11f47ef417791f1c}\label{classBlock_ab484cd5e16bbf84e11f47ef417791f1c} 
+{\bfseries Block} (std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classStatement}{Statement}} $>$ $>$ statements)
+\item 
+\Hypertarget{classBlock_a91b27e9e1ca398aa714c0ca0906d5fa5}\label{classBlock_a91b27e9e1ca398aa714c0ca0906d5fa5} 
+void {\bfseries accept} (\mbox{\hyperlink{classVisitor}{Visitor}} \&visitor) const
+\item 
+\Hypertarget{classBlock_a964bfefc9cc0a3b3e28aa3f1793cc68b}\label{classBlock_a964bfefc9cc0a3b3e28aa3f1793cc68b} 
+auto {\bfseries get\+\_\+statements} () const -\/$>$ std\+::vector$<$ const \mbox{\hyperlink{classStatement}{Statement}} \texorpdfstring{$\ast$}{*} $>$
+\begin{DoxyCompactList}\small\item\em get the block\textquotesingle{}s body as a vector of const Statement\texorpdfstring{$\ast$}{*} \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classNode}{Node}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_ad58eb6f069642c7f454679659bc2cbf9}{Node}} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto \mbox{\hyperlink{classNode_a6329ea38da23b81bfe58f5e200951818}{get\+\_\+position}} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classBlock_aaf9f1527a62f1344327f268052636a99}\label{classBlock_aaf9f1527a62f1344327f268052636a99} 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classStatement}{Statement}} $>$ $>$ {\bfseries statements}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+class representing a block of code consisting of statements 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/block.\+h\item 
+src/parser/block.\+cpp\end{DoxyCompactItemize}

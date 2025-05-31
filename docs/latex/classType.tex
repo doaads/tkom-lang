@@ -1,0 +1,147 @@
+\doxysection{Type Class Reference}
+\hypertarget{classType}{}\label{classType}\index{Type@{Type}}
+
+
+Abstract class representing a \doxylink{classType}{Type}.  
+
+
+
+
+{\ttfamily \#include $<$type.\+h$>$}
+
+Inheritance diagram for Type\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classType}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual auto \mbox{\hyperlink{classType_a354f1859296fa319abfd1870c20b7bd1}{is\+\_\+func}} () const -\/$>$ bool
+\begin{DoxyCompactList}\small\item\em function returning true if the type is a function type \end{DoxyCompactList}\item 
+\Hypertarget{classType_a4ce68e4e8e069c1aa31c9f9bcddc5a65}\label{classType_a4ce68e4e8e069c1aa31c9f9bcddc5a65} 
+virtual void {\bfseries accept} (\mbox{\hyperlink{classVisitor}{Visitor}} \&visitor) const =0
+\item 
+virtual auto \mbox{\hyperlink{classType_ac8b581197cdc81a9aa8d562c6117c843}{get\+\_\+mut}} () const -\/$>$ bool=0
+\begin{DoxyCompactList}\small\item\em function returning true if the type represented is mutable \end{DoxyCompactList}\item 
+virtual auto \mbox{\hyperlink{classType_a7e25e8b381dc6a8e9a348736016993d4}{is\+\_\+equal\+\_\+to}} (const \mbox{\hyperlink{classType}{Type}} \texorpdfstring{$\ast$}{*}other) const -\/$>$ bool=0
+\begin{DoxyCompactList}\small\item\em function for checking type-\/equality during semantic analysis \end{DoxyCompactList}\item 
+virtual auto \mbox{\hyperlink{classType_aab5538c91c732314e63d9c72f6cb8f95}{get\+\_\+params}} () const -\/$>$ std\+::vector$<$ const \mbox{\hyperlink{classType}{Type}} \texorpdfstring{$\ast$}{*} $>$=0
+\begin{DoxyCompactList}\small\item\em function returning the parameters of a function type \end{DoxyCompactList}\item 
+virtual auto \mbox{\hyperlink{classType_abdd3c969c52ea1a15647208f0b6ac008}{get\+\_\+ret\+\_\+type}} () const -\/$>$ const \mbox{\hyperlink{classType}{Type}} \texorpdfstring{$\ast$}{*}=0
+\begin{DoxyCompactList}\small\item\em function returning the return type of a function, or \doxylink{classVarType}{Var\+Type} for variables \end{DoxyCompactList}\item 
+virtual auto \mbox{\hyperlink{classType_a41731e639b5b5aa98cc39b21d8d6cab3}{clone}} (size\+\_\+t skip\+\_\+args=0) const -\/$>$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classType}{Type}} $>$=0
+\begin{DoxyCompactList}\small\item\em function for type copying \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classNode}{Node}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_ad58eb6f069642c7f454679659bc2cbf9}{Node}} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto \mbox{\hyperlink{classNode_a6329ea38da23b81bfe58f5e200951818}{get\+\_\+position}} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Abstract class representing a \doxylink{classType}{Type}. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classType_a41731e639b5b5aa98cc39b21d8d6cab3}\index{Type@{Type}!clone@{clone}}
+\index{clone@{clone}!Type@{Type}}
+\doxysubsubsection{\texorpdfstring{clone()}{clone()}}
+{\footnotesize\ttfamily \label{classType_a41731e639b5b5aa98cc39b21d8d6cab3} 
+virtual auto Type\+::clone (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{skip\+\_\+args}{ = {\ttfamily 0}}\end{DoxyParamCaption}) const -\/$>$  std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classType}{Type}} $>$\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [pure virtual]}}
+
+
+
+function for type copying 
+
+
+\begin{DoxyParams}{Parameters}
+{\em skip\+\_\+args} & how many args to skip (for bind front) \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{classFuncType_a92d73f1e9e4c472e2ffeb665534ad696}{Func\+Type}}, and \mbox{\hyperlink{classVarType_ac14ddcddfdd6785c54ab91e9cc7163fb}{Var\+Type}}.
+
+\Hypertarget{classType_ac8b581197cdc81a9aa8d562c6117c843}\index{Type@{Type}!get\_mut@{get\_mut}}
+\index{get\_mut@{get\_mut}!Type@{Type}}
+\doxysubsubsection{\texorpdfstring{get\_mut()}{get\_mut()}}
+{\footnotesize\ttfamily \label{classType_ac8b581197cdc81a9aa8d562c6117c843} 
+virtual auto Type\+::get\+\_\+mut (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$  bool\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [pure virtual]}}
+
+
+
+function returning true if the type represented is mutable 
+
+
+
+Implemented in \mbox{\hyperlink{classFuncType_a3cd8ca33d471de6c206c3a3aa3751612}{Func\+Type}}, and \mbox{\hyperlink{classVarType_aa22b7019f0210733fe00c8e99387299f}{Var\+Type}}.
+
+\Hypertarget{classType_aab5538c91c732314e63d9c72f6cb8f95}\index{Type@{Type}!get\_params@{get\_params}}
+\index{get\_params@{get\_params}!Type@{Type}}
+\doxysubsubsection{\texorpdfstring{get\_params()}{get\_params()}}
+{\footnotesize\ttfamily \label{classType_aab5538c91c732314e63d9c72f6cb8f95} 
+virtual auto Type\+::get\+\_\+params (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$  std\+::vector$<$ const \mbox{\hyperlink{classType}{Type}} \texorpdfstring{$\ast$}{*} $>$\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [pure virtual]}}
+
+
+
+function returning the parameters of a function type 
+
+
+
+Implemented in \mbox{\hyperlink{classFuncType_a7f4d33e34d756808f9de4c424f5c393f}{Func\+Type}}, and \mbox{\hyperlink{classVarType_ac10e5b23a969189c644c5ae8eb5d9aae}{Var\+Type}}.
+
+\Hypertarget{classType_abdd3c969c52ea1a15647208f0b6ac008}\index{Type@{Type}!get\_ret\_type@{get\_ret\_type}}
+\index{get\_ret\_type@{get\_ret\_type}!Type@{Type}}
+\doxysubsubsection{\texorpdfstring{get\_ret\_type()}{get\_ret\_type()}}
+{\footnotesize\ttfamily \label{classType_abdd3c969c52ea1a15647208f0b6ac008} 
+virtual auto Type\+::get\+\_\+ret\+\_\+type (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$  const \mbox{\hyperlink{classType}{Type}} \texorpdfstring{$\ast$}{*}\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [pure virtual]}}
+
+
+
+function returning the return type of a function, or \doxylink{classVarType}{Var\+Type} for variables 
+
+
+
+Implemented in \mbox{\hyperlink{classFuncType_af2edf9f1ffdf5d9ba3ed0e645b057f8c}{Func\+Type}}, and \mbox{\hyperlink{classVarType_a9ff232c1c40e62c630d14f015f770a69}{Var\+Type}}.
+
+\Hypertarget{classType_a7e25e8b381dc6a8e9a348736016993d4}\index{Type@{Type}!is\_equal\_to@{is\_equal\_to}}
+\index{is\_equal\_to@{is\_equal\_to}!Type@{Type}}
+\doxysubsubsection{\texorpdfstring{is\_equal\_to()}{is\_equal\_to()}}
+{\footnotesize\ttfamily \label{classType_a7e25e8b381dc6a8e9a348736016993d4} 
+virtual auto Type\+::is\+\_\+equal\+\_\+to (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classType}{Type}} \texorpdfstring{$\ast$}{*}}]{other}{}\end{DoxyParamCaption}) const -\/$>$  bool\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+function for checking type-\/equality during semantic analysis 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & Pointer to another type object \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{classFuncType_a7e3b107a4d5c0b6045b78bf4948e7362}{Func\+Type}}, and \mbox{\hyperlink{classVarType_a6df4efab7e5aab095b6a3c5c08dae869}{Var\+Type}}.
+
+\Hypertarget{classType_a354f1859296fa319abfd1870c20b7bd1}\index{Type@{Type}!is\_func@{is\_func}}
+\index{is\_func@{is\_func}!Type@{Type}}
+\doxysubsubsection{\texorpdfstring{is\_func()}{is\_func()}}
+{\footnotesize\ttfamily \label{classType_a354f1859296fa319abfd1870c20b7bd1} 
+virtual auto Type\+::is\+\_\+func (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$ bool \hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [virtual]}}
+
+
+
+function returning true if the type is a function type 
+
+
+
+Reimplemented in \mbox{\hyperlink{classFuncType_ad899ecf4d3f812b1f4a5d70df38e9150}{Func\+Type}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/type.\+h\end{DoxyCompactItemize}

@@ -1,0 +1,86 @@
+\doxysection{Assign\+Statement Class Reference}
+\hypertarget{classAssignStatement}{}\label{classAssignStatement}\index{AssignStatement@{AssignStatement}}
+
+
+Represents a variable assignment statement, optionally with type annotation.  
+
+
+
+
+{\ttfamily \#include $<$statement\+\_\+specific.\+h$>$}
+
+Inheritance diagram for Assign\+Statement\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classAssignStatement}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classAssignStatement_a7c094fb02bcb99a159ff329a65fb6559}\label{classAssignStatement_a7c094fb02bcb99a159ff329a65fb6559} 
+{\bfseries Assign\+Statement} (\mbox{\hyperlink{classPosition}{Position}} pos, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classExpression}{Expression}} $>$ value, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classVariableSignature}{Variable\+Signature}} $>$ sign)
+\item 
+void \mbox{\hyperlink{classAssignStatement_a2460d5a488fa55191db04a69657eb525}{accept}} (\mbox{\hyperlink{classVisitor}{Visitor}} \&visitor) const override
+\item 
+\Hypertarget{classAssignStatement_a434c68449832bdf7f1ec29329689e594}\label{classAssignStatement_a434c68449832bdf7f1ec29329689e594} 
+auto {\bfseries get\+\_\+value} () const -\/$>$ const \mbox{\hyperlink{classExpression}{Expression}} \texorpdfstring{$\ast$}{*}
+\item 
+\Hypertarget{classAssignStatement_a481bb654d2d0c0dc31c08d1e418a3dbb}\label{classAssignStatement_a481bb654d2d0c0dc31c08d1e418a3dbb} 
+auto {\bfseries get\+\_\+type} () const -\/$>$ const \mbox{\hyperlink{classType}{Type}} \texorpdfstring{$\ast$}{*}
+\item 
+\Hypertarget{classAssignStatement_ab27abbda7e5e758728e5c3cffa17b080}\label{classAssignStatement_ab27abbda7e5e758728e5c3cffa17b080} 
+auto {\bfseries get\+\_\+identifier} () const -\/$>$ const std\+::string
+\item 
+\Hypertarget{classAssignStatement_aacb592710eb01e1dbd80850765b4bc64}\label{classAssignStatement_aacb592710eb01e1dbd80850765b4bc64} 
+auto {\bfseries get\+\_\+signature} () const -\/$>$ const \mbox{\hyperlink{classVariableSignature}{Variable\+Signature}} \texorpdfstring{$\ast$}{*}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classStatement}{Statement}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Statement} (const \mbox{\hyperlink{classPosition}{Position}} pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classNode}{Node}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_ad58eb6f069642c7f454679659bc2cbf9}{Node}} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto \mbox{\hyperlink{classNode_a6329ea38da23b81bfe58f5e200951818}{get\+\_\+position}} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classAssignStatement_a80dc0b2951ab41d254c8180ad1f386bf}\label{classAssignStatement_a80dc0b2951ab41d254c8180ad1f386bf} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classExpression}{Expression}} $>$ {\bfseries value}
+\item 
+\Hypertarget{classAssignStatement_ab403804e12b69b1fa5dd78b927845494}\label{classAssignStatement_ab403804e12b69b1fa5dd78b927845494} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classVariableSignature}{Variable\+Signature}} $>$ {\bfseries var\+\_\+sign}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Static Protected Member Functions inherited from \mbox{\hyperlink{classStatement}{Statement}}}
+\begin{DoxyCompactItemize}
+\item 
+static auto {\bfseries indent\+\_\+str} (int amount) -\/$>$ std\+::string
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a variable assignment statement, optionally with type annotation. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classAssignStatement_a2460d5a488fa55191db04a69657eb525}\index{AssignStatement@{AssignStatement}!accept@{accept}}
+\index{accept@{accept}!AssignStatement@{AssignStatement}}
+\doxysubsubsection{\texorpdfstring{accept()}{accept()}}
+{\footnotesize\ttfamily \label{classAssignStatement_a2460d5a488fa55191db04a69657eb525} 
+void Assign\+Statement\+::accept (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classVisitor}{Visitor}} \&}]{visitor}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classStatement}{Statement}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{statement__specific_8h}{statement\+\_\+specific.\+h}}\item 
+src/parser/statement.\+cpp\end{DoxyCompactItemize}

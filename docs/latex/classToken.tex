@@ -1,0 +1,82 @@
+\doxysection{Token Class Reference}
+\hypertarget{classToken}{}\label{classToken}\index{Token@{Token}}
+
+
+class representing a single token  
+
+
+
+
+{\ttfamily \#include $<$token.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classToken_afd199ae9910ff4935f77a88b8d53cdd3}\label{classToken_afd199ae9910ff4935f77a88b8d53cdd3} 
+{\bfseries Token} (Token\+Type type)
+\begin{DoxyCompactList}\small\item\em Construct the token with a given type. \end{DoxyCompactList}\item 
+\Hypertarget{classToken_a69dcd6b378eed9bc3afba6b0a5c0ee2e}\label{classToken_a69dcd6b378eed9bc3afba6b0a5c0ee2e} 
+{\footnotesize template$<$typename T$>$ }\\auto {\bfseries get\+\_\+value} () const -\/$>$ T
+\begin{DoxyCompactList}\small\item\em get the value of a token \end{DoxyCompactList}\item 
+\Hypertarget{classToken_a356a8819675a900bd5270c19f72544a8}\label{classToken_a356a8819675a900bd5270c19f72544a8} 
+auto {\bfseries get\+\_\+value} () const -\/$>$ Value\+Type
+\begin{DoxyCompactList}\small\item\em get the value of the token as a {\ttfamily std\+::variant} ({\ttfamily Value\+Type}) \end{DoxyCompactList}\item 
+\Hypertarget{classToken_afc0cde40fed5696716d08f505ae9eb14}\label{classToken_afc0cde40fed5696716d08f505ae9eb14} 
+{\footnotesize template$<$typename T$>$ }\\void {\bfseries set\+\_\+value} (T new\+\_\+value)
+\item 
+\Hypertarget{classToken_af946a1bc47929574d17645403dbdac4c}\label{classToken_af946a1bc47929574d17645403dbdac4c} 
+auto {\bfseries get\+\_\+type} () const -\/$>$ Token\+Type
+\begin{DoxyCompactList}\small\item\em get the type of the token \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classToken_ab9a00d5cd05a15db5b8db570179cfbdd}{set\+\_\+type}} (Token\+Type new\+\_\+type)
+\begin{DoxyCompactList}\small\item\em set the type of the token \end{DoxyCompactList}\item 
+\Hypertarget{classToken_a9521e1a9b734ba9cda443a50441b0145}\label{classToken_a9521e1a9b734ba9cda443a50441b0145} 
+auto {\bfseries get\+\_\+position} () const -\/$>$ \mbox{\hyperlink{classPosition}{Position}}
+\begin{DoxyCompactList}\small\item\em get the token\textquotesingle{}s position \end{DoxyCompactList}\item 
+\Hypertarget{classToken_a6d1896ad2cd9af0ea8dbf3df962f6d7b}\label{classToken_a6d1896ad2cd9af0ea8dbf3df962f6d7b} 
+void {\bfseries set\+\_\+position} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\begin{DoxyCompactList}\small\item\em set the token\textquotesingle{}s position \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classToken_a67919af9f3a80dc0b28a0ab1e6d5bf8a}\label{classToken_a67919af9f3a80dc0b28a0ab1e6d5bf8a} 
+Token\+Type {\bfseries type}
+\item 
+\Hypertarget{classToken_aa5d47482f3b146f8f3e1ca9c8011425b}\label{classToken_aa5d47482f3b146f8f3e1ca9c8011425b} 
+Value\+Type {\bfseries value}
+\item 
+\Hypertarget{classToken_acc099a8e7df67f981fde18378271d43b}\label{classToken_acc099a8e7df67f981fde18378271d43b} 
+\mbox{\hyperlink{classPosition}{Position}} {\bfseries position}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classToken_a01aa0b71b323bee51af79bf8661f9bec}\label{classToken_a01aa0b71b323bee51af79bf8661f9bec} 
+auto {\bfseries operator$<$$<$} (std\+::ostream \&os, const \mbox{\hyperlink{classToken}{Token}} \&token) -\/$>$ std\+::ostream \&
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+class representing a single token 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classToken_ab9a00d5cd05a15db5b8db570179cfbdd}\index{Token@{Token}!set\_type@{set\_type}}
+\index{set\_type@{set\_type}!Token@{Token}}
+\doxysubsubsection{\texorpdfstring{set\_type()}{set\_type()}}
+{\footnotesize\ttfamily \label{classToken_ab9a00d5cd05a15db5b8db570179cfbdd} 
+void Token\+::set\+\_\+type (\begin{DoxyParamCaption}\item[{Token\+Type}]{new\+\_\+type}{}\end{DoxyParamCaption})}
+
+
+
+set the type of the token 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+type} & the new type of the token \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/token.\+h\item 
+src/token/token.\+cpp\end{DoxyCompactItemize}

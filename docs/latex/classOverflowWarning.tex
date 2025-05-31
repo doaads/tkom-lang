@@ -1,0 +1,56 @@
+\doxysection{Overflow\+Warning Class Reference}
+\hypertarget{classOverflowWarning}{}\label{classOverflowWarning}\index{OverflowWarning@{OverflowWarning}}
+
+
+Thrown by the lexer when an integer/float exceeds its numeric limit limit.  
+
+
+
+
+{\ttfamily \#include $<$exceptions.\+h$>$}
+
+Inheritance diagram for Overflow\+Warning\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{classOverflowWarning}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+auto \mbox{\hyperlink{classOverflowWarning_ac19856c5ed448d947ad9b95c8391b2f4}{what}} () const noexcept -\/$>$ const char \texorpdfstring{$\ast$}{*}override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classCompilerWarning}{Compiler\+Warning}}}
+\begin{DoxyCompactItemize}
+\item 
+auto \mbox{\hyperlink{classCompilerWarning_ac3642e0b555b6ad73c296a1538717a6e}{is\+\_\+error}} () const -\/$>$ bool override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classCompilerException}{Compiler\+Exception}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries set\+\_\+position} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto {\bfseries get\+\_\+position} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Thrown by the lexer when an integer/float exceeds its numeric limit limit. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classOverflowWarning_ac19856c5ed448d947ad9b95c8391b2f4}\index{OverflowWarning@{OverflowWarning}!what@{what}}
+\index{what@{what}!OverflowWarning@{OverflowWarning}}
+\doxysubsubsection{\texorpdfstring{what()}{what()}}
+{\footnotesize\ttfamily \label{classOverflowWarning_ac19856c5ed448d947ad9b95c8391b2f4} 
+auto Overflow\+Warning\+::what (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$ const char \texorpdfstring{$\ast$}{*}\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}, {\ttfamily [noexcept]}}
+
+
+
+Implements \mbox{\hyperlink{classCompilerException}{Compiler\+Exception}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{exceptions_8h}{exceptions.\+h}}\item 
+src/exceptions/exceptions.\+cpp\end{DoxyCompactItemize}

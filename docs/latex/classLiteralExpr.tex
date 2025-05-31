@@ -1,0 +1,82 @@
+\doxysection{Literal\+Expr Class Reference}
+\hypertarget{classLiteralExpr}{}\label{classLiteralExpr}\index{LiteralExpr@{LiteralExpr}}
+
+
+Represents a literal value (string, int, double, bool) in the AST.  
+
+
+
+
+{\ttfamily \#include $<$expression.\+h$>$}
+
+Inheritance diagram for Literal\+Expr\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classLiteralExpr}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classLiteralExpr_a76e88c8ac81bd0bf4d6a2dba0a16a829}\label{classLiteralExpr_a76e88c8ac81bd0bf4d6a2dba0a16a829} 
+{\footnotesize template$<$typename T$>$ }\\auto {\bfseries get\+\_\+value} () const -\/$>$ T
+\item 
+\Hypertarget{classLiteralExpr_a736f35c00556e10b22d64af968af594a}\label{classLiteralExpr_a736f35c00556e10b22d64af968af594a} 
+auto {\bfseries get\+\_\+value} () const -\/$>$ Value\+Type
+\item 
+\Hypertarget{classLiteralExpr_a9d4b87f7eec380a2f788d01757463913}\label{classLiteralExpr_a9d4b87f7eec380a2f788d01757463913} 
+{\bfseries Literal\+Expr} (const \mbox{\hyperlink{classPosition}{Position}} pos, \mbox{\hyperlink{classToken}{Token}} token)
+\item 
+void \mbox{\hyperlink{classLiteralExpr_aca18106196c7719785765a328474ea8d}{accept}} (\mbox{\hyperlink{classVisitor}{Visitor}} \&visitor) const override
+\item 
+\Hypertarget{classLiteralExpr_a89d1ef926ac0a7b1937223a6e054a5b6}\label{classLiteralExpr_a89d1ef926ac0a7b1937223a6e054a5b6} 
+auto {\bfseries get\+\_\+value\+\_\+string} () const -\/$>$ std\+::string
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classExpression}{Expression}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classExpression_add91c65717707728b11e516d3199d269}{Expression}} (const \mbox{\hyperlink{classPosition}{Position}} pos)
+\begin{DoxyCompactList}\small\item\em Constructor for the \doxylink{classExpression}{Expression} class. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classNode}{Node}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_ad58eb6f069642c7f454679659bc2cbf9}{Node}} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto \mbox{\hyperlink{classNode_a6329ea38da23b81bfe58f5e200951818}{get\+\_\+position}} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classLiteralExpr_a436bebfe2ee98774ada490f67fc25473}\label{classLiteralExpr_a436bebfe2ee98774ada490f67fc25473} 
+Base\+Type {\bfseries type}
+\item 
+\Hypertarget{classLiteralExpr_a237bc15c9b8df8b9682dae882dae81b3}\label{classLiteralExpr_a237bc15c9b8df8b9682dae882dae81b3} 
+Value\+Type {\bfseries value}
+\item 
+\Hypertarget{classLiteralExpr_a91f7a6361ba30ddda71962fb881593e3}\label{classLiteralExpr_a91f7a6361ba30ddda71962fb881593e3} 
+\mbox{\hyperlink{classPosition}{Position}} {\bfseries position}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a literal value (string, int, double, bool) in the AST. 
+
+Used to represent literal values in the source code, such as numbers, strings, and booleans. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classLiteralExpr_aca18106196c7719785765a328474ea8d}\index{LiteralExpr@{LiteralExpr}!accept@{accept}}
+\index{accept@{accept}!LiteralExpr@{LiteralExpr}}
+\doxysubsubsection{\texorpdfstring{accept()}{accept()}}
+{\footnotesize\ttfamily \label{classLiteralExpr_aca18106196c7719785765a328474ea8d} 
+void Literal\+Expr\+::accept (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classVisitor}{Visitor}} \&}]{visitor}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classExpression}{Expression}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{expression_8h}{expression.\+h}}\item 
+src/parser/expression.\+cpp\end{DoxyCompactItemize}

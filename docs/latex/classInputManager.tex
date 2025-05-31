@@ -1,0 +1,72 @@
+\doxysection{Input\+Manager Class Reference}
+\hypertarget{classInputManager}{}\label{classInputManager}\index{InputManager@{InputManager}}
+
+
+class representing the input document and tracking the position in it  
+
+
+
+
+{\ttfamily \#include $<$input\+\_\+manager.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classInputManager_a14ca24ac8ba4f9f7069ee5f49e7070ee}\label{classInputManager_a14ca24ac8ba4f9f7069ee5f49e7070ee} 
+{\bfseries Input\+Manager} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPosition}{Position}} $>$ position, std\+::shared\+\_\+ptr$<$ std\+::istream $>$ input)
+\item 
+\Hypertarget{classInputManager_a664a26e07ccd72f076af7b4dbcdf454f}\label{classInputManager_a664a26e07ccd72f076af7b4dbcdf454f} 
+auto {\bfseries get\+\_\+next\+\_\+char} () -\/$>$ char
+\begin{DoxyCompactList}\small\item\em get the next character from the input and adjust position \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classInputManager_a98f474a3f8d8a121a85ac02e0d58bd21}{save\+\_\+position}} () const -\/$>$ \mbox{\hyperlink{classPosition}{Position}}
+\item 
+void \mbox{\hyperlink{classInputManager_afb739a4f9bbd4660a341f765edfef2ec}{skip\+\_\+line}} ()
+\item 
+\Hypertarget{classInputManager_a51be8d50b68aad33c61d1e656e2250a0}\label{classInputManager_a51be8d50b68aad33c61d1e656e2250a0} 
+void {\bfseries unget} ()
+\begin{DoxyCompactList}\small\item\em flip the handed\+\_\+back field, on next character request, return {\ttfamily current\+\_\+char} instead \end{DoxyCompactList}\item 
+\Hypertarget{classInputManager_a6bc761fbd5d2d9d109526d8c14e120d8}\label{classInputManager_a6bc761fbd5d2d9d109526d8c14e120d8} 
+auto {\bfseries end} () const -\/$>$ bool
+\begin{DoxyCompactList}\small\item\em returns true if the source document has ended \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classInputManager_abc191cc0118817093775dc25c710fd0b}\label{classInputManager_abc191cc0118817093775dc25c710fd0b} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPosition}{Position}} $>$ {\bfseries position}
+\item 
+\Hypertarget{classInputManager_a95cc360d2713f7cb4d7a2f2ad8df5a60}\label{classInputManager_a95cc360d2713f7cb4d7a2f2ad8df5a60} 
+std\+::shared\+\_\+ptr$<$ std\+::istream $>$ {\bfseries input\+\_\+stream}
+\item 
+\Hypertarget{classInputManager_a3b7b63d48254d5dbd1f588b859f2992e}\label{classInputManager_a3b7b63d48254d5dbd1f588b859f2992e} 
+char {\bfseries last\+\_\+char}
+\item 
+\Hypertarget{classInputManager_a103fb91a0cd248c0eae5196c5fd6092a}\label{classInputManager_a103fb91a0cd248c0eae5196c5fd6092a} 
+bool {\bfseries handed\+\_\+back} = false
+\item 
+\Hypertarget{classInputManager_a5e05ddb6820407bf5b55baea67a42789}\label{classInputManager_a5e05ddb6820407bf5b55baea67a42789} 
+bool {\bfseries eof} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+class representing the input document and tracking the position in it 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classInputManager_a98f474a3f8d8a121a85ac02e0d58bd21}\index{InputManager@{InputManager}!save\_position@{save\_position}}
+\index{save\_position@{save\_position}!InputManager@{InputManager}}
+\doxysubsubsection{\texorpdfstring{save\_position()}{save\_position()}}
+{\footnotesize\ttfamily \label{classInputManager_a98f474a3f8d8a121a85ac02e0d58bd21} 
+auto Input\+Manager\+::save\+\_\+position (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$ \mbox{\hyperlink{classPosition}{Position}}\hspace{0.3cm}{\ttfamily [nodiscard]}}
+
+return a copy of the current position \Hypertarget{classInputManager_afb739a4f9bbd4660a341f765edfef2ec}\index{InputManager@{InputManager}!skip\_line@{skip\_line}}
+\index{skip\_line@{skip\_line}!InputManager@{InputManager}}
+\doxysubsubsection{\texorpdfstring{skip\_line()}{skip\_line()}}
+{\footnotesize\ttfamily \label{classInputManager_afb739a4f9bbd4660a341f765edfef2ec} 
+void Input\+Manager\+::skip\+\_\+line (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+skip until the end of the current line 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/input\+\_\+manager.\+h\item 
+src/input/input\+\_\+manager.\+cpp\end{DoxyCompactItemize}

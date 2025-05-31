@@ -1,0 +1,134 @@
+\doxysection{parser.\+h}
+\hypertarget{parser_8h_source}{}\label{parser_8h_source}\index{include/parser.h@{include/parser.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}block.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{exceptions_8h}{exceptions.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{expression_8h}{expression.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}function.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}lexer.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}program.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statement_8h}{statement.h}}"{}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statement__specific_8h}{statement\_specific.h}}"{}}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ "{}token.h"{}}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ "{}tokens.h"{}}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ "{}type.h"{}}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{using\ }ExprPtr\ =\ std::unique\_ptr<Expression>;}
+\DoxyCodeLine{00018\ \textcolor{keyword}{using\ }ArgOrExpr\ =\ std::variant<ExprPtr,\ std::vector<ExprPtr>>;}
+\DoxyCodeLine{00019\ \textcolor{keyword}{using\ }StatementPtr\ =\ std::unique\_ptr<Statement>;}
+\DoxyCodeLine{00020\ \textcolor{keyword}{using\ }BlockPtr\ =\ std::unique\_ptr<Block>;}
+\DoxyCodeLine{00021\ \textcolor{keyword}{using\ }ForLoopArgsPtr\ =\ std::unique\_ptr<ForLoopArgs>;}
+\DoxyCodeLine{00022\ \textcolor{keyword}{using\ }FuncPtr\ =\ std::unique\_ptr<Function>;}
+\DoxyCodeLine{00023\ \textcolor{keyword}{using\ }TypePtr\ =\ std::unique\_ptr<Type>;}
+\DoxyCodeLine{00024\ \textcolor{keyword}{using\ }FuncSignPtr\ =\ std::unique\_ptr<FuncSignature>;}
+\DoxyCodeLine{00025\ \textcolor{keyword}{using\ }ProgramPtr\ =\ std::unique\_ptr<Program>;}
+\DoxyCodeLine{00026\ \textcolor{keyword}{using\ }ParamPtr\ =\ std::unique\_ptr<VariableSignature>;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classParser_a453dea22865a0e18240ec4efd61c07a8}{Parser}}\ \{}
+\DoxyCodeLine{00032\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00033\ \ \ \ \ std::shared\_ptr<Lexer>\ \mbox{\hyperlink{classParser_a2f50c2893fdecbd0cb8e7d7a465e4f3a}{lexer}};\ \ }
+\DoxyCodeLine{00034\ \ \ \ \ \mbox{\hyperlink{classToken}{Token}}\ \mbox{\hyperlink{classParser_a21ea3fca7b244f80d61baa44d145d3c6}{current\_token}};\ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ ConditionFunc,\ \textcolor{keyword}{typename}\ NextFunc>}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_ac644b96034d838efedd1360d5ab2d1f5}{parse\_binary\_expr}}(ConditionFunc\ condition,\ NextFunc\ next,\ \textcolor{keywordtype}{bool}\ limited\ =\ \textcolor{keyword}{false})\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a10fa8f1fbd7cb37efdba9b9f1fec9bb2}{parse\_func\_def}}()\ -\/>\ FuncPtr;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a617a11e0305450dfb73e517ae2afa86d}{parse\_func\_signature}}()\ -\/>\ FuncSignPtr;}
+\DoxyCodeLine{00064\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a24abe38441c2a2fccb60e20f074e841f}{parse\_func\_param}}()\ -\/>\ ParamPtr;}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a64d09ac80f0bb0358cdb40b808b6050f}{parse\_block}}()\ -\/>\ BlockPtr;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_adf3894b98d5d7843533382effea83913}{parse\_or\_expression}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a7f9f59d0b9265a1edef5cfca25b34b61}{parse\_and\_expression}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00095\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a0339b7c050c56ed9baa362680849e7e2}{parse\_comp\_expression}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a7f0a6022640765058ad962ccba198467}{parse\_additive\_expression}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00118\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_af7b27a75d600ee5e546f80a3828f8221}{parse\_term}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a64b01431ae2ca929d115d3e4c359aea5}{parse\_unary}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a0303c15cf9ebfa053bca7f2af5fa5573}{parse\_factor}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00141\ }
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_aa7419a9e21d529d9af2e3d9878ac9ef6}{parse\_func\_call\_or\_parens}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_af1dc912ef6817a93ec6aa7aa0ac8fe38}{parse\_assign\_or\_call}}()\ -\/>\ StatementPtr;}
+\DoxyCodeLine{00160\ }
+\DoxyCodeLine{00169\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a9415a0e2546d9ec38b5ab40d5563c88a}{parse\_conditional\_statement}}(TokenType\ st\_type)\ -\/>\ StatementPtr;}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00177\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_ab7a63c75987e69681b3f8b56471d2e9c}{parse\_else\_statement}}()\ -\/>\ StatementPtr;}
+\DoxyCodeLine{00178\ }
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a21578bd901d6e33df8bde03a0e4164a6}{parse\_for\_loop}}()\ -\/>\ StatementPtr;}
+\DoxyCodeLine{00186\ }
+\DoxyCodeLine{00193\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a4a4c1600d6a23d2213ec68e9006774e1}{parse\_for\_loop\_args}}()\ -\/>\ ForLoopArgsPtr;}
+\DoxyCodeLine{00194\ }
+\DoxyCodeLine{00201\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a126a309ba0da0a1ae7c7ddc2e5b5ad3b}{parse\_while\_loop}}()\ -\/>\ StatementPtr;}
+\DoxyCodeLine{00202\ }
+\DoxyCodeLine{00209\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a35e82cd54a8118d86990f8ffc1aaa7d8}{parse\_ret\_statement}}()\ -\/>\ StatementPtr;}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00217\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_abf7509e8578883bd7ddf3450ce476202}{parse\_condition}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00218\ }
+\DoxyCodeLine{00227\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_ae6db9de57b961c1898de70bca4da2308}{parse\_bindfrt\_or\_call}}(std::vector<ExprPtr>\&\ args)\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00237\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_ab3f359319dd90d468551233effe979c0}{parse\_bind\_front\_right}}(std::vector<ExprPtr>\&\ args)\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00238\ }
+\DoxyCodeLine{00245\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a4aeb49963af6d6024f28d8c8b697fef9}{parse\_bind\_front}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00246\ }
+\DoxyCodeLine{00253\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a3a739303ba9080489a5d6b4093adb7ba}{parse\_decorator}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00254\ }
+\DoxyCodeLine{00260\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a4080c65b8d03d5d84ae6575fb292869e}{parse\_identifier}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00261\ }
+\DoxyCodeLine{00270\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_ad79892ddd65155e0587a4d0da44c20d0}{parse\_type}}(\textcolor{keywordtype}{bool}\ allow\_void\ =\ \textcolor{keyword}{false})\ -\/>\ TypePtr;}
+\DoxyCodeLine{00271\ }
+\DoxyCodeLine{00283\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_aac1e782dcb39f2d695a8e4b4e1e7cd83}{parse\_var\_type}}(\textcolor{keywordtype}{bool}\ allow\_void)\ -\/>\ TypePtr;}
+\DoxyCodeLine{00284\ }
+\DoxyCodeLine{00291\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a2cf88fbf89845a671a251f44cee0bf6c}{parse\_func\_type}}()\ -\/>\ TypePtr;}
+\DoxyCodeLine{00292\ }
+\DoxyCodeLine{00300\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_abccbf315c3c3cc86fec36985f35baa78}{parse\_func\_args}}()\ -\/>\ std::optional<std::vector<ExprPtr>>;}
+\DoxyCodeLine{00301\ }
+\DoxyCodeLine{00308\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a1bd9561940797917834dcc89455f875f}{is\_comparative}}(TokenType\ type)\ \textcolor{keyword}{const}\ -\/>\ bool;}
+\DoxyCodeLine{00309\ }
+\DoxyCodeLine{00316\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a7117307f8995892c3c801cc3c8afc959}{is\_factor}}(TokenType\ type)\ \textcolor{keyword}{const}\ -\/>\ bool;}
+\DoxyCodeLine{00317\ }
+\DoxyCodeLine{00324\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a319041d4631197a92fbc39c3961fda20}{is\_type}}(TokenType\ type)\ \textcolor{keyword}{const}\ -\/>\ bool;}
+\DoxyCodeLine{00325\ }
+\DoxyCodeLine{00332\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_aa86116637776ba61c159db3451017b90}{is\_type\_or\_void}}(TokenType\ type)\ \textcolor{keyword}{const}\ -\/>\ bool;}
+\DoxyCodeLine{00333\ }
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a8fda9fc2049798bd0f9ba6f146f86c56}{is\_next\_token}}(TokenType\ type)\ -\/>\ bool;}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00348\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_ad9dcf6e6e1b65d727b5acb1b204ac05c}{was\_last\_token}}(TokenType\ type)\ -\/>\ bool;}
+\DoxyCodeLine{00349\ }
+\DoxyCodeLine{00356\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_aaa9c437e2194d4b1eb9e73930e98c47f}{is\_token}}(TokenType\ type)\ \textcolor{keyword}{const}\ -\/>\ bool;}
+\DoxyCodeLine{00357\ }
+\DoxyCodeLine{00358\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ get\_position()\ const\ -\/>\ const\ \mbox{\hyperlink{classPosition}{Position}}\ \{}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{classParser_a21ea3fca7b244f80d61baa44d145d3c6}{current\_token}}.get\_position();}
+\DoxyCodeLine{00360\ \ \ \ \ \};}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{keyword}{auto}\ shall(T\ arg,\ std::string\ error)\ -\/>\ T\ \{}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!arg)\ \textcolor{keywordflow}{throw}\ \mbox{\hyperlink{classParserError}{ParserError}}(get\_position(),\ error);}
+\DoxyCodeLine{00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::move(arg);}
+\DoxyCodeLine{00366\ \ \ \ \ \}}
+\DoxyCodeLine{00367\ }
+\DoxyCodeLine{00368\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00374\ \ \ \ \ \mbox{\hyperlink{classParser_a453dea22865a0e18240ec4efd61c07a8}{Parser}}(std::shared\_ptr<Lexer>\ \mbox{\hyperlink{classParser_a2f50c2893fdecbd0cb8e7d7a465e4f3a}{lexer}});}
+\DoxyCodeLine{00375\ }
+\DoxyCodeLine{00381\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a36fe89159601be46fe6a7031896a91f9}{parse}}()\ -\/>\ ProgramPtr;}
+\DoxyCodeLine{00382\ }
+\DoxyCodeLine{00387\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a4d40bc258bbc03c5068c22839a994aa3}{parse\_statement}}()\ -\/>\ StatementPtr;}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00394\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classParser_a3765ab1d438463290e311c32b0754668}{parse\_expression}}()\ -\/>\ ExprPtr;}
+\DoxyCodeLine{00395\ }
+\DoxyCodeLine{00399\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{classParser_aa9d77f13b9067eb48671d674b8a2f993}{next\_token}}();}
+\DoxyCodeLine{00400\ \};}
+
+\end{DoxyCode}

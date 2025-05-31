@@ -1,0 +1,66 @@
+\doxysection{Type\+Cast Struct Reference}
+\hypertarget{structTypeCast}{}\label{structTypeCast}\index{TypeCast@{TypeCast}}
+
+
+structure of call operators for type casting  
+
+
+
+
+{\ttfamily \#include $<$type\+\_\+cast.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{structTypeCast_ac203141c22101895fbb9fa0a37959795}\label{structTypeCast_ac203141c22101895fbb9fa0a37959795} 
+auto {\bfseries operator()} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classCallable}{Callable}} $>$ a, std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classCallable}{Callable}} $>$ b) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\begin{DoxyCompactList}\small\item\em when type casting functions, pass them on if their type is the same \end{DoxyCompactList}\item 
+\Hypertarget{structTypeCast_aacfaf22116570df9d24efd01235f1c8f}\label{structTypeCast_aacfaf22116570df9d24efd01235f1c8f} 
+{\footnotesize template$<$typename T$>$ }\\auto {\bfseries operator()} (T a, T) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\begin{DoxyCompactList}\small\item\em if both types are the same, we don\textquotesingle{}t need to type cast \end{DoxyCompactList}\item 
+\Hypertarget{structTypeCast_abe7a301386365a4d4a6fbb6c540ed5ff}\label{structTypeCast_abe7a301386365a4d4a6fbb6c540ed5ff} 
+auto {\bfseries operator()} (int a, double) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\item 
+\Hypertarget{structTypeCast_a570c68613f72be69dde5dfd62e22a21e}\label{structTypeCast_a570c68613f72be69dde5dfd62e22a21e} 
+auto {\bfseries operator()} (double a, int) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\item 
+\Hypertarget{structTypeCast_af21cd2937f9e7770a4e6a93d53ed2c2a}\label{structTypeCast_af21cd2937f9e7770a4e6a93d53ed2c2a} 
+auto {\bfseries operator()} (std\+::string a, int) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\item 
+\Hypertarget{structTypeCast_a5bfec8c279e8cdb05f847b5f3f9880f6}\label{structTypeCast_a5bfec8c279e8cdb05f847b5f3f9880f6} 
+auto {\bfseries operator()} (int a, std\+::string) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\item 
+\Hypertarget{structTypeCast_a5ceac8fcc4467f886922a1fc80cbeaf2}\label{structTypeCast_a5ceac8fcc4467f886922a1fc80cbeaf2} 
+auto {\bfseries operator()} (std\+::string a, double) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\item 
+\Hypertarget{structTypeCast_a48a068f0a7a2df591c63fa9ad8ee4789}\label{structTypeCast_a48a068f0a7a2df591c63fa9ad8ee4789} 
+auto {\bfseries operator()} (double a, std\+::string) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\item 
+\Hypertarget{structTypeCast_af39eeb75abbcc4416e076636786f9a9b}\label{structTypeCast_af39eeb75abbcc4416e076636786f9a9b} 
+auto {\bfseries operator()} (bool a, int) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\item 
+\Hypertarget{structTypeCast_a29140f417b8e7516a5298d0a75656ef0}\label{structTypeCast_a29140f417b8e7516a5298d0a75656ef0} 
+auto {\bfseries operator()} (int a, bool) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\item 
+\Hypertarget{structTypeCast_a41ebbc002f06133c4f6cb4714db76ee8}\label{structTypeCast_a41ebbc002f06133c4f6cb4714db76ee8} 
+auto {\bfseries operator()} (bool a, double) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\item 
+\Hypertarget{structTypeCast_a73863bae73b908ab19cf1a722e305c6b}\label{structTypeCast_a73863bae73b908ab19cf1a722e305c6b} 
+auto {\bfseries operator()} (double a, bool) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\item 
+\Hypertarget{structTypeCast_aa46ae1961d8adcd9f5b9713c99856640}\label{structTypeCast_aa46ae1961d8adcd9f5b9713c99856640} 
+auto {\bfseries operator()} (std\+::string a, bool) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\item 
+\Hypertarget{structTypeCast_a15ce4f70c85642027c534827ad247a8f}\label{structTypeCast_a15ce4f70c85642027c534827ad247a8f} 
+{\footnotesize template$<$typename A, typename B$>$ }\\auto {\bfseries operator()} (A, B) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\begin{DoxyCompactList}\small\item\em throw an exception if we get two differing types not mentioned above \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+structure of call operators for type casting 
+
+the structure consists of call operators, accepting two arguments which are the current type, and the desired type 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/type\+\_\+cast.\+h\end{DoxyCompactItemize}

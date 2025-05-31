@@ -1,0 +1,95 @@
+\doxysection{Conditional\+Statement Class Reference}
+\hypertarget{classConditionalStatement}{}\label{classConditionalStatement}\index{ConditionalStatement@{ConditionalStatement}}
+
+
+Represents an {\ttfamily else} statement block.  
+
+
+
+
+{\ttfamily \#include $<$statement\+\_\+specific.\+h$>$}
+
+Inheritance diagram for Conditional\+Statement\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classConditionalStatement}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classConditionalStatement_a576d1f2f39cb0c1afafa7534f9e1439e}\label{classConditionalStatement_a576d1f2f39cb0c1afafa7534f9e1439e} 
+{\bfseries Conditional\+Statement} (\mbox{\hyperlink{classPosition}{Position}} pos, Token\+Type type, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classExpression}{Expression}} $>$ condition, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classBlock}{Block}} $>$ body, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classStatement}{Statement}} $>$ else\+\_\+st)
+\item 
+\Hypertarget{classConditionalStatement_af134a270c84ade99a6625a47f1e35d30}\label{classConditionalStatement_af134a270c84ade99a6625a47f1e35d30} 
+{\bfseries Conditional\+Statement} (\mbox{\hyperlink{classPosition}{Position}} pos, Token\+Type type, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classExpression}{Expression}} $>$ condition, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classBlock}{Block}} $>$ body)
+\item 
+void \mbox{\hyperlink{classConditionalStatement_a8819fef0545ed3d7cdd52070fff4f0ea}{accept}} (\mbox{\hyperlink{classVisitor}{Visitor}} \&visitor) const override
+\item 
+\Hypertarget{classConditionalStatement_a6cd2467576af85d4886479c484377059}\label{classConditionalStatement_a6cd2467576af85d4886479c484377059} 
+auto {\bfseries get\+\_\+type} () const -\/$>$ Token\+Type
+\item 
+\Hypertarget{classConditionalStatement_a7f74c520f9eee70a97ea522b5eeeef1e}\label{classConditionalStatement_a7f74c520f9eee70a97ea522b5eeeef1e} 
+auto {\bfseries get\+\_\+condition} () const -\/$>$ const \mbox{\hyperlink{classExpression}{Expression}} \texorpdfstring{$\ast$}{*}
+\item 
+\Hypertarget{classConditionalStatement_ad3254f755693283ea1ea94af63f97e71}\label{classConditionalStatement_ad3254f755693283ea1ea94af63f97e71} 
+auto {\bfseries get\+\_\+body} () const -\/$>$ const \mbox{\hyperlink{classBlock}{Block}} \texorpdfstring{$\ast$}{*}
+\item 
+\Hypertarget{classConditionalStatement_a5101d3e9bdbaf119a86472b45676d89b}\label{classConditionalStatement_a5101d3e9bdbaf119a86472b45676d89b} 
+auto {\bfseries get\+\_\+else\+\_\+st} () const -\/$>$ const \mbox{\hyperlink{classStatement}{Statement}} \texorpdfstring{$\ast$}{*}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classStatement}{Statement}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Statement} (const \mbox{\hyperlink{classPosition}{Position}} pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classNode}{Node}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_ad58eb6f069642c7f454679659bc2cbf9}{Node}} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto \mbox{\hyperlink{classNode_a6329ea38da23b81bfe58f5e200951818}{get\+\_\+position}} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classConditionalStatement_a9978ce731de2cf4348f8f469632516ed}\label{classConditionalStatement_a9978ce731de2cf4348f8f469632516ed} 
+Token\+Type {\bfseries type}
+\item 
+\Hypertarget{classConditionalStatement_a92881a45c92ef85306956d7b7bf386fe}\label{classConditionalStatement_a92881a45c92ef85306956d7b7bf386fe} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classExpression}{Expression}} $>$ {\bfseries condition}
+\item 
+\Hypertarget{classConditionalStatement_a98c98cb0e3c1401002dc9a66eee9b1b4}\label{classConditionalStatement_a98c98cb0e3c1401002dc9a66eee9b1b4} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classBlock}{Block}} $>$ {\bfseries body}
+\item 
+\Hypertarget{classConditionalStatement_afb483e53589b967f20027dedfff5656b}\label{classConditionalStatement_afb483e53589b967f20027dedfff5656b} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classStatement}{Statement}} $>$ {\bfseries else\+\_\+st}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Static Protected Member Functions inherited from \mbox{\hyperlink{classStatement}{Statement}}}
+\begin{DoxyCompactItemize}
+\item 
+static auto {\bfseries indent\+\_\+str} (int amount) -\/$>$ std\+::string
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an {\ttfamily else} statement block. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classConditionalStatement_a8819fef0545ed3d7cdd52070fff4f0ea}\index{ConditionalStatement@{ConditionalStatement}!accept@{accept}}
+\index{accept@{accept}!ConditionalStatement@{ConditionalStatement}}
+\doxysubsubsection{\texorpdfstring{accept()}{accept()}}
+{\footnotesize\ttfamily \label{classConditionalStatement_a8819fef0545ed3d7cdd52070fff4f0ea} 
+void Conditional\+Statement\+::accept (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classVisitor}{Visitor}} \&}]{visitor}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classStatement}{Statement}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{statement__specific_8h}{statement\+\_\+specific.\+h}}\item 
+src/parser/statement.\+cpp\end{DoxyCompactItemize}

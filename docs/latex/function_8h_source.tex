@@ -1,0 +1,49 @@
+\doxysection{function.\+h}
+\hypertarget{function_8h_source}{}\label{function_8h_source}\index{include/function.h@{include/function.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00004\ }
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}block.h"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}type.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}variable.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classVisitor}{Visitor}};}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{class\ }FuncSignature\ :\ \textcolor{keyword}{public}\ Node\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ std::unique\_ptr<Type>\ ret\_type;\ \ \textcolor{comment}{//<\ the\ return\ type\ of\ the\ function}}
+\DoxyCodeLine{00019\ \ \ \ \ std::vector<std::unique\_ptr<VariableSignature>>\ args;\ \ \textcolor{comment}{//<\ the\ signature\ of\ the\ function's\ arguments}}
+\DoxyCodeLine{00020\ \ \ \ \ std::string\ name;\ \ \textcolor{comment}{//<\ the\ name\ of\ the\ function}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00023\ \ \ \ \ FuncSignature(\mbox{\hyperlink{classPosition}{Position}}\ pos,\ std::unique\_ptr<Type>\ ret,}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<std::unique\_ptr<VariableSignature>>\ args,\ std::string\ name);}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordtype}{void}\ accept(\mbox{\hyperlink{classVisitor}{Visitor}}\ \&visitor)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00031\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classFuncSignature_ab13a5378a1348c48bd77ae192272a439}{get\_type}}()\ const\ -\/>\ const\ \mbox{\hyperlink{classType}{Type}}\ *\ \{\ \textcolor{keywordflow}{return}\ ret\_type.get();\ \};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00036\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classFuncSignature_abc2a464626e7ee7fe48ae78bf41d3573}{clone\_type\_as\_type\_obj}}()\ const\ -\/>\ std::unique\_ptr<\mbox{\hyperlink{classFuncType}{FuncType}}>;}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00041\ \ \ \ \ [[nodiscard]]\ auto\ \mbox{\hyperlink{classFuncSignature_a644f34e100464c383185dbc6cda1167e}{get\_params}}()\ const\ -\/>\ const\ std::vector<const\ \mbox{\hyperlink{classVariableSignature}{VariableSignature}}\ *>;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00046\ \ \ \ \ [[nodiscard]]\ auto\ \mbox{\hyperlink{classFuncSignature_a343188b5c37a41d0ca07379c6f7fa0d6}{get\_name}}()\ const\ -\/>\ std::\textcolor{keywordtype}{string};}
+\DoxyCodeLine{00047\ \};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00052\ class\ Function\ :\ public\ Node\ \{}
+\DoxyCodeLine{00053\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00054\ \ \ \ \ std::unique\_ptr<FuncSignature>\ signature;\ \ \textcolor{comment}{//<\ the\ signature\ of\ the\ function}}
+\DoxyCodeLine{00055\ \ \ \ \ std::unique\_ptr<Block>\ body;\ \ \textcolor{comment}{//<\ the\ function's\ body}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00058\ \ \ \ \ Function(std::unique\_ptr<FuncSignature>\ signature,\ std::unique\_ptr<Block>\ body);}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ accept(\mbox{\hyperlink{classVisitor}{Visitor}}\ \&visitor)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00064\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classFunction_abad593e36369a4cad8d87c23e5c4a6d1}{get\_signature}}()\ \textcolor{keyword}{const}\ -\/>\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classFuncSignature}{FuncSignature}}\ *;}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00069\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classFunction_af43e1f2d377c0d7ea82e94e715dc6daf}{get\_body}}()\ \textcolor{keyword}{const}\ -\/>\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classBlock}{Block}}\ *;}
+\DoxyCodeLine{00070\ \};}
+
+\end{DoxyCode}

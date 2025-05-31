@@ -1,0 +1,99 @@
+\doxysection{Global\+Function Class Reference}
+\hypertarget{classGlobalFunction}{}\label{classGlobalFunction}\index{GlobalFunction@{GlobalFunction}}
+
+
+class for holding a direct reference to parsed functions  
+
+
+
+
+{\ttfamily \#include $<$local\+\_\+function.\+h$>$}
+
+Inheritance diagram for Global\+Function\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classGlobalFunction}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classGlobalFunction_aa4ac9a9527af2a5f42aa94abcb35042e}\label{classGlobalFunction_aa4ac9a9527af2a5f42aa94abcb35042e} 
+{\bfseries Global\+Function} (const \mbox{\hyperlink{classFunction}{Function}} \texorpdfstring{$\ast$}{*}func)
+\item 
+void \mbox{\hyperlink{classGlobalFunction_a6af905d36f418d08157cc557e54c10c2}{call}} (\mbox{\hyperlink{classInterpreterVisitor}{Interpreter\+Visitor}} \&interpreter, Arg\+Vector params) override
+\begin{DoxyCompactList}\small\item\em verify argument types, push call frame and call \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classGlobalFunction_a9ef4af2248642b3ff3f4bca9160f0c6e}{get\+\_\+func}} () const -\/$>$ const \mbox{\hyperlink{classFunction}{Function}} \texorpdfstring{$\ast$}{*}override
+\item 
+\Hypertarget{classGlobalFunction_aab464584a983d02840e50667d9c0a6ee}\label{classGlobalFunction_aab464584a983d02840e50667d9c0a6ee} 
+auto {\bfseries prepare\+\_\+func\+\_\+args} (\mbox{\hyperlink{classInterpreterVisitor}{Interpreter\+Visitor}} \&interpreter, Arg\+Vector \&args) const -\/$>$ std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{structVarRef}{Var\+Ref}} $>$ $>$
+\item 
+auto \mbox{\hyperlink{classGlobalFunction_ac0960e08e128cbb0ff963c7ee58b12d5}{get\+\_\+type}} () const -\/$>$ const \mbox{\hyperlink{classType}{Type}} \texorpdfstring{$\ast$}{*}override
+\item 
+auto \mbox{\hyperlink{classGlobalFunction_a731d4d55223267fa0be019a95acd8ba9}{get\+\_\+name}} () const -\/$>$ const std\+::string override
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classGlobalFunction_a2ef421088cc17c6a4e4f82caee9387f6}\label{classGlobalFunction_a2ef421088cc17c6a4e4f82caee9387f6} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classType}{Type}} $>$ {\bfseries type}
+\item 
+\Hypertarget{classGlobalFunction_aee41da9b861604e7cc9e4abbf46b33a5}\label{classGlobalFunction_aee41da9b861604e7cc9e4abbf46b33a5} 
+const \mbox{\hyperlink{classFunction}{Function}} \texorpdfstring{$\ast$}{*} {\bfseries func}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+class for holding a direct reference to parsed functions 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classGlobalFunction_a6af905d36f418d08157cc557e54c10c2}\index{GlobalFunction@{GlobalFunction}!call@{call}}
+\index{call@{call}!GlobalFunction@{GlobalFunction}}
+\doxysubsubsection{\texorpdfstring{call()}{call()}}
+{\footnotesize\ttfamily \label{classGlobalFunction_a6af905d36f418d08157cc557e54c10c2} 
+void Global\+Function\+::call (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classInterpreterVisitor}{Interpreter\+Visitor}} \&}]{interpreter}{, }\item[{Arg\+Vector}]{params}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+verify argument types, push call frame and call 
+
+
+
+Implements \mbox{\hyperlink{classCallable}{Callable}}.
+
+\Hypertarget{classGlobalFunction_a9ef4af2248642b3ff3f4bca9160f0c6e}\index{GlobalFunction@{GlobalFunction}!get\_func@{get\_func}}
+\index{get\_func@{get\_func}!GlobalFunction@{GlobalFunction}}
+\doxysubsubsection{\texorpdfstring{get\_func()}{get\_func()}}
+{\footnotesize\ttfamily \label{classGlobalFunction_a9ef4af2248642b3ff3f4bca9160f0c6e} 
+auto Global\+Function\+::get\+\_\+func (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$ const \mbox{\hyperlink{classFunction}{Function}}\texorpdfstring{$\ast$}{*}\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classCallable}{Callable}}.
+
+\Hypertarget{classGlobalFunction_a731d4d55223267fa0be019a95acd8ba9}\index{GlobalFunction@{GlobalFunction}!get\_name@{get\_name}}
+\index{get\_name@{get\_name}!GlobalFunction@{GlobalFunction}}
+\doxysubsubsection{\texorpdfstring{get\_name()}{get\_name()}}
+{\footnotesize\ttfamily \label{classGlobalFunction_a731d4d55223267fa0be019a95acd8ba9} 
+auto Global\+Function\+::get\+\_\+name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$ const std\+::string\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classCallable}{Callable}}.
+
+\Hypertarget{classGlobalFunction_ac0960e08e128cbb0ff963c7ee58b12d5}\index{GlobalFunction@{GlobalFunction}!get\_type@{get\_type}}
+\index{get\_type@{get\_type}!GlobalFunction@{GlobalFunction}}
+\doxysubsubsection{\texorpdfstring{get\_type()}{get\_type()}}
+{\footnotesize\ttfamily \label{classGlobalFunction_ac0960e08e128cbb0ff963c7ee58b12d5} 
+auto Global\+Function\+::get\+\_\+type (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$ const \mbox{\hyperlink{classType}{Type}}\texorpdfstring{$\ast$}{*}\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classCallable}{Callable}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/local\+\_\+function.\+h\item 
+src/interpreter/local\+\_\+function.\+cpp\end{DoxyCompactItemize}

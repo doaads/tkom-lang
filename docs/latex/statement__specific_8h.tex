@@ -1,0 +1,35 @@
+\doxysection{include/statement\+\_\+specific.h File Reference}
+\hypertarget{statement__specific_8h}{}\label{statement__specific_8h}\index{include/statement\_specific.h@{include/statement\_specific.h}}
+
+
+Contains specific statement classes representing various control flow and function-\/related constructs.  
+
+
+{\ttfamily \#include "{}block.\+h"{}}\newline
+{\ttfamily \#include "{}statement.\+h"{}}\newline
+{\ttfamily \#include "{}variable.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structForLoopArgs}{For\+Loop\+Args}}
+\begin{DoxyCompactList}\small\item\em Represents arguments passed to a {\ttfamily for} loop, such as initializer, condition, and iterator expression. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classForLoopStatement}{For\+Loop\+Statement}}
+\begin{DoxyCompactList}\small\item\em Represents a {\ttfamily for} loop statement in the AST. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classWhileLoopStatement}{While\+Loop\+Statement}}
+\begin{DoxyCompactList}\small\item\em Represents a conditional {\ttfamily if} or {\ttfamily elif} statement in the AST. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classConditionalStatement}{Conditional\+Statement}}
+\begin{DoxyCompactList}\small\item\em Represents an {\ttfamily else} statement block. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classElseStatement}{Else\+Statement}}
+\begin{DoxyCompactList}\small\item\em Represents a {\ttfamily return} statement in a function. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classRetStatement}{Ret\+Statement}}
+\begin{DoxyCompactList}\small\item\em Represents a standalone expression call as a statement. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classCallStatement}{Call\+Statement}}
+\begin{DoxyCompactList}\small\item\em Represents a standalone expression as a statement. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classAssignStatement}{Assign\+Statement}}
+\begin{DoxyCompactList}\small\item\em Represents a variable assignment statement, optionally with type annotation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains specific statement classes representing various control flow and function-\/related constructs. 
+
+This file defines concrete subclasses of {\ttfamily \doxylink{classStatement}{Statement}} that represent specific control flow structures such as for-\/loops, while-\/loops, conditionals, return statements, and function calls. 

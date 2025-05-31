@@ -1,0 +1,58 @@
+\doxysection{Expression Class Reference}
+\hypertarget{classExpression}{}\label{classExpression}\index{Expression@{Expression}}
+
+
+Abstract base class for all expression types in the program tree.  
+
+
+
+
+{\ttfamily \#include $<$expression.\+h$>$}
+
+Inheritance diagram for Expression\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.947368cm]{classExpression}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classExpression_add91c65717707728b11e516d3199d269}{Expression}} (const \mbox{\hyperlink{classPosition}{Position}} pos)
+\begin{DoxyCompactList}\small\item\em Constructor for the \doxylink{classExpression}{Expression} class. \end{DoxyCompactList}\item 
+\Hypertarget{classExpression_aa05335ad57710f07ea574bd462eb0340}\label{classExpression_aa05335ad57710f07ea574bd462eb0340} 
+virtual void {\bfseries accept} (\mbox{\hyperlink{classVisitor}{Visitor}} \&visitor) const =0
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classNode}{Node}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_ad58eb6f069642c7f454679659bc2cbf9}{Node}} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto \mbox{\hyperlink{classNode_a6329ea38da23b81bfe58f5e200951818}{get\+\_\+position}} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Abstract base class for all expression types in the program tree. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classExpression_add91c65717707728b11e516d3199d269}\index{Expression@{Expression}!Expression@{Expression}}
+\index{Expression@{Expression}!Expression@{Expression}}
+\doxysubsubsection{\texorpdfstring{Expression()}{Expression()}}
+{\footnotesize\ttfamily \label{classExpression_add91c65717707728b11e516d3199d269} 
+Expression\+::\+Expression (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classPosition}{Position}}}]{pos}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor for the \doxylink{classExpression}{Expression} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em pos} & The position of the expression in the source code. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{expression_8h}{expression.\+h}}\end{DoxyCompactItemize}

@@ -1,0 +1,44 @@
+\doxysection{interpreter\+\_\+helpers.\+h}
+\hypertarget{interpreter__helpers_8h_source}{}\label{interpreter__helpers_8h_source}\index{include/interpreter\_helpers.h@{include/interpreter\_helpers.h}}
+\mbox{\hyperlink{interpreter__helpers_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}\textcolor{preprocessor}{}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}local\_function.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{using\ }\mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ =}
+\DoxyCodeLine{00014\ \ \ \ \ std::variant<std::monostate,\ std::string,\ int,\ double,\ bool,\ std::shared\_ptr<Callable>>;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00019\ \textcolor{keyword}{using\ }\mbox{\hyperlink{interpreter__helpers_8h_aa4bfd8ebad1ce848d9f39eec760c74de}{TypeType}}\ =\ std::variant<const\ Type*,\ BaseType>;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structVarRef}{VarRef}}\ \{}
+\DoxyCodeLine{00027\ \ \ \ \ std::shared\_ptr<Variable>\ ref;\ \ \textcolor{comment}{//<\ variable\ reference}}
+\DoxyCodeLine{00028\ \ \ \ \ std::string\ curr\_name;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//<\ name\ in\ current\ scope}}
+\DoxyCodeLine{00029\ \};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structVariable}{Variable}}\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{const}\ \mbox{\hyperlink{classVariableSignature}{VariableSignature}}\&\ signature;\ \ \textcolor{comment}{//<\ variable\ type\ and\ name\ as\ parsed\ by\ the\ parser}}
+\DoxyCodeLine{00039\ \ \ \ \ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ value;}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keyword}{auto}\ get\_type()\ -\/>\ \textcolor{keyword}{const}\ \mbox{\hyperlink{classType}{Type}}*\ \{\ \textcolor{keywordflow}{return}\ signature.get\_type();\ \}}
+\DoxyCodeLine{00041\ \};}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structBlockScope}{BlockScope}}\ \{}
+\DoxyCodeLine{00047\ \ \ \ \ std::vector<std::shared\_ptr<Variable>>\ vars;\ \ \textcolor{comment}{//<\ variables\ in\ current\ scope\ (block)}}
+\DoxyCodeLine{00048\ \};}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00057\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structCallStackFrame}{CallStackFrame}}\ \{}
+\DoxyCodeLine{00058\ \ \ \ \ std::vector<std::shared\_ptr<VarRef>>\ args;\ \ \textcolor{comment}{//<\ variables\ passed\ by\ reference}}
+\DoxyCodeLine{00059\ \ \ \ \ std::vector<BlockScope>\ var\_scope;\ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//<\ variables\ originating\ inside\ the\ function}}
+\DoxyCodeLine{00060\ \};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00065\ \textcolor{keyword}{enum\ class}\ \mbox{\hyperlink{interpreter__helpers_8h_ab603d1b1c93a5d8264130588ee6fe1f0}{ReceivedBy}}\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ EXPR,}
+\DoxyCodeLine{00067\ \ \ \ \ VAR,}
+\DoxyCodeLine{00068\ \};}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{using\ }\mbox{\hyperlink{interpreter__helpers_8h_a64c3c6fb006bd3fe9704b59bf93aa323}{Arg}}\ =\ std::variant<std::shared\_ptr<Variable>,\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}>;}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00078\ \textcolor{keyword}{using\ }\mbox{\hyperlink{interpreter__helpers_8h_af0df1662beea2aac1e8da2cbffb93f6f}{ArgVector}}\ =\ std::vector<Arg>;}
+
+\end{DoxyCode}

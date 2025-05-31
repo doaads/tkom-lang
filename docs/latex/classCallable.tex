@@ -1,0 +1,79 @@
+\doxysection{Callable Class Reference}
+\hypertarget{classCallable}{}\label{classCallable}\index{Callable@{Callable}}
+
+
+general class for registering available functions.  
+
+
+
+
+{\ttfamily \#include $<$local\+\_\+function.\+h$>$}
+
+Inheritance diagram for Callable\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classCallable}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{classCallable_a60dd29fa47febfc9027275a6c1b4d6fd}{call}} (\mbox{\hyperlink{classInterpreterVisitor}{Interpreter\+Visitor}} \&interpreter, Arg\+Vector params)=0
+\item 
+virtual auto \mbox{\hyperlink{classCallable_a60b8e9d5cf58f20f49a007c95e6ad64c}{get\+\_\+func}} () const -\/$>$ const \mbox{\hyperlink{classFunction}{Function}} \texorpdfstring{$\ast$}{*}=0
+\item 
+virtual auto \mbox{\hyperlink{classCallable_aeea7fd7577df68f68d6f0db949d813cf}{get\+\_\+type}} () const -\/$>$ const \mbox{\hyperlink{classType}{Type}} \texorpdfstring{$\ast$}{*}=0
+\item 
+virtual auto \mbox{\hyperlink{classCallable_a9cfd1708d565ea58b790a3e3849fe95f}{get\+\_\+name}} () const -\/$>$ const std\+::string=0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+general class for registering available functions. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classCallable_a60dd29fa47febfc9027275a6c1b4d6fd}\index{Callable@{Callable}!call@{call}}
+\index{call@{call}!Callable@{Callable}}
+\doxysubsubsection{\texorpdfstring{call()}{call()}}
+{\footnotesize\ttfamily \label{classCallable_a60dd29fa47febfc9027275a6c1b4d6fd} 
+virtual void Callable\+::call (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classInterpreterVisitor}{Interpreter\+Visitor}} \&}]{interpreter}{, }\item[{Arg\+Vector}]{params}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{classBuiltIn_a97daf8637fb3903e34225cc68e2c8d13}{Built\+In}}, \mbox{\hyperlink{classGlobalFunction_a6af905d36f418d08157cc557e54c10c2}{Global\+Function}}, and \mbox{\hyperlink{classLocalFunction_ae895676cd8883cb8455838d8c045d07f}{Local\+Function}}.
+
+\Hypertarget{classCallable_a60b8e9d5cf58f20f49a007c95e6ad64c}\index{Callable@{Callable}!get\_func@{get\_func}}
+\index{get\_func@{get\_func}!Callable@{Callable}}
+\doxysubsubsection{\texorpdfstring{get\_func()}{get\_func()}}
+{\footnotesize\ttfamily \label{classCallable_a60b8e9d5cf58f20f49a007c95e6ad64c} 
+virtual auto Callable\+::get\+\_\+func (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$  const \mbox{\hyperlink{classFunction}{Function}} \texorpdfstring{$\ast$}{*}\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{classBuiltIn_a0fa98de860737d4dd6cd35672e7ba651}{Built\+In}}.
+
+\Hypertarget{classCallable_a9cfd1708d565ea58b790a3e3849fe95f}\index{Callable@{Callable}!get\_name@{get\_name}}
+\index{get\_name@{get\_name}!Callable@{Callable}}
+\doxysubsubsection{\texorpdfstring{get\_name()}{get\_name()}}
+{\footnotesize\ttfamily \label{classCallable_a9cfd1708d565ea58b790a3e3849fe95f} 
+virtual auto Callable\+::get\+\_\+name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$  const std\+::string\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{classBuiltIn_a5b6bcb965a5704a21d4100bdc7ef4c72}{Built\+In}}.
+
+\Hypertarget{classCallable_aeea7fd7577df68f68d6f0db949d813cf}\index{Callable@{Callable}!get\_type@{get\_type}}
+\index{get\_type@{get\_type}!Callable@{Callable}}
+\doxysubsubsection{\texorpdfstring{get\_type()}{get\_type()}}
+{\footnotesize\ttfamily \label{classCallable_aeea7fd7577df68f68d6f0db949d813cf} 
+virtual auto Callable\+::get\+\_\+type (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$  const \mbox{\hyperlink{classType}{Type}} \texorpdfstring{$\ast$}{*}\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{classBuiltIn_a426cddd5c07dd3c6c85fad94d0f93e00}{Built\+In}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/local\+\_\+function.\+h\end{DoxyCompactItemize}

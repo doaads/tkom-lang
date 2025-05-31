@@ -1,0 +1,95 @@
+\doxysection{type.\+h}
+\hypertarget{type_8h_source}{}\label{type_8h_source}\index{include/type.h@{include/type.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}node.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}tokens.h"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classVisitor}{Visitor}};}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{enum\ class}\ BaseType\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ INT,}
+\DoxyCodeLine{00017\ \ \ \ \ FLT,}
+\DoxyCodeLine{00018\ \ \ \ \ STRING,}
+\DoxyCodeLine{00019\ \ \ \ \ BOOL,}
+\DoxyCodeLine{00020\ \ \ \ \ VOID,}
+\DoxyCodeLine{00021\ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{auto}\ translate\_token\_to\_type(TokenType\ type)\ -\/>\ std::optional<BaseType>;}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{auto}\ get\_literal\_token\_type(TokenType\ type)\ -\/>\ std::optional<BaseType>;}
+\DoxyCodeLine{00032\ \textcolor{keyword}{auto}\ operator<<(std::ostream\ \&os,\ \textcolor{keyword}{const}\ BaseType\ \&type)\ -\/>\ std::ostream\ \&;}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00037\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classType}{Type}}\ :\ \textcolor{keyword}{public}\ Node\ \{}
+\DoxyCodeLine{00038\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00042\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classType_a354f1859296fa319abfd1870c20b7bd1}{is\_func}}()\ const\ -\/>\ \textcolor{keywordtype}{bool}\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \};}
+\DoxyCodeLine{00043\ \ \ \ \ \mbox{\hyperlink{classType}{\string~Type}}()\ \textcolor{keyword}{override}\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ accept(\mbox{\hyperlink{classVisitor}{Visitor}}\ \&visitor)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00049\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{virtual}\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classType_ac8b581197cdc81a9aa8d562c6117c843}{get\_mut}}()\ const\ -\/>\ \textcolor{keywordtype}{bool}\ =\ 0;}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00056\ \ \ \ \ virtual\ auto\ \mbox{\hyperlink{classType_a7e25e8b381dc6a8e9a348736016993d4}{is\_equal\_to}}(const\ \mbox{\hyperlink{classType}{Type}}\ *other)\ const\ -\/>\ \textcolor{keywordtype}{bool}\ =\ 0;}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00061\ \ \ \ \ [[nodiscard]]\ virtual\ auto\ \mbox{\hyperlink{classType_aab5538c91c732314e63d9c72f6cb8f95}{get\_params}}()\ const\ -\/>\ std::vector<const\ \mbox{\hyperlink{classType}{Type}}\ *>\ =\ 0;}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00066\ \ \ \ \ [[nodiscard]]\ virtual\ auto\ \mbox{\hyperlink{classType_abdd3c969c52ea1a15647208f0b6ac008}{get\_ret\_type}}()\ const\ -\/>\ const\ \mbox{\hyperlink{classType}{Type}}\ *\ =\ 0;}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00073\ \ \ \ \ [[nodiscard]]\ virtual\ auto\ \mbox{\hyperlink{classType_a41731e639b5b5aa98cc39b21d8d6cab3}{clone}}(\textcolor{keywordtype}{size\_t}\ skip\_args\ =\ 0)\ const\ -\/>\ std::unique\_ptr<\mbox{\hyperlink{classType}{Type}}>\ =\ 0;}
+\DoxyCodeLine{00074\ \};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{comment}{/*}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ *\ @brief\ class\ representing\ a\ variable\ type}}
+\DoxyCodeLine{00078\ \textcolor{comment}{\ */}}
+\DoxyCodeLine{00079\ class\ \mbox{\hyperlink{classVarType_af92e6d4598a1db88a1ffa451e1a70009}{VarType}}\ :\ public\ \mbox{\hyperlink{classType}{Type}}\ \{}
+\DoxyCodeLine{00080\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00081\ \ \ \ \ BaseType\ type;\ \ \textcolor{comment}{//<\ the\ base\ type\ of\ the\ variable}}
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{bool}\ mut\ =\ \textcolor{keyword}{false};\ \ \textcolor{comment}{//<\ whether\ the\ variable\ is\ mutable}}
+\DoxyCodeLine{00083\ }
+\DoxyCodeLine{00084\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00092\ \ \ \ \ \mbox{\hyperlink{classVarType_af92e6d4598a1db88a1ffa451e1a70009}{VarType}}(BaseType\ type,\ \textcolor{keywordtype}{bool}\ mut);}
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{void}\ accept(\mbox{\hyperlink{classVisitor}{Visitor}}\ \&visitor)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00095\ \ \ \ \ }
+\DoxyCodeLine{00099\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classVarType_ac76fe7244b544b1eb83fead63b5c2c62}{get\_type}}()\ \textcolor{keyword}{const}\ -\/>\ BaseType;}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00104\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classType_ac8b581197cdc81a9aa8d562c6117c843}{get\_mut}}()\ \textcolor{keyword}{const}\ -\/>\ \textcolor{keywordtype}{bool}\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classType_a7e25e8b381dc6a8e9a348736016993d4}{is\_equal\_to}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{classType}{Type}}\ *other)\ \textcolor{keyword}{const}\ -\/>\ \textcolor{keywordtype}{bool}\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00116\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classVarType_ac10e5b23a969189c644c5ae8eb5d9aae}{get\_params}}()\ const\ -\/>\ std::vector<const\ \mbox{\hyperlink{classType}{Type}}\ *>\textcolor{keyword}{\ override\ }\{}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::runtime\_error(\textcolor{stringliteral}{"{}Variable\ type\ does\ not\ contain\ parameters"{}});}
+\DoxyCodeLine{00118\ \ \ \ \ \}}
+\DoxyCodeLine{00119\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classVarType_a9ff232c1c40e62c630d14f015f770a69}{get\_ret\_type}}()\ const\ -\/>\ const\ \mbox{\hyperlink{classType}{Type}}\ *\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{this};\ \}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00124\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classType_a41731e639b5b5aa98cc39b21d8d6cab3}{clone}}(\textcolor{keywordtype}{size\_t}\ =\ 0)\ const\ -\/>\ std::unique\_ptr<\mbox{\hyperlink{classType}{Type}}>\ override;}
+\DoxyCodeLine{00125\ \};}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00130\ class\ \mbox{\hyperlink{classFuncType_abf26a93204131e5ab1cea31d80bcfa1f}{FuncType}}\ :\ public\ \mbox{\hyperlink{classType}{Type}}\ \{}
+\DoxyCodeLine{00131\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00132\ \ \ \ \ std::unique\_ptr<Type>\ ret\_type;\ \ \textcolor{comment}{//<\ the\ return\ type\ of\ the\ function}}
+\DoxyCodeLine{00133\ \ \ \ \ std::vector<std::unique\_ptr<Type>>\ params;\ \ \textcolor{comment}{//<\ the\ parameters\ of\ the\ function}}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00141\ \ \ \ \ \mbox{\hyperlink{classFuncType_abf26a93204131e5ab1cea31d80bcfa1f}{FuncType}}(std::unique\_ptr<Type>\ ret\_type,\ std::vector<std::unique\_ptr<Type>>\ params);}
+\DoxyCodeLine{00142\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classFuncType_ad899ecf4d3f812b1f4a5d70df38e9150}{is\_func}}()\ const\ -\/>\ \textcolor{keywordtype}{bool}\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};\ \}}
+\DoxyCodeLine{00143\ \ \ \ \ \textcolor{keywordtype}{void}\ accept(\mbox{\hyperlink{classVisitor}{Visitor}}\ \&visitor)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00144\ }
+\DoxyCodeLine{00148\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classFuncType_a3cd8ca33d471de6c206c3a3aa3751612}{get\_mut}}()\ const\ -\/>\ \textcolor{keywordtype}{bool}\textcolor{keyword}{\ override\ }\{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};\ \}}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00153\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classType_abdd3c969c52ea1a15647208f0b6ac008}{get\_ret\_type}}()\ const\ -\/>\ const\ \mbox{\hyperlink{classType}{Type}}\ *\ override;}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00158\ \ \ \ \ [[nodiscard]]\ auto\ \mbox{\hyperlink{classType_aab5538c91c732314e63d9c72f6cb8f95}{get\_params}}()\ const\ -\/>\ std::vector<const\ \mbox{\hyperlink{classType}{Type}}\ *>\ override;}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00163\ \ \ \ \ auto\ \mbox{\hyperlink{classType_a7e25e8b381dc6a8e9a348736016993d4}{is\_equal\_to}}(const\ \mbox{\hyperlink{classType}{Type}}\ *other)\ const\ -\/>\ \textcolor{keywordtype}{bool}\ override;}
+\DoxyCodeLine{00164\ }
+\DoxyCodeLine{00169\ \ \ \ \ [[nodiscard]]\ auto\ \mbox{\hyperlink{classType_a41731e639b5b5aa98cc39b21d8d6cab3}{clone}}(\textcolor{keywordtype}{size\_t}\ skip\_args\ =\ 0)\ const\ -\/>\ std::unique\_ptr<\mbox{\hyperlink{classType}{Type}}>\ override;}
+\DoxyCodeLine{00170\ \};}
+
+\end{DoxyCode}

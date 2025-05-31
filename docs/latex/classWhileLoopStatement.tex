@@ -1,0 +1,80 @@
+\doxysection{While\+Loop\+Statement Class Reference}
+\hypertarget{classWhileLoopStatement}{}\label{classWhileLoopStatement}\index{WhileLoopStatement@{WhileLoopStatement}}
+
+
+Represents a conditional {\ttfamily if} or {\ttfamily elif} statement in the AST.  
+
+
+
+
+{\ttfamily \#include $<$statement\+\_\+specific.\+h$>$}
+
+Inheritance diagram for While\+Loop\+Statement\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classWhileLoopStatement}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classWhileLoopStatement_a01a18cb283e257eddb4ef8b7dea06160}\label{classWhileLoopStatement_a01a18cb283e257eddb4ef8b7dea06160} 
+{\bfseries While\+Loop\+Statement} (\mbox{\hyperlink{classPosition}{Position}} pos, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classExpression}{Expression}} $>$ condition, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classBlock}{Block}} $>$ body)
+\item 
+void \mbox{\hyperlink{classWhileLoopStatement_ac6806bdb33892a2b1af1c9229fd35666}{accept}} (\mbox{\hyperlink{classVisitor}{Visitor}} \&visitor) const override
+\item 
+\Hypertarget{classWhileLoopStatement_a590e5ff9a774beb9a1e5ef5d0751bf82}\label{classWhileLoopStatement_a590e5ff9a774beb9a1e5ef5d0751bf82} 
+auto {\bfseries get\+\_\+condition} () const -\/$>$ const \mbox{\hyperlink{classExpression}{Expression}} \texorpdfstring{$\ast$}{*}
+\item 
+\Hypertarget{classWhileLoopStatement_a2866bf8788e2a3917ae34a026f7d4466}\label{classWhileLoopStatement_a2866bf8788e2a3917ae34a026f7d4466} 
+auto {\bfseries get\+\_\+body} () const -\/$>$ const \mbox{\hyperlink{classBlock}{Block}} \texorpdfstring{$\ast$}{*}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classStatement}{Statement}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Statement} (const \mbox{\hyperlink{classPosition}{Position}} pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classNode}{Node}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_ad58eb6f069642c7f454679659bc2cbf9}{Node}} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto \mbox{\hyperlink{classNode_a6329ea38da23b81bfe58f5e200951818}{get\+\_\+position}} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classWhileLoopStatement_ab48a083e3ec6db55e5667f2af8dd73db}\label{classWhileLoopStatement_ab48a083e3ec6db55e5667f2af8dd73db} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classExpression}{Expression}} $>$ {\bfseries condition}
+\item 
+\Hypertarget{classWhileLoopStatement_a41b7f5ae30bfb3029bfaae8a958c8584}\label{classWhileLoopStatement_a41b7f5ae30bfb3029bfaae8a958c8584} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classBlock}{Block}} $>$ {\bfseries body}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Static Protected Member Functions inherited from \mbox{\hyperlink{classStatement}{Statement}}}
+\begin{DoxyCompactItemize}
+\item 
+static auto {\bfseries indent\+\_\+str} (int amount) -\/$>$ std\+::string
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a conditional {\ttfamily if} or {\ttfamily elif} statement in the AST. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classWhileLoopStatement_ac6806bdb33892a2b1af1c9229fd35666}\index{WhileLoopStatement@{WhileLoopStatement}!accept@{accept}}
+\index{accept@{accept}!WhileLoopStatement@{WhileLoopStatement}}
+\doxysubsubsection{\texorpdfstring{accept()}{accept()}}
+{\footnotesize\ttfamily \label{classWhileLoopStatement_ac6806bdb33892a2b1af1c9229fd35666} 
+void While\+Loop\+Statement\+::accept (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classVisitor}{Visitor}} \&}]{visitor}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classStatement}{Statement}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{statement__specific_8h}{statement\+\_\+specific.\+h}}\item 
+src/parser/statement.\+cpp\end{DoxyCompactItemize}

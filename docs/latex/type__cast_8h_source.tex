@@ -1,0 +1,60 @@
+\doxysection{type\+\_\+cast.\+h}
+\hypertarget{type__cast_8h_source}{}\label{type__cast_8h_source}\index{include/type\_cast.h@{include/type\_cast.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{exceptions_8h}{exceptions.h}}"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}local\_function.h"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structTypeCast}{TypeCast}}\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(std::shared\_ptr<Callable>\ a,\ std::shared\_ptr<Callable>\ b)\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (a-\/>get\_type()-\/>is\_equal\_to(b-\/>get\_type()))\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \mbox{\hyperlink{classInterpreterError}{InterpreterError}}(\textcolor{stringliteral}{"{}Functions\ have\ a\ different\ number\ of\ parameters"{}});}
+\DoxyCodeLine{00021\ \ \ \ \ \}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_aacfaf22116570df9d24efd01235f1c8f}{operator()}}(T\ a,\ T)\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ a;}
+\DoxyCodeLine{00029\ \ \ \ \ \}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(\textcolor{keywordtype}{int}\ a,\ \textcolor{keywordtype}{double})\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{double}\textcolor{keyword}{>}(a);\ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(\textcolor{keywordtype}{double}\ a,\ \textcolor{keywordtype}{int})\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{int}\textcolor{keyword}{>}(a);\ \}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(std::string\ a,\ \textcolor{keywordtype}{int})\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ result\ =\ std::stoi(a);}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (std::exception\&\ e)\ \{}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ InterpreterError(\textcolor{stringliteral}{"{}Cannot\ cast\ "{}}\ +\ a\ +\ \textcolor{stringliteral}{"{}\ to\ int"{}});}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00041\ \ \ \ \ \}}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(\textcolor{keywordtype}{int}\ a,\ std::string)\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{\ \textcolor{keywordflow}{return}\ std::to\_string(a);\ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(std::string\ a,\ \textcolor{keywordtype}{double})\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{try}\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{double}\ result\ =\ std::stod(a);}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ result;}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \}\ \textcolor{keywordflow}{catch}\ (std::exception\&\ e)\ \{}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ InterpreterError(\textcolor{stringliteral}{"{}Cannot\ cast\ "{}}\ +\ a\ +\ \textcolor{stringliteral}{"{}\ to\ double"{}});}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(\textcolor{keywordtype}{double}\ a,\ std::string)\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{\ \textcolor{keywordflow}{return}\ std::to\_string(a);\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(\textcolor{keywordtype}{bool}\ a,\ \textcolor{keywordtype}{int})\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{\ \textcolor{keywordflow}{return}\ a\ ?\ 1\ :\ 0;\ \}}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(\textcolor{keywordtype}{int}\ a,\ \textcolor{keywordtype}{bool})\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{bool}\textcolor{keyword}{>}(a);\ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(\textcolor{keywordtype}{bool}\ a,\ \textcolor{keywordtype}{double})\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{\ \textcolor{keywordflow}{return}\ a\ ?\ 1.0\ :\ 0.0;\ \}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(\textcolor{keywordtype}{double}\ a,\ \textcolor{keywordtype}{bool})\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{\ \textcolor{keywordflow}{return}\ \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{bool}\textcolor{keyword}{>}(a);\ \}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_ac203141c22101895fbb9fa0a37959795}{operator()}}(std::string\ a,\ \textcolor{keywordtype}{bool})\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{\ \textcolor{keywordflow}{return}\ a.empty();\ \}}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ A,\ \textcolor{keyword}{typename}\ B>}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{structTypeCast_a15ce4f70c85642027c534827ad247a8f}{operator()}}(A,\ B)\ -\/>\ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{ValType}}\ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \mbox{\hyperlink{classInterpreterError}{InterpreterError}}(\textcolor{stringliteral}{"{}Cannot\ cast\ type"{}});}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ \};}
+\DoxyCodeLine{00069\ }
+
+\end{DoxyCode}

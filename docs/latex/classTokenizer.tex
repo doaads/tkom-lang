@@ -1,0 +1,328 @@
+\doxysection{Tokenizer Class Reference}
+\hypertarget{classTokenizer}{}\label{classTokenizer}\index{Tokenizer@{Tokenizer}}
+
+
+class representing the main part of the lexical analyzer  
+
+
+
+
+{\ttfamily \#include $<$tokenizer.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classTokenizer_a7c7e51c72eea1f159f11d6f2da026df5}\label{classTokenizer_a7c7e51c72eea1f159f11d6f2da026df5} 
+{\bfseries Tokenizer} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classInputManager}{Input\+Manager}} $>$ input)
+\item 
+auto \mbox{\hyperlink{classTokenizer_a714e301deacd2e4b1b597bd43d22eea9}{get\+\_\+token}} () -\/$>$ \mbox{\hyperlink{classToken}{Token}}
+\begin{DoxyCompactList}\small\item\em request the next token \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+auto \mbox{\hyperlink{classTokenizer_a7bac7625a4da3a1f8b56c69f0235a915}{start\+\_\+build\+\_\+token}} (\mbox{\hyperlink{classPosition}{Position}} \&pos) -\/$>$ \mbox{\hyperlink{classToken}{Token}}
+\begin{DoxyCompactList}\small\item\em start building a token at the given position \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classTokenizer_a17a5b7a13380094cc7be641e1d0c10b0}{build\+\_\+token}} (char current\+\_\+token) -\/$>$ \mbox{\hyperlink{classToken}{Token}}
+\begin{DoxyCompactList}\small\item\em attempt to create a token from the given character \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classTokenizer_a95ec723568174684aeb26ac8078fe287}{build\+\_\+identifier}} (char current\+\_\+char) const -\/$>$ Opt\+Token
+\begin{DoxyCompactList}\small\item\em try building an identifier token consisting of alphanumeric chars and \textquotesingle{}\+\_\+\textquotesingle{} \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classTokenizer_af1107d1ae78f16305b1003304c700342}{build\+\_\+number}} (char current\+\_\+char) const -\/$>$ Opt\+Token
+\begin{DoxyCompactList}\small\item\em try building a number, integer or float \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classTokenizer_af9fc5c8192d8d92dc6876da278f37af9}{build\+\_\+string}} (char current\+\_\+char) const -\/$>$ Opt\+Token
+\begin{DoxyCompactList}\small\item\em try building a string \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classTokenizer_a1ca692e127b2e80cd95cc17da5e0bd04}{build\+\_\+short\+\_\+operator}} (char current\+\_\+char) const -\/$>$ Opt\+Token
+\begin{DoxyCompactList}\small\item\em try building a short operator \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classTokenizer_a53ca123a70840dbc61e14ac0f2a1af03}{start\+\_\+build\+\_\+long\+\_\+operator}} (char current\+\_\+char) const -\/$>$ Opt\+Token
+\begin{DoxyCompactList}\small\item\em try building a multi-\/character operator \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classTokenizer_a8d597d90559820e746d00a555782ee46}{build\+\_\+long\+\_\+operator}} (Token\+Type type) const -\/$>$ Opt\+Token
+\begin{DoxyCompactList}\small\item\em continue building a long operator \end{DoxyCompactList}\item 
+\Hypertarget{classTokenizer_ac94788eeb0ab0f6ecfd290a4c0e165a6}\label{classTokenizer_ac94788eeb0ab0f6ecfd290a4c0e165a6} 
+auto {\bfseries get\+\_\+type\+\_\+for\+\_\+operator} (char c) const -\/$>$ Map\+Token\+Type
+\begin{DoxyCompactList}\small\item\em get the token type for a short operator represented by a given char \end{DoxyCompactList}\item 
+\Hypertarget{classTokenizer_ad453aac99d4362eaa5ec0b9c636b124d}\label{classTokenizer_ad453aac99d4362eaa5ec0b9c636b124d} 
+auto {\bfseries get\+\_\+type\+\_\+for\+\_\+first\+\_\+op\+\_\+char} (char c) const -\/$>$ Map\+Token\+Type
+\begin{DoxyCompactList}\small\item\em get the token type for a start of a long operator represented by a given char \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{classTokenizer_a6d6ce9712b10437ff25833566ba91b64}{get\+\_\+type\+\_\+for\+\_\+long\+\_\+op}} (char c, Token\+Type type) const -\/$>$ Map\+Token\+Type
+\begin{DoxyCompactList}\small\item\em get the continuation of a currently built operator, for a given char \end{DoxyCompactList}\item 
+\Hypertarget{classTokenizer_aa623ead9325fa2c152005ebe5f0c9116}\label{classTokenizer_aa623ead9325fa2c152005ebe5f0c9116} 
+auto {\bfseries get\+\_\+keyword\+\_\+for\+\_\+string} (std\+::string value) const -\/$>$ Map\+Token\+Type
+\begin{DoxyCompactList}\small\item\em get the keyword token type for a keyword \end{DoxyCompactList}\item 
+\Hypertarget{classTokenizer_a29ac7187f76a7072724530077306e42f}\label{classTokenizer_a29ac7187f76a7072724530077306e42f} 
+auto {\bfseries get\+\_\+char\+\_\+for\+\_\+escape} (char c) const -\/$>$ char
+\begin{DoxyCompactList}\small\item\em get the char for an escape \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classTokenizer_aa1f46ba1e6ddc82d75f2642c64418808}\label{classTokenizer_aa1f46ba1e6ddc82d75f2642c64418808} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classInputManager}{Input\+Manager}} $>$ {\bfseries input}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const std\+::unordered\+\_\+map$<$ std\+::string, Token\+Type $>$ \mbox{\hyperlink{classTokenizer_a11660d0d3dea3c57607f3d41e061c6a8}{keyword\+\_\+tokens}}
+\item 
+static const std\+::unordered\+\_\+map$<$ char, Token\+Type $>$ \mbox{\hyperlink{classTokenizer_a070bdaf9020377c9fdbacdd5e9cd32d9}{first\+\_\+char\+\_\+tokens}}
+\item 
+static const std\+::unordered\+\_\+map$<$ char, Token\+Type $>$ \mbox{\hyperlink{classTokenizer_ab5d0baa7a80e0afeaf8aea9f2d2e72f2}{operator\+\_\+tokens}}
+\item 
+static const std\+::map$<$ std\+::pair$<$ char, Token\+Type $>$, Token\+Type $>$ \mbox{\hyperlink{classTokenizer_a56d0978b6ed3978e2454dcf2891eb33a}{long\+\_\+operator\+\_\+tokens}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+class representing the main part of the lexical analyzer 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classTokenizer_a95ec723568174684aeb26ac8078fe287}\index{Tokenizer@{Tokenizer}!build\_identifier@{build\_identifier}}
+\index{build\_identifier@{build\_identifier}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{build\_identifier()}{build\_identifier()}}
+{\footnotesize\ttfamily \label{classTokenizer_a95ec723568174684aeb26ac8078fe287} 
+auto Tokenizer\+::build\+\_\+identifier (\begin{DoxyParamCaption}\item[{char}]{current\+\_\+char}{}\end{DoxyParamCaption}) const -\/$>$ Opt\+Token\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [private]}}
+
+
+
+try building an identifier token consisting of alphanumeric chars and \textquotesingle{}\+\_\+\textquotesingle{} 
+
+The character must be an alphanumeric char or \textquotesingle{}\+\_\+\textquotesingle{}
+
+
+\begin{DoxyParams}{Parameters}
+{\em current\+\_\+char} & the character from which the token starts \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classTokenizer_a8d597d90559820e746d00a555782ee46}\index{Tokenizer@{Tokenizer}!build\_long\_operator@{build\_long\_operator}}
+\index{build\_long\_operator@{build\_long\_operator}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{build\_long\_operator()}{build\_long\_operator()}}
+{\footnotesize\ttfamily \label{classTokenizer_a8d597d90559820e746d00a555782ee46} 
+auto Tokenizer\+::build\+\_\+long\+\_\+operator (\begin{DoxyParamCaption}\item[{Token\+Type}]{type}{}\end{DoxyParamCaption}) const -\/$>$ Opt\+Token\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [private]}}
+
+
+
+continue building a long operator 
+
+The character must be a valid continuation of the previously created operator
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & the type of the operator which we will extend \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classTokenizer_af1107d1ae78f16305b1003304c700342}\index{Tokenizer@{Tokenizer}!build\_number@{build\_number}}
+\index{build\_number@{build\_number}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{build\_number()}{build\_number()}}
+{\footnotesize\ttfamily \label{classTokenizer_af1107d1ae78f16305b1003304c700342} 
+auto Tokenizer\+::build\+\_\+number (\begin{DoxyParamCaption}\item[{char}]{current\+\_\+char}{}\end{DoxyParamCaption}) const -\/$>$ Opt\+Token\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [private]}}
+
+
+
+try building a number, integer or float 
+
+The character must be a non-\/zero digit
+
+
+\begin{DoxyParams}{Parameters}
+{\em current\+\_\+char} & the character from which the token starts \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classTokenizer_a1ca692e127b2e80cd95cc17da5e0bd04}\index{Tokenizer@{Tokenizer}!build\_short\_operator@{build\_short\_operator}}
+\index{build\_short\_operator@{build\_short\_operator}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{build\_short\_operator()}{build\_short\_operator()}}
+{\footnotesize\ttfamily \label{classTokenizer_a1ca692e127b2e80cd95cc17da5e0bd04} 
+auto Tokenizer\+::build\+\_\+short\+\_\+operator (\begin{DoxyParamCaption}\item[{char}]{current\+\_\+char}{}\end{DoxyParamCaption}) const -\/$>$ Opt\+Token\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [private]}}
+
+
+
+try building a short operator 
+
+The character must be a valid one-\/char-\/long operator
+
+
+\begin{DoxyParams}{Parameters}
+{\em current\+\_\+char} & the character from which the token starts \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classTokenizer_af9fc5c8192d8d92dc6876da278f37af9}\index{Tokenizer@{Tokenizer}!build\_string@{build\_string}}
+\index{build\_string@{build\_string}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{build\_string()}{build\_string()}}
+{\footnotesize\ttfamily \label{classTokenizer_af9fc5c8192d8d92dc6876da278f37af9} 
+auto Tokenizer\+::build\+\_\+string (\begin{DoxyParamCaption}\item[{char}]{current\+\_\+char}{}\end{DoxyParamCaption}) const -\/$>$ Opt\+Token\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [private]}}
+
+
+
+try building a string 
+
+The character must be a \textquotesingle{}"{}\textquotesingle{}
+
+
+\begin{DoxyParams}{Parameters}
+{\em current\+\_\+char} & the character from which the token starts \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classTokenizer_a17a5b7a13380094cc7be641e1d0c10b0}\index{Tokenizer@{Tokenizer}!build\_token@{build\_token}}
+\index{build\_token@{build\_token}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{build\_token()}{build\_token()}}
+{\footnotesize\ttfamily \label{classTokenizer_a17a5b7a13380094cc7be641e1d0c10b0} 
+auto Tokenizer\+::build\+\_\+token (\begin{DoxyParamCaption}\item[{char}]{current\+\_\+token}{}\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{classToken}{Token}}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+attempt to create a token from the given character 
+
+Try to build each token going through the possible ones one-\/by-\/one Throw if none of the builders return a valid token
+
+
+\begin{DoxyParams}{Parameters}
+{\em current\+\_\+char} & the character from which the token starts \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classTokenizer_a714e301deacd2e4b1b597bd43d22eea9}\index{Tokenizer@{Tokenizer}!get\_token@{get\_token}}
+\index{get\_token@{get\_token}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{get\_token()}{get\_token()}}
+{\footnotesize\ttfamily \label{classTokenizer_a714e301deacd2e4b1b597bd43d22eea9} 
+auto Tokenizer\+::get\+\_\+token (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{classToken}{Token}}}
+
+
+
+request the next token 
+
+Continue parsing the file until a full token is built, then return the token \Hypertarget{classTokenizer_a6d6ce9712b10437ff25833566ba91b64}\index{Tokenizer@{Tokenizer}!get\_type\_for\_long\_op@{get\_type\_for\_long\_op}}
+\index{get\_type\_for\_long\_op@{get\_type\_for\_long\_op}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{get\_type\_for\_long\_op()}{get\_type\_for\_long\_op()}}
+{\footnotesize\ttfamily \label{classTokenizer_a6d6ce9712b10437ff25833566ba91b64} 
+auto Tokenizer\+::get\+\_\+type\+\_\+for\+\_\+long\+\_\+op (\begin{DoxyParamCaption}\item[{char}]{c}{, }\item[{Token\+Type}]{type}{}\end{DoxyParamCaption}) const -\/$>$ Map\+Token\+Type\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [private]}}
+
+
+
+get the continuation of a currently built operator, for a given char 
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & the type of the token we are extending \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classTokenizer_a53ca123a70840dbc61e14ac0f2a1af03}\index{Tokenizer@{Tokenizer}!start\_build\_long\_operator@{start\_build\_long\_operator}}
+\index{start\_build\_long\_operator@{start\_build\_long\_operator}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{start\_build\_long\_operator()}{start\_build\_long\_operator()}}
+{\footnotesize\ttfamily \label{classTokenizer_a53ca123a70840dbc61e14ac0f2a1af03} 
+auto Tokenizer\+::start\+\_\+build\+\_\+long\+\_\+operator (\begin{DoxyParamCaption}\item[{char}]{current\+\_\+char}{}\end{DoxyParamCaption}) const -\/$>$ Opt\+Token\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [private]}}
+
+
+
+try building a multi-\/character operator 
+
+The character must be a valid first-\/character of a long operator
+
+
+\begin{DoxyParams}{Parameters}
+{\em current\+\_\+char} & the character from which the token starts \\
+\hline
+\end{DoxyParams}
+\Hypertarget{classTokenizer_a7bac7625a4da3a1f8b56c69f0235a915}\index{Tokenizer@{Tokenizer}!start\_build\_token@{start\_build\_token}}
+\index{start\_build\_token@{start\_build\_token}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{start\_build\_token()}{start\_build\_token()}}
+{\footnotesize\ttfamily \label{classTokenizer_a7bac7625a4da3a1f8b56c69f0235a915} 
+auto Tokenizer\+::start\+\_\+build\+\_\+token (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPosition}{Position}} \&}]{pos}{}\end{DoxyParamCaption}) -\/$>$ \mbox{\hyperlink{classToken}{Token}}\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+start building a token at the given position 
+
+Start building a token, skipping through all whitespace until a non-\/whitespace character is found
+
+
+\begin{DoxyParams}{Parameters}
+{\em pos} & the current position in the source document \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\Hypertarget{classTokenizer_a070bdaf9020377c9fdbacdd5e9cd32d9}\index{Tokenizer@{Tokenizer}!first\_char\_tokens@{first\_char\_tokens}}
+\index{first\_char\_tokens@{first\_char\_tokens}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{first\_char\_tokens}{first\_char\_tokens}}
+{\footnotesize\ttfamily \label{classTokenizer_a070bdaf9020377c9fdbacdd5e9cd32d9} 
+const std\+::unordered\+\_\+map$<$ char, Token\+Type $>$ Tokenizer\+::first\+\_\+char\+\_\+tokens\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{charliteral}{'='},\ TokenType::T\_EQ\_ST\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{charliteral}{'|'},\ TokenType::T\_OR\_ST\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{charliteral}{'\&'},\ TokenType::T\_AND\_ST\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{charliteral}{':'},\ TokenType::T\_FUNC\_SIGN\_ST\},}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\Hypertarget{classTokenizer_a11660d0d3dea3c57607f3d41e061c6a8}\index{Tokenizer@{Tokenizer}!keyword\_tokens@{keyword\_tokens}}
+\index{keyword\_tokens@{keyword\_tokens}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{keyword\_tokens}{keyword\_tokens}}
+{\footnotesize\ttfamily \label{classTokenizer_a11660d0d3dea3c57607f3d41e061c6a8} 
+const std\+::unordered\+\_\+map$<$ std\+::string, Token\+Type $>$ Tokenizer\+::keyword\+\_\+tokens\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}int"{}},\ TokenType::T\_INT\_TYPE\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}flt"{}},\ TokenType::T\_FLT\_TYPE\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}string"{}},\ TokenType::T\_STRING\_TYPE\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}int"{}},\ TokenType::T\_INT\_TYPE\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}void"{}},\ TokenType::T\_VOID\_TYPE\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}ret"{}},\ TokenType::T\_RET\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}while"{}},\ TokenType::T\_WHILE\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}for"{}},\ TokenType::T\_FOR\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}if"{}},\ TokenType::T\_IF\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}elif"{}},\ TokenType::T\_ELIF\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}else"{}},\ TokenType::T\_ELSE\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}mut"{}},\ TokenType::T\_MUT\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}bool"{}},\ TokenType::T\_BOOL\_TYPE\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}true"{}},\ TokenType::T\_BOOL\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{stringliteral}{"{}false"{}},\ TokenType::T\_BOOL\},}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\Hypertarget{classTokenizer_a56d0978b6ed3978e2454dcf2891eb33a}\index{Tokenizer@{Tokenizer}!long\_operator\_tokens@{long\_operator\_tokens}}
+\index{long\_operator\_tokens@{long\_operator\_tokens}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{long\_operator\_tokens}{long\_operator\_tokens}}
+{\footnotesize\ttfamily \label{classTokenizer_a56d0978b6ed3978e2454dcf2891eb33a} 
+const std\+::map$<$ std\+::pair$<$ char, Token\+Type $>$, Token\+Type $>$ Tokenizer\+::long\+\_\+operator\+\_\+tokens\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \{std::pair<char,\ TokenType>(\textcolor{charliteral}{'>'},\ TokenType::T\_MINUS),\ TokenType::T\_CALL\},}
+\DoxyCodeLine{\ \ \ \ \{std::pair<char,\ TokenType>(\textcolor{charliteral}{'>'},\ TokenType::T\_CALL),\ TokenType::T\_BINDFRT\},}
+\DoxyCodeLine{\ \ \ \ \{std::pair<char,\ TokenType>(\textcolor{charliteral}{'='},\ TokenType::T\_NOT),\ TokenType::T\_NEQ\},}
+\DoxyCodeLine{\ \ \ \ \{std::pair<char,\ TokenType>(\textcolor{charliteral}{'='},\ TokenType::T\_GT),\ TokenType::T\_GTE\},}
+\DoxyCodeLine{\ \ \ \ \{std::pair<char,\ TokenType>(\textcolor{charliteral}{'='},\ TokenType::T\_LT),\ TokenType::T\_LTE\},}
+\DoxyCodeLine{\ \ \ \ \{std::pair<char,\ TokenType>(\textcolor{charliteral}{'>'},\ TokenType::T\_EQ\_ST),\ TokenType::T\_ASSIGN\},}
+\DoxyCodeLine{\ \ \ \ \{std::pair<char,\ TokenType>(\textcolor{charliteral}{'='},\ TokenType::T\_EQ\_ST),\ TokenType::T\_EQ\},}
+\DoxyCodeLine{\ \ \ \ \{std::pair<char,\ TokenType>(\textcolor{charliteral}{'\&'},\ TokenType::T\_AND\_ST),\ TokenType::T\_AND\},}
+\DoxyCodeLine{\ \ \ \ \{std::pair<char,\ TokenType>(\textcolor{charliteral}{'|'},\ TokenType::T\_OR\_ST),\ TokenType::T\_OR\},}
+\DoxyCodeLine{\ \ \ \ \{std::pair<char,\ TokenType>(\textcolor{charliteral}{'/'},\ TokenType::T\_DIV),\ TokenType::T\_COMMENT\},}
+\DoxyCodeLine{\ \ \ \ \{std::pair<char,\ TokenType>(\textcolor{charliteral}{':'},\ TokenType::T\_FUNC\_SIGN\_ST),\ TokenType::T\_FUNC\_SIGN\},}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\Hypertarget{classTokenizer_ab5d0baa7a80e0afeaf8aea9f2d2e72f2}\index{Tokenizer@{Tokenizer}!operator\_tokens@{operator\_tokens}}
+\index{operator\_tokens@{operator\_tokens}!Tokenizer@{Tokenizer}}
+\doxysubsubsection{\texorpdfstring{operator\_tokens}{operator\_tokens}}
+{\footnotesize\ttfamily \label{classTokenizer_ab5d0baa7a80e0afeaf8aea9f2d2e72f2} 
+const std\+::unordered\+\_\+map$<$ char, Token\+Type $>$ Tokenizer\+::operator\+\_\+tokens\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{charliteral}{'-\/'},\ TokenType::T\_MINUS\},\ \ \ \ \{\textcolor{charliteral}{'+'},\ TokenType::T\_PLUS\},\ \ \ \ \ \ \{\textcolor{charliteral}{'*'},\ TokenType::T\_MULT\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{charliteral}{'/'},\ TokenType::T\_DIV\},\ \ \ \ \ \ \{\textcolor{charliteral}{'@'},\ TokenType::T\_DECORATE\},\ \ \{\textcolor{charliteral}{'-\/'},\ TokenType::T\_MINUS\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{charliteral}{'!'},\ TokenType::T\_NOT\},\ \ \ \ \ \ \{\textcolor{charliteral}{'>'},\ TokenType::T\_GT\},\ \ \ \ \ \ \ \ \{\textcolor{charliteral}{'<'},\ TokenType::T\_LT\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{charliteral}{'('},\ TokenType::T\_LPAREN\},\ \ \ \{\textcolor{charliteral}{')'},\ TokenType::T\_RPAREN\},\ \ \ \ \{\textcolor{charliteral}{'\{'},\ TokenType::T\_LBLOCK\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{charliteral}{'\}'},\ TokenType::T\_RBLOCK\},\ \ \ \{\textcolor{charliteral}{';'},\ TokenType::T\_SEMICOLON\},\ \{\textcolor{charliteral}{','},\ TokenType::T\_COMMA\},}
+\DoxyCodeLine{\ \ \ \ \{\textcolor{charliteral}{'\_'},\ TokenType::T\_WILDCARD\},\ \{\textcolor{charliteral}{'['},\ TokenType::T\_LFTYPE\},\ \ \ \ \{\textcolor{charliteral}{']'},\ TokenType::T\_RFTYPE\}\}}
+
+\end{DoxyCode}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/tokenizer.\+h\item 
+src/tokenizer/tokenizer.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,52 @@
+\doxysection{include/builtin\+\_\+helpers.h File Reference}
+\hypertarget{builtin__helpers_8h}{}\label{builtin__helpers_8h}\index{include/builtin\_helpers.h@{include/builtin\_helpers.h}}
+{\ttfamily \#include $<$deque$>$}\newline
+{\ttfamily \#include "{}interpreter\+\_\+helpers.\+h"{}}\newline
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{builtin__helpers_8h_af96db37da8ad31afcb4038192e485658}{modify\+\_\+value}} (\mbox{\hyperlink{interpreter__helpers_8h_a64c3c6fb006bd3fe9704b59bf93aa323}{Arg}} \&arg, \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}} value)
+\begin{DoxyCompactList}\small\item\em modify a variable\textquotesingle{}s value. \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{builtin__helpers_8h_a98f97d81ab3fe4a00cf9faaa92871720}{get\+\_\+value}} (\mbox{\hyperlink{interpreter__helpers_8h_a64c3c6fb006bd3fe9704b59bf93aa323}{Arg}} \&arg) -\/$>$ \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}
+\begin{DoxyCompactList}\small\item\em get a variable\textquotesingle{}s value \end{DoxyCompactList}\item 
+auto \mbox{\hyperlink{builtin__helpers_8h_ab8663b3fc5d0cb4b719849c91303c6f4}{build\+\_\+type}} (std\+::deque$<$ \mbox{\hyperlink{classVarType}{Var\+Type}} $>$ args) -\/$>$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classType}{Type}} $>$
+\begin{DoxyCompactList}\small\item\em build a function type \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Helper functions for easier inplementation of builtin functions 
+
+\doxysubsection{Function Documentation}
+\Hypertarget{builtin__helpers_8h_ab8663b3fc5d0cb4b719849c91303c6f4}\index{builtin\_helpers.h@{builtin\_helpers.h}!build\_type@{build\_type}}
+\index{build\_type@{build\_type}!builtin\_helpers.h@{builtin\_helpers.h}}
+\doxysubsubsection{\texorpdfstring{build\_type()}{build\_type()}}
+{\footnotesize\ttfamily \label{builtin__helpers_8h_ab8663b3fc5d0cb4b719849c91303c6f4} 
+auto build\+\_\+type (\begin{DoxyParamCaption}\item[{std\+::deque$<$ \mbox{\hyperlink{classVarType}{Var\+Type}} $>$}]{args}{}\end{DoxyParamCaption}) -\/$>$  std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classType}{Type}} $>$}
+
+
+
+build a function type 
+
+The argument must be a std\+::deque containing the return type as the first element and argument types following it
+
+build a function type \Hypertarget{builtin__helpers_8h_a98f97d81ab3fe4a00cf9faaa92871720}\index{builtin\_helpers.h@{builtin\_helpers.h}!get\_value@{get\_value}}
+\index{get\_value@{get\_value}!builtin\_helpers.h@{builtin\_helpers.h}}
+\doxysubsubsection{\texorpdfstring{get\_value()}{get\_value()}}
+{\footnotesize\ttfamily \label{builtin__helpers_8h_a98f97d81ab3fe4a00cf9faaa92871720} 
+auto get\+\_\+value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interpreter__helpers_8h_a64c3c6fb006bd3fe9704b59bf93aa323}{Arg}} \&}]{arg}{}\end{DoxyParamCaption}) -\/$>$  \mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}}
+
+
+
+get a variable\textquotesingle{}s value 
+
+get a variable\textquotesingle{}s value \Hypertarget{builtin__helpers_8h_af96db37da8ad31afcb4038192e485658}\index{builtin\_helpers.h@{builtin\_helpers.h}!modify\_value@{modify\_value}}
+\index{modify\_value@{modify\_value}!builtin\_helpers.h@{builtin\_helpers.h}}
+\doxysubsubsection{\texorpdfstring{modify\_value()}{modify\_value()}}
+{\footnotesize\ttfamily \label{builtin__helpers_8h_af96db37da8ad31afcb4038192e485658} 
+void modify\+\_\+value (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interpreter__helpers_8h_a64c3c6fb006bd3fe9704b59bf93aa323}{Arg}} \&}]{arg}{, }\item[{\mbox{\hyperlink{interpreter__helpers_8h_a2510b2edc139843ff4194c43706d0b9a}{Val\+Type}}}]{value}{}\end{DoxyParamCaption})}
+
+
+
+modify a variable\textquotesingle{}s value. 
+
+modify a variable\textquotesingle{}s value. 

@@ -1,0 +1,24 @@
+\doxysection{operators.\+h}
+\hypertarget{operators_8h_source}{}\label{operators_8h_source}\index{include/operators.h@{include/operators.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <optional>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <ostream>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}tokens.h"{}}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{enum\ class}\ UnaryOp\ \{\ NOT,\ MINUS\ \};}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{auto}\ operator<<(std::ostream\ \&os,\ \textcolor{keyword}{const}\ UnaryOp\ \&token)\ -\/>\ std::ostream\ \&;}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{enum\ class}\ BinaryOp\ \{\ OR,\ AND,\ NEQ,\ EQ,\ LT,\ LTE,\ GT,\ GTE,\ ADD,\ SUB,\ DIV,\ MULT,\ DECORATE\ \};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{auto}\ operator<<(std::ostream\ \&os,\ \textcolor{keyword}{const}\ BinaryOp\ \&token)\ -\/>\ std::ostream\ \&;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{auto}\ token\_to\_unary\_op(TokenType\ type)\ -\/>\ std::optional<UnaryOp>;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{auto}\ token\_to\_binary\_op(TokenType\ type)\ -\/>\ std::optional<BinaryOp>;}
+
+\end{DoxyCode}

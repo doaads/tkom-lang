@@ -1,0 +1,29 @@
+\doxysection{block.\+h}
+\hypertarget{block_8h_source}{}\label{block_8h_source}\index{include/block.h@{include/block.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}node.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{statement_8h}{statement.h}}"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classParserPrinter}{ParserPrinter}};}
+\DoxyCodeLine{00010\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classVisitor}{Visitor}};}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }Block\ :\ \textcolor{keyword}{public}\ Node\ \{}
+\DoxyCodeLine{00016\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00017\ \ \ \ \ std::vector<std::unique\_ptr<Statement>>\ statements;\ \ \textcolor{comment}{//<\ the\ block's\ body}}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ Block(std::vector<std::unique\_ptr<Statement>>\ statements);}
+\DoxyCodeLine{00021\ \ \ \ \ \string~Block()\ \textcolor{keyword}{override}\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keywordtype}{void}\ accept(\mbox{\hyperlink{classVisitor}{Visitor}}\ \&visitor)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00028\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classBlock_a964bfefc9cc0a3b3e28aa3f1793cc68b}{get\_statements}}()\ \textcolor{keyword}{const}\ -\/>\ std::vector<const\ Statement\ *>;}
+\DoxyCodeLine{00029\ \};}
+
+\end{DoxyCode}

@@ -1,0 +1,74 @@
+\doxysection{Bind\+Frt\+Expr Class Reference}
+\hypertarget{classBindFrtExpr}{}\label{classBindFrtExpr}\index{BindFrtExpr@{BindFrtExpr}}
+
+
+Represents a bind front-\/right expression (used in specific language features).  
+
+
+
+
+{\ttfamily \#include $<$expression.\+h$>$}
+
+Inheritance diagram for Bind\+Frt\+Expr\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classBindFrtExpr}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classBindFrtExpr_acb3597b1d17cd51d687a9adf68848189}\label{classBindFrtExpr_acb3597b1d17cd51d687a9adf68848189} 
+{\bfseries Bind\+Frt\+Expr} (const \mbox{\hyperlink{classPosition}{Position}} pos, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classExpression}{Expression}} $>$ name, std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classExpression}{Expression}} $>$ $>$ args)
+\item 
+void \mbox{\hyperlink{classBindFrtExpr_af3ff611d25d617bd06a1531c81c22e79}{accept}} (\mbox{\hyperlink{classVisitor}{Visitor}} \&visitor) const override
+\item 
+\Hypertarget{classBindFrtExpr_a1868bd207484d5240f710d41b1f08817}\label{classBindFrtExpr_a1868bd207484d5240f710d41b1f08817} 
+auto {\bfseries get\+\_\+func\+\_\+name} () const -\/$>$ const \mbox{\hyperlink{classExpression}{Expression}} \texorpdfstring{$\ast$}{*}
+\item 
+\Hypertarget{classBindFrtExpr_a48c52ce5b496ab98c1ba52a464177535}\label{classBindFrtExpr_a48c52ce5b496ab98c1ba52a464177535} 
+auto {\bfseries get\+\_\+args} () const -\/$>$ const std\+::vector$<$ const \mbox{\hyperlink{classExpression}{Expression}} \texorpdfstring{$\ast$}{*} $>$
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classExpression}{Expression}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classExpression_add91c65717707728b11e516d3199d269}{Expression}} (const \mbox{\hyperlink{classPosition}{Position}} pos)
+\begin{DoxyCompactList}\small\item\em Constructor for the \doxylink{classExpression}{Expression} class. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classNode}{Node}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_ad58eb6f069642c7f454679659bc2cbf9}{Node}} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto \mbox{\hyperlink{classNode_a6329ea38da23b81bfe58f5e200951818}{get\+\_\+position}} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classBindFrtExpr_a7ec517464eff9299ae2281f15e1f4e18}\label{classBindFrtExpr_a7ec517464eff9299ae2281f15e1f4e18} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classExpression}{Expression}} $>$ {\bfseries func\+\_\+name}
+\item 
+\Hypertarget{classBindFrtExpr_a46ddbe4fb8526572937b87ad524a462b}\label{classBindFrtExpr_a46ddbe4fb8526572937b87ad524a462b} 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classExpression}{Expression}} $>$ $>$ {\bfseries args}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a bind front-\/right expression (used in specific language features). 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classBindFrtExpr_af3ff611d25d617bd06a1531c81c22e79}\index{BindFrtExpr@{BindFrtExpr}!accept@{accept}}
+\index{accept@{accept}!BindFrtExpr@{BindFrtExpr}}
+\doxysubsubsection{\texorpdfstring{accept()}{accept()}}
+{\footnotesize\ttfamily \label{classBindFrtExpr_af3ff611d25d617bd06a1531c81c22e79} 
+void Bind\+Frt\+Expr\+::accept (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classVisitor}{Visitor}} \&}]{visitor}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classExpression}{Expression}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{expression_8h}{expression.\+h}}\item 
+src/parser/expression.\+cpp\end{DoxyCompactItemize}

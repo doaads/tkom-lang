@@ -1,0 +1,34 @@
+\doxysection{tkom\+\_\+interpreter.\+h}
+\hypertarget{tkom__interpreter_8h_source}{}\label{tkom__interpreter_8h_source}\index{include/tkom\_interpreter.h@{include/tkom\_interpreter.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}interpreter.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}parser.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{enum\ class}\ From\ \{}
+\DoxyCodeLine{00011\ \ \ \ \ STRING\ =\ 0,}
+\DoxyCodeLine{00012\ \ \ \ \ FILE}
+\DoxyCodeLine{00013\ \};}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{using\ }BuiltinVector\ =\ std::vector<std::shared\_ptr<Callable>>;}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{class\ }\mbox{\hyperlink{classTKOMInterpreter_a5b36ee587ed7a5f2039cc4420b5fe4db}{TKOMInterpreter}}\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::string\ filename;\ \ \textcolor{comment}{//<\ filename\ of\ the\ source\ document}}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ From\ from;\ \ \textcolor{comment}{//<\ input\ source\ type}}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ std::unique\_ptr<Program>\ program;\ \ \textcolor{comment}{//<\ the\ parsed\ program}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ std::shared\_ptr<Parser>\ parser;\ \ \textcolor{comment}{//<\ the\ parser}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classInterpreterVisitor}{InterpreterVisitor}}\ interpreter;\ \ \textcolor{comment}{//<\ the\ interpreter}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTKOMInterpreter_a5b36ee587ed7a5f2039cc4420b5fe4db}{TKOMInterpreter}}(\textcolor{keyword}{const}\ std::string\&\ filename,\ BuiltinVector\ builtins);}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classTKOMInterpreter_a5b36ee587ed7a5f2039cc4420b5fe4db}{TKOMInterpreter}}(\textcolor{keyword}{const}\ std::string\&\ program,\ From\ from,\ BuiltinVector\ builtins);}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ process()\ -\/>\ int;}
+\DoxyCodeLine{00047\ \};}
+
+\end{DoxyCode}

@@ -1,0 +1,57 @@
+\doxysection{Function Class Reference}
+\hypertarget{classFunction}{}\label{classFunction}\index{Function@{Function}}
+
+
+class representing a parsed function  
+
+
+
+
+{\ttfamily \#include $<$function.\+h$>$}
+
+Inheritance diagram for Function\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classFunction}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classFunction_a955ce40d70a93b31679e9137eb55c0d6}\label{classFunction_a955ce40d70a93b31679e9137eb55c0d6} 
+{\bfseries Function} (std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classFuncSignature}{Func\+Signature}} $>$ signature, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classBlock}{Block}} $>$ body)
+\item 
+\Hypertarget{classFunction_af2a7fa4e82fdc41176b1c8e249961db8}\label{classFunction_af2a7fa4e82fdc41176b1c8e249961db8} 
+void {\bfseries accept} (\mbox{\hyperlink{classVisitor}{Visitor}} \&visitor) const
+\item 
+\Hypertarget{classFunction_abad593e36369a4cad8d87c23e5c4a6d1}\label{classFunction_abad593e36369a4cad8d87c23e5c4a6d1} 
+auto {\bfseries get\+\_\+signature} () const -\/$>$ const \mbox{\hyperlink{classFuncSignature}{Func\+Signature}} \texorpdfstring{$\ast$}{*}
+\begin{DoxyCompactList}\small\item\em get the function\textquotesingle{}s signature \end{DoxyCompactList}\item 
+\Hypertarget{classFunction_af43e1f2d377c0d7ea82e94e715dc6daf}\label{classFunction_af43e1f2d377c0d7ea82e94e715dc6daf} 
+auto {\bfseries get\+\_\+body} () const -\/$>$ const \mbox{\hyperlink{classBlock}{Block}} \texorpdfstring{$\ast$}{*}
+\begin{DoxyCompactList}\small\item\em get the function\textquotesingle{}s body \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classNode}{Node}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_ad58eb6f069642c7f454679659bc2cbf9}{Node}} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto \mbox{\hyperlink{classNode_a6329ea38da23b81bfe58f5e200951818}{get\+\_\+position}} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classFunction_a359bc1c3e8b9a3ca3f96bccad3fa947d}\label{classFunction_a359bc1c3e8b9a3ca3f96bccad3fa947d} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classFuncSignature}{Func\+Signature}} $>$ {\bfseries signature}
+\item 
+\Hypertarget{classFunction_aa15232d6a2caa9d9955419d332e31c92}\label{classFunction_aa15232d6a2caa9d9955419d332e31c92} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classBlock}{Block}} $>$ {\bfseries body}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+class representing a parsed function 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/function.\+h\item 
+src/parser/function.\+cpp\end{DoxyCompactItemize}

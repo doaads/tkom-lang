@@ -1,0 +1,70 @@
+\doxysection{Lexer Class Reference}
+\hypertarget{classLexer}{}\label{classLexer}\index{Lexer@{Lexer}}
+
+
+A tokenizer interface producing tokens from an input stream.  
+
+
+
+
+{\ttfamily \#include $<$lexer.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classLexer_ac8ffc0d7881583fba1f253c91f96491e}\label{classLexer_ac8ffc0d7881583fba1f253c91f96491e} 
+{\bfseries Lexer} (std\+::shared\+\_\+ptr$<$ std\+::istream $>$ input\+\_\+stream)
+\begin{DoxyCompactList}\small\item\em \doxylink{classLexer}{Lexer}\textquotesingle{}s constructor, verbosity set to false by default. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classLexer_a9e4158d2fd5dfbd06a6ecdbc267b053e}{Lexer}} (std\+::shared\+\_\+ptr$<$ std\+::istream $>$ input\+\_\+stream, bool verbose)
+\begin{DoxyCompactList}\small\item\em \doxylink{classLexer}{Lexer}\textquotesingle{}s constructor, verbosity set by a parameter. \end{DoxyCompactList}\item 
+\Hypertarget{classLexer_ab5d40feaaf899b39e258f240edd55750}\label{classLexer_ab5d40feaaf899b39e258f240edd55750} 
+auto {\bfseries get\+\_\+token} () -\/$>$ \mbox{\hyperlink{classToken}{Token}}
+\begin{DoxyCompactList}\small\item\em get the next token from the tokenizer \end{DoxyCompactList}\item 
+\Hypertarget{classLexer_a324d12afbba754c9e35a2bcec8da823a}\label{classLexer_a324d12afbba754c9e35a2bcec8da823a} 
+auto {\bfseries end} () const -\/$>$ bool
+\begin{DoxyCompactList}\small\item\em function returning true if the entire file is read \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classLexer_a0ccc6645153fc5afd05e27f2438d63a8}\label{classLexer_a0ccc6645153fc5afd05e27f2438d63a8} 
+bool {\bfseries verbose} = false
+\item 
+\Hypertarget{classLexer_ab177de7dbae453b474d4b615e851587d}\label{classLexer_ab177de7dbae453b474d4b615e851587d} 
+bool {\bfseries eof} = false
+\item 
+\Hypertarget{classLexer_abe4880d3337ac006f7286e728d6b1e3c}\label{classLexer_abe4880d3337ac006f7286e728d6b1e3c} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classPosition}{Position}} $>$ {\bfseries position}
+\item 
+\Hypertarget{classLexer_a08174545a154f021c85f8472edce8bf4}\label{classLexer_a08174545a154f021c85f8472edce8bf4} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{classInputManager}{Input\+Manager}} $>$ {\bfseries input}
+\item 
+\Hypertarget{classLexer_affdfdc26bfcf8f3d00ee536e6fbd0175}\label{classLexer_affdfdc26bfcf8f3d00ee536e6fbd0175} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classTokenizer}{Tokenizer}} $>$ {\bfseries tokenizer}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A tokenizer interface producing tokens from an input stream. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{classLexer_a9e4158d2fd5dfbd06a6ecdbc267b053e}\index{Lexer@{Lexer}!Lexer@{Lexer}}
+\index{Lexer@{Lexer}!Lexer@{Lexer}}
+\doxysubsubsection{\texorpdfstring{Lexer()}{Lexer()}}
+{\footnotesize\ttfamily \label{classLexer_a9e4158d2fd5dfbd06a6ecdbc267b053e} 
+Lexer\+::\+Lexer (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ std\+::istream $>$}]{input\+\_\+stream}{, }\item[{bool}]{verbose}{}\end{DoxyParamCaption})}
+
+
+
+\doxylink{classLexer}{Lexer}\textquotesingle{}s constructor, verbosity set by a parameter. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em verbose} & Whether we want verbose logging \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/lexer.\+h\item 
+src/lexer.\+cpp\end{DoxyCompactItemize}

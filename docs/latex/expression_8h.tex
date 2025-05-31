@@ -1,0 +1,42 @@
+\doxysection{include/expression.h File Reference}
+\hypertarget{expression_8h}{}\label{expression_8h}\index{include/expression.h@{include/expression.h}}
+
+
+Contains the definitions of various expression types in the program tree.  
+
+
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$variant$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include "{}node.\+h"{}}\newline
+{\ttfamily \#include "{}operators.\+h"{}}\newline
+{\ttfamily \#include "{}token.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classExpression}{Expression}}
+\begin{DoxyCompactList}\small\item\em Abstract base class for all expression types in the program tree. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classLiteralExpr}{Literal\+Expr}}
+\begin{DoxyCompactList}\small\item\em Represents a literal value (string, int, double, bool) in the AST. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classIdentifierExpr}{Identifier\+Expr}}
+\begin{DoxyCompactList}\small\item\em Represents an identifier (e.\+g., variable or function name). \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classUnaryExpr}{Unary\+Expr}}
+\begin{DoxyCompactList}\small\item\em Represents a unary expression (e.\+g., negation or logical NOT). \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBinaryExpr}{Binary\+Expr}}
+\begin{DoxyCompactList}\small\item\em Represents a binary expression (e.\+g., addition, subtraction, etc.). \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classCallExpr}{Call\+Expr}}
+\begin{DoxyCompactList}\small\item\em Represents a function call expression. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classBindFrtExpr}{Bind\+Frt\+Expr}}
+\begin{DoxyCompactList}\small\item\em Represents a bind front-\/right expression (used in specific language features). \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{expression_8h_a36e936db5ef28d5706c34958b7a80572}\label{expression_8h_a36e936db5ef28d5706c34958b7a80572} 
+using {\bfseries Value\+Type} = std\+::variant$<$std\+::monostate, std\+::string, int, double, bool$>$
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains the definitions of various expression types in the program tree. 
+
+This file defines classes for different types of expressions used in the language, namely\+: literal expressions, identifier expressions, unary and binary expressions, function calls, and function bind front expressions. 

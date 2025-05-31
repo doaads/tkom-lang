@@ -1,0 +1,68 @@
+\doxysection{Func\+Signature Class Reference}
+\hypertarget{classFuncSignature}{}\label{classFuncSignature}\index{FuncSignature@{FuncSignature}}
+
+
+class representing a function\textquotesingle{}s signature  
+
+
+
+
+{\ttfamily \#include $<$function.\+h$>$}
+
+Inheritance diagram for Func\+Signature\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classFuncSignature}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classFuncSignature_a6a5db65b074f85dd49cc06898bfca8ae}\label{classFuncSignature_a6a5db65b074f85dd49cc06898bfca8ae} 
+{\bfseries Func\+Signature} (\mbox{\hyperlink{classPosition}{Position}} pos, std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classType}{Type}} $>$ ret, std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classVariableSignature}{Variable\+Signature}} $>$ $>$ args, std\+::string name)
+\item 
+\Hypertarget{classFuncSignature_a433139fd1caa898f487bd01a1fb60b08}\label{classFuncSignature_a433139fd1caa898f487bd01a1fb60b08} 
+void {\bfseries accept} (\mbox{\hyperlink{classVisitor}{Visitor}} \&visitor) const
+\item 
+\Hypertarget{classFuncSignature_ab13a5378a1348c48bd77ae192272a439}\label{classFuncSignature_ab13a5378a1348c48bd77ae192272a439} 
+auto {\bfseries get\+\_\+type} () const -\/$>$ const \mbox{\hyperlink{classType}{Type}} \texorpdfstring{$\ast$}{*}
+\begin{DoxyCompactList}\small\item\em get the function\textquotesingle{}s return type \end{DoxyCompactList}\item 
+\Hypertarget{classFuncSignature_abc2a464626e7ee7fe48ae78bf41d3573}\label{classFuncSignature_abc2a464626e7ee7fe48ae78bf41d3573} 
+auto {\bfseries clone\+\_\+type\+\_\+as\+\_\+type\+\_\+obj} () const -\/$>$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classFuncType}{Func\+Type}} $>$
+\begin{DoxyCompactList}\small\item\em clone the function\textquotesingle{}s signature as a {\ttfamily \doxylink{classFuncType}{Func\+Type}} \end{DoxyCompactList}\item 
+\Hypertarget{classFuncSignature_a644f34e100464c383185dbc6cda1167e}\label{classFuncSignature_a644f34e100464c383185dbc6cda1167e} 
+auto {\bfseries get\+\_\+params} () const -\/$>$ const std\+::vector$<$ const \mbox{\hyperlink{classVariableSignature}{Variable\+Signature}} \texorpdfstring{$\ast$}{*} $>$
+\begin{DoxyCompactList}\small\item\em get the function\textquotesingle{}s parameter \end{DoxyCompactList}\item 
+\Hypertarget{classFuncSignature_a343188b5c37a41d0ca07379c6f7fa0d6}\label{classFuncSignature_a343188b5c37a41d0ca07379c6f7fa0d6} 
+auto {\bfseries get\+\_\+name} () const -\/$>$ std\+::string
+\begin{DoxyCompactList}\small\item\em get the function\textquotesingle{}s name \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classNode}{Node}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_ad58eb6f069642c7f454679659bc2cbf9}{Node}} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto \mbox{\hyperlink{classNode_a6329ea38da23b81bfe58f5e200951818}{get\+\_\+position}} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classFuncSignature_ac66cd32735e229a0c9e2576a40191bc7}\label{classFuncSignature_ac66cd32735e229a0c9e2576a40191bc7} 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classType}{Type}} $>$ {\bfseries ret\+\_\+type}
+\item 
+\Hypertarget{classFuncSignature_a1835ed63044b9bb0d1e60df5b5802aaa}\label{classFuncSignature_a1835ed63044b9bb0d1e60df5b5802aaa} 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classVariableSignature}{Variable\+Signature}} $>$ $>$ {\bfseries args}
+\item 
+\Hypertarget{classFuncSignature_a2f22b4d95d9f3a68fefa07cde683f42e}\label{classFuncSignature_a2f22b4d95d9f3a68fefa07cde683f42e} 
+std\+::string {\bfseries name}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+class representing a function\textquotesingle{}s signature 
+
+the class stores a unique pointer to the return type of the function, and the signatures of all arguments it accepts as well as its name 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/function.\+h\item 
+src/parser/function.\+cpp\end{DoxyCompactItemize}

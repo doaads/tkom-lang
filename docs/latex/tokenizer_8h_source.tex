@@ -1,0 +1,57 @@
+\doxysection{tokenizer.\+h}
+\hypertarget{tokenizer_8h_source}{}\label{tokenizer_8h_source}\index{include/tokenizer.h@{include/tokenizer.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}input\_manager.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}token.h"{}}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{using\ }MapTokenType\ =\ std::variant<std::monostate,\ TokenType>;}
+\DoxyCodeLine{00010\ \textcolor{keyword}{using\ }OptToken\ =\ std::optional<Token>;}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{class\ }Tokenizer\ \{}
+\DoxyCodeLine{00016\ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::unordered\_map<std::string,\ TokenType>\ keyword\_tokens;\ \ \textcolor{comment}{//<\ map\ keyword\ to\ token\ types}}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::unordered\_map<char,\ TokenType>\ first\_char\_tokens;\ \ \textcolor{comment}{//<\ map\ first\ characters\ of\ operators}}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::unordered\_map<char,\ TokenType>\ operator\_tokens;\ \ \textcolor{comment}{//<\ map\ short\ operators}}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{const}\ std::map<std::pair<char,\ TokenType>,\ TokenType>\ long\_operator\_tokens;\ \ \textcolor{comment}{//<\ map\ long\ operators}}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ std::shared\_ptr<InputManager>\ input;\ \ \textcolor{comment}{//<\ the\ input\ manager,\ tracking\ the\ position\ in\ the\ source\ document}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_a7bac7625a4da3a1f8b56c69f0235a915}{start\_build\_token}}(\mbox{\hyperlink{classPosition}{Position}}\&\ pos)\ -\/>\ \mbox{\hyperlink{classToken}{Token}};}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_a17a5b7a13380094cc7be641e1d0c10b0}{build\_token}}(\textcolor{keywordtype}{char}\ current\_token)\ -\/>\ \mbox{\hyperlink{classToken}{Token}};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00051\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_a95ec723568174684aeb26ac8078fe287}{build\_identifier}}(\textcolor{keywordtype}{char}\ current\_char)\ \textcolor{keyword}{const}\ -\/>\ OptToken;}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00060\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_af1107d1ae78f16305b1003304c700342}{build\_number}}(\textcolor{keywordtype}{char}\ current\_char)\ \textcolor{keyword}{const}\ -\/>\ OptToken;}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00069\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_af9fc5c8192d8d92dc6876da278f37af9}{build\_string}}(\textcolor{keywordtype}{char}\ current\_char)\ \textcolor{keyword}{const}\ -\/>\ OptToken;}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00078\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_a1ca692e127b2e80cd95cc17da5e0bd04}{build\_short\_operator}}(\textcolor{keywordtype}{char}\ current\_char)\ \textcolor{keyword}{const}\ -\/>\ OptToken;}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00087\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_a53ca123a70840dbc61e14ac0f2a1af03}{start\_build\_long\_operator}}(\textcolor{keywordtype}{char}\ current\_char)\ \textcolor{keyword}{const}\ -\/>\ OptToken;}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00096\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_a8d597d90559820e746d00a555782ee46}{build\_long\_operator}}(TokenType\ type)\ \textcolor{keyword}{const}\ -\/>\ OptToken;}
+\DoxyCodeLine{00097\ }
+\DoxyCodeLine{00101\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_ac94788eeb0ab0f6ecfd290a4c0e165a6}{get\_type\_for\_operator}}(\textcolor{keywordtype}{char}\ c)\ \textcolor{keyword}{const}\ -\/>\ MapTokenType;}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00106\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_ad453aac99d4362eaa5ec0b9c636b124d}{get\_type\_for\_first\_op\_char}}(\textcolor{keywordtype}{char}\ c)\ \textcolor{keyword}{const}\ -\/>\ MapTokenType;}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00113\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_a6d6ce9712b10437ff25833566ba91b64}{get\_type\_for\_long\_op}}(\textcolor{keywordtype}{char}\ c,\ TokenType\ type)\ \textcolor{keyword}{const}\ -\/>\ MapTokenType;}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00118\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_aa623ead9325fa2c152005ebe5f0c9116}{get\_keyword\_for\_string}}(std::string\ value)\ \textcolor{keyword}{const}\ -\/>\ MapTokenType;}
+\DoxyCodeLine{00119\ }
+\DoxyCodeLine{00123\ \ \ \ \ [[nodiscard]]\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_a29ac7187f76a7072724530077306e42f}{get\_char\_for\_escape}}(\textcolor{keywordtype}{char}\ c)\ \textcolor{keyword}{const}\ -\/>\ char;}
+\DoxyCodeLine{00124\ }
+\DoxyCodeLine{00125\ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00126\ \ \ \ \ Tokenizer(std::shared\_ptr<InputManager>\ input);}
+\DoxyCodeLine{00127\ }
+\DoxyCodeLine{00133\ \ \ \ \ \textcolor{keyword}{auto}\ \mbox{\hyperlink{classTokenizer_a714e301deacd2e4b1b597bd43d22eea9}{get\_token}}()\ -\/>\ \mbox{\hyperlink{classToken}{Token}};}
+\DoxyCodeLine{00134\ \};}
+
+\end{DoxyCode}

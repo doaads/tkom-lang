@@ -1,0 +1,53 @@
+\doxysection{Compiler\+Error Class Reference}
+\hypertarget{classCompilerError}{}\label{classCompilerError}\index{CompilerError@{CompilerError}}
+
+
+A general compiler error -\/ thrown by the lexer.  
+
+
+
+
+{\ttfamily \#include $<$exceptions.\+h$>$}
+
+Inheritance diagram for Compiler\+Error\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{classCompilerError}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+auto \mbox{\hyperlink{classCompilerError_ae00d74524ce310e21065e36e0f2149f8}{is\+\_\+error}} () const -\/$>$ bool override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{classCompilerException}{Compiler\+Exception}}}
+\begin{DoxyCompactItemize}
+\item 
+auto {\bfseries what} () const noexcept -\/$>$ const char \texorpdfstring{$\ast$}{*}override=0
+\item 
+void {\bfseries set\+\_\+position} (\mbox{\hyperlink{classPosition}{Position}} pos)
+\item 
+auto {\bfseries get\+\_\+position} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A general compiler error -\/ thrown by the lexer. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{classCompilerError_ae00d74524ce310e21065e36e0f2149f8}\index{CompilerError@{CompilerError}!is\_error@{is\_error}}
+\index{is\_error@{is\_error}!CompilerError@{CompilerError}}
+\doxysubsubsection{\texorpdfstring{is\_error()}{is\_error()}}
+{\footnotesize\ttfamily \label{classCompilerError_ae00d74524ce310e21065e36e0f2149f8} 
+auto Compiler\+Error\+::is\+\_\+error (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const -\/$>$ bool\hspace{0.3cm}{\ttfamily [nodiscard]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{classCompilerException}{Compiler\+Exception}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{exceptions_8h}{exceptions.\+h}}\item 
+src/exceptions/exceptions.\+cpp\end{DoxyCompactItemize}

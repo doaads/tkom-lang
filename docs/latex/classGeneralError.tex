@@ -1,0 +1,47 @@
+\doxysection{General\+Error Class Reference}
+\hypertarget{classGeneralError}{}\label{classGeneralError}\index{GeneralError@{GeneralError}}
+
+
+A general compiler error, thrown at runtime either by the parser or interpreter.  
+
+
+
+
+{\ttfamily \#include $<$exceptions.\+h$>$}
+
+Inheritance diagram for General\+Error\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classGeneralError}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classGeneralError_afc00e00995bf8b5f3fa0f375eafe6c4c}\label{classGeneralError_afc00e00995bf8b5f3fa0f375eafe6c4c} 
+{\bfseries General\+Error} (const \mbox{\hyperlink{classPosition}{Position}} \&pos, const std\+::string \&msg)
+\item 
+\Hypertarget{classGeneralError_aa728b5b2e400da8a1c08d6b7a872692d}\label{classGeneralError_aa728b5b2e400da8a1c08d6b7a872692d} 
+auto {\bfseries get\+\_\+position} () const -\/$>$ const \mbox{\hyperlink{classPosition}{Position}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classGeneralError_a12ccce237441317b5041152546063fde}\label{classGeneralError_a12ccce237441317b5041152546063fde} 
+static auto {\bfseries format\+\_\+message} (const \mbox{\hyperlink{classPosition}{Position}} \&pos, const std\+::string \&msg) -\/$>$ std\+::string
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{classGeneralError_a65486a0fa18dc6ae4ddb9df073af3e36}\label{classGeneralError_a65486a0fa18dc6ae4ddb9df073af3e36} 
+\mbox{\hyperlink{classPosition}{Position}} {\bfseries pos}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A general compiler error, thrown at runtime either by the parser or interpreter. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{exceptions_8h}{exceptions.\+h}}\item 
+src/exceptions/exceptions.\+cpp\end{DoxyCompactItemize}
