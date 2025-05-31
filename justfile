@@ -11,7 +11,6 @@ dev: prerequisites
 # build the project
 build: prerequisites
 	cd build && cmake ".." && make
-	make
 
 # run tests
 test: build

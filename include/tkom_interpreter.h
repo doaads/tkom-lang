@@ -26,6 +26,7 @@ class TKOMInterpreter {
         const From from;  //< input source type
         std::unique_ptr<Program> program;  //< the parsed program
         std::shared_ptr<Parser> parser;  //< the parser
+        bool verbose = false;  //< whether we want verbose logging
 
         InterpreterVisitor interpreter;  //< the interpreter
 
@@ -35,13 +36,13 @@ class TKOMInterpreter {
          *
          * From::FILE will be assumed
          */
-        TKOMInterpreter(const std::string& filename, BuiltinVector builtins);
+        TKOMInterpreter(const std::string& filename, BuiltinVector builtins, bool verbose = false);
 
         /**
          * @brief construct the interpreter and initialize its components
          *
          * Specify the input source
          */
-        TKOMInterpreter(const std::string& program, From from, BuiltinVector builtins);
+        TKOMInterpreter(const std::string& program, From from, BuiltinVector builtins, bool verbose = false);
         auto process() -> int;
 };

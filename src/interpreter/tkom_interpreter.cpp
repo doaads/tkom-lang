@@ -4,7 +4,7 @@
 #include "tkom_interpreter.h"
 #include "print_error.h"
 
-TKOMInterpreter::TKOMInterpreter(const std::string& filename, BuiltinVector builtins) : filename(filename), from(From::FILE) {
+TKOMInterpreter::TKOMInterpreter(const std::string& filename, BuiltinVector builtins, bool verbose) : filename(filename), from(From::FILE), verbose(verbose) {
     std::shared_ptr<std::fstream> input =
         std::make_shared<std::fstream>(filename, std::fstream::in);
     std::shared_ptr<Lexer> lexer = std::make_shared<Lexer>(input);
@@ -12,7 +12,7 @@ TKOMInterpreter::TKOMInterpreter(const std::string& filename, BuiltinVector buil
     interpreter = InterpreterVisitor(std::move(builtins));
 }
 
-TKOMInterpreter::TKOMInterpreter(const std::string& program, From from, BuiltinVector builtins) : filename(program), from(from) {
+TKOMInterpreter::TKOMInterpreter(const std::string& program, From from, BuiltinVector builtins, bool verbose) : filename(program), from(from), verbose(verbose) {
     std::shared_ptr<std::istream> input;
     switch (from) {
         case From::STRING:
@@ -22,7 +22,7 @@ TKOMInterpreter::TKOMInterpreter(const std::string& program, From from, BuiltinV
             input = std::make_unique<std::fstream>(program, std::fstream::in);
             break;
     }
-    std::shared_ptr<Lexer> lexer = std::make_shared<Lexer>(input);
+    std::shared_ptr<Lexer> lexer = std::make_shared<Lexer>(input, verbose);
     parser = std::make_shared<Parser>(std::move(lexer));
     interpreter = InterpreterVisitor(std::move(builtins));
 }
@@ -33,6 +33,10 @@ auto TKOMInterpreter::process() -> int {
     ValType ret_code;
     try {
         program = parser->parse();
+        if (verbose) {
+            ParserPrinter printer(std::cout);
+            program->accept(printer);
+        }
         program->accept(interpreter);
         ret_code = interpreter.get_value();
         if (!std::holds_alternative<int>(ret_code)) {

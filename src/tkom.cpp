@@ -31,6 +31,6 @@ auto main(int argc, char **argv) -> int {
         return 1;
     }
 
-    TKOMInterpreter interpreter{input_file, builtins};
+    TKOMInterpreter interpreter{input_file, builtins, verbose};
     return interpreter.process();
 }
