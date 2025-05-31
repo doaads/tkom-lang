@@ -1,17 +1,19 @@
 #include "function.h"
 
+#include <utility>
+
 #include "block.h"
-#include "visitor.h"
 #include "statement.h"
 #include "type.h"
+#include "visitor.h"
 
 FuncSignature::FuncSignature(Position pos, std::unique_ptr<Type> ret,
                              std::vector<std::unique_ptr<VariableSignature>> args, std::string name)
-    : Node(pos), ret_type(std::move(ret)), args(std::move(args)), name(name) {}
+    : Node(pos), ret_type(std::move(ret)), args(std::move(args)), name(std::move(name)) {}
 
 void FuncSignature::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-std::unique_ptr<FuncType> FuncSignature::clone_type_as_type_obj() const { 
+auto FuncSignature::clone_type_as_type_obj() const -> std::unique_ptr<FuncType> {
     std::vector<std::unique_ptr<Type>> params;
     for (auto& arg : args) {
         params.push_back(arg->get_type()->clone());
@@ -19,9 +21,9 @@ std::unique_ptr<FuncType> FuncSignature::clone_type_as_type_obj() const {
     return std::make_unique<FuncType>(ret_type->clone(), std::move(params));
 }
 
-std::string FuncSignature::get_name() const { return name; }
+auto FuncSignature::get_name() const -> std::string { return name; }
 
-const std::vector<const VariableSignature *> FuncSignature::get_params() const {
+auto FuncSignature::get_params() const -> const std::vector<const VariableSignature *> {
     std::vector<const VariableSignature *> params;
     for (auto &param : args) {
         params.push_back(param.get());
@@ -36,6 +38,6 @@ Function::Function(std::unique_ptr<FuncSignature> signature, std::unique_ptr<Blo
 
 void Function::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-const FuncSignature *Function::get_signature() const { return signature.get(); }
+auto Function::get_signature() const -> const FuncSignature * { return signature.get(); }
 
-const Block *Function::get_body() const { return body.get(); }
+auto Function::get_body() const -> const Block * { return body.get(); }

@@ -44,7 +44,7 @@ class Parser {
      * @return Parsed expression.
      */
     template <typename ConditionFunc, typename NextFunc>
-    ExprPtr parse_binary_expr(ConditionFunc condition, NextFunc next, bool limited = false);
+    auto parse_binary_expr(ConditionFunc condition, NextFunc next, bool limited = false) -> ExprPtr;
 
     /**
      * @brief Parses a function definition.
@@ -52,7 +52,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed function.
      */
-    FuncPtr parse_func_def();
+    auto parse_func_def() -> FuncPtr;
 
     /**
      * @brief Parses a function signature.
@@ -60,14 +60,14 @@ class Parser {
      * `func_def_params = type_non_void, identifier, {",", type_non_void, identifier}`
      * @return A unique pointer to the parsed function signature.
      */
-    FuncSignPtr parse_func_signature();
+    auto parse_func_signature() -> FuncSignPtr;
 
     /**
      * @brief Parses a function parameter.
      * `func_param  = type_non_void, identifier`
      * @return A unique pointer to the parsed function parameter.
      */
-    ParamPtr parse_func_param();
+    auto parse_func_param() -> ParamPtr;
 
     /**
      * @brief Parses a block of code.
@@ -75,7 +75,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed block.
      */
-    BlockPtr parse_block();
+    auto parse_block() -> BlockPtr;
 
     /**
      * @brief Parses an OR expression (logical OR).
@@ -83,7 +83,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed OR expression.
      */
-    ExprPtr parse_or_expression();
+    auto parse_or_expression() -> ExprPtr;
 
     /**
      * @brief Parses an AND expression (logical AND).
@@ -91,7 +91,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed AND expression.
      */
-    ExprPtr parse_and_expression();
+    auto parse_and_expression() -> ExprPtr;
 
     /**
      * @brief Parses a comparative expression (e.g., equality, relational operators).
@@ -99,7 +99,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed comparative expression.
      */
-    ExprPtr parse_comp_expression();
+    auto parse_comp_expression() -> ExprPtr;
 
     /**
      * @brief Parses an additive expression (addition, subtraction).
@@ -107,7 +107,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed additive expression.
      */
-    ExprPtr parse_additive_expression();
+    auto parse_additive_expression() -> ExprPtr;
 
     /**
      * @brief Parses a term (multiplication, division).
@@ -115,7 +115,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed term.
      */
-    ExprPtr parse_term();
+    auto parse_term() -> ExprPtr;
 
     /**
      * @brief Parses a unary expression (negation, logical NOT).
@@ -123,7 +123,7 @@ class Parser {
      * `unary_factor = [unary_operator], factor`
      * @return A unique pointer to the parsed unary expression.
      */
-    ExprPtr parse_unary();
+    auto parse_unary() -> ExprPtr;
 
     /**
      * @brief Parses a factor (base of expressions like numbers or identifiers).
@@ -137,7 +137,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed factor expression.
      */
-    ExprPtr parse_factor();
+    auto parse_factor() -> ExprPtr;
 
     /**
      * @brief Parses a function call or a parenthesized expression.
@@ -145,7 +145,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed expression.
      */
-    ExprPtr parse_func_call_or_parens();
+    auto parse_func_call_or_parens() -> ExprPtr;
 
     /**
      * @brief Parses an assignment or a function call statement.
@@ -156,7 +156,7 @@ class Parser {
      * Parsed together due to common construction at start
      * @return A unique pointer to the parsed statement.
      */
-    StatementPtr parse_assign_or_call();
+    auto parse_assign_or_call() -> StatementPtr;
 
     /**
      * @brief Parses a conditional statement (if/else).
@@ -166,7 +166,7 @@ class Parser {
      * @param st_type The type of the statement (if or else).
      * @return A unique pointer to the parsed conditional statement.
      */
-    StatementPtr parse_conditional_statement(TokenType st_type);
+    auto parse_conditional_statement(TokenType st_type) -> StatementPtr;
 
     /**
      * @brief Parses an else statement.
@@ -174,7 +174,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed else statement.
      */
-    StatementPtr parse_else_statement();
+    auto parse_else_statement() -> StatementPtr;
 
     /**
      * @brief Parses a for loop statement.
@@ -182,7 +182,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed for loop statement.
      */
-    StatementPtr parse_for_loop();
+    auto parse_for_loop() -> StatementPtr;
 
     /**
      * @brief Parses the arguments for a for loop.
@@ -190,7 +190,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed for loop arguments.
      */
-    ForLoopArgsPtr parse_for_loop_args();
+    auto parse_for_loop_args() -> ForLoopArgsPtr;
 
     /**
      * @brief Parses a while loop statement.
@@ -198,7 +198,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed while loop statement.
      */
-    StatementPtr parse_while_loop();
+    auto parse_while_loop() -> StatementPtr;
 
     /**
      * @brief Parses a return statement.
@@ -206,7 +206,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed return statement.
      */
-    StatementPtr parse_ret_statement();
+    auto parse_ret_statement() -> StatementPtr;
 
     /**
      * @brief Parses the condition for conditional or loop statements.
@@ -214,7 +214,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed condition expression.
      */
-    ExprPtr parse_condition();
+    auto parse_condition() -> ExprPtr;
 
     /**
      * @brief Parses a bind front-right or function call.
@@ -224,7 +224,7 @@ class Parser {
      * previous owner
      *
      */
-    ExprPtr parse_bindfrt_or_call(std::vector<ExprPtr>& args);
+    auto parse_bindfrt_or_call(std::vector<ExprPtr>& args) -> ExprPtr;
 
     /**
      * @brief Parses a bind front-right expression.
@@ -234,7 +234,7 @@ class Parser {
      * @return ExprPtr if function succeeds, if it does not - it returns the argument vector to
      * previous owner
      */
-    ExprPtr parse_bind_front_right(std::vector<ExprPtr>& args);
+    auto parse_bind_front_right(std::vector<ExprPtr>& args) -> ExprPtr;
 
     /**
      * @brief Parses a bind front expression.
@@ -242,7 +242,7 @@ class Parser {
      *
      * @return A unique pointer to the parsed bind front expression.
      */
-    ExprPtr parse_bind_front();
+    auto parse_bind_front() -> ExprPtr;
 
     /**
      * @brief Parses a decorator expression.
@@ -250,14 +250,14 @@ class Parser {
      *
      * @return A unique pointer to the parsed decorator expression.
      */
-    ExprPtr parse_decorator();
+    auto parse_decorator() -> ExprPtr;
 
     /**
      * @brief Parses an identifier expression.
      *
      * @return A unique pointer to the parsed identifier expression.
      */
-    ExprPtr parse_identifier();
+    auto parse_identifier() -> ExprPtr;
 
     /**
      * @brief Parses a type expression (e.g., int, void).
@@ -267,7 +267,7 @@ class Parser {
      * @param allow_void Whether to allow the void type. `true` by default.
      * @return A unique pointer to the parsed type expression.
      */
-    TypePtr parse_type(bool allow_void = false);
+    auto parse_type(bool allow_void = false) -> TypePtr;
 
     /**
      * @brief Parses a variable type.
@@ -280,7 +280,7 @@ class Parser {
      * @param allow_void Whether to allow the void type.
      * @return A unique pointer to the parsed variable type.
      */
-    TypePtr parse_var_type(bool allow_void);
+    auto parse_var_type(bool allow_void) -> TypePtr;
 
     /**
      * @brief Parses a function type.
@@ -288,7 +288,7 @@ class Parser {
      * `func_type_args    = type_non_void, {",", type_non_void}`
      * @return A unique pointer to the parsed function type.
      */
-    TypePtr parse_func_type();
+    auto parse_func_type() -> TypePtr;
 
     /**
      * @brief Parses function arguments.
@@ -297,7 +297,7 @@ class Parser {
      *
      * @return A vector of unique pointers to parsed function arguments.
      */
-    std::optional<std::vector<ExprPtr>> parse_func_args();
+    auto parse_func_args() -> std::optional<std::vector<ExprPtr>>;
 
     /**
      * @brief Checks if the given token is a comparative operator.
@@ -305,7 +305,7 @@ class Parser {
      * @param type The token type to check.
      * @return True if the token is a comparative operator, false otherwise.
      */
-    bool is_comparative(TokenType type) const;
+    [[nodiscard]] auto is_comparative(TokenType type) const -> bool;
 
     /**
      * @brief Checks if the given token is a factor operator.
@@ -313,7 +313,7 @@ class Parser {
      * @param type The token type to check.
      * @return True if the token is a factor operator, false otherwise.
      */
-    bool is_factor(TokenType type) const;
+    [[nodiscard]] auto is_factor(TokenType type) const -> bool;
 
     /**
      * @brief Checks if the given token represents a type.
@@ -321,7 +321,7 @@ class Parser {
      * @param type The token type to check.
      * @return True if the token represents a type, false otherwise.
      */
-    bool is_type(TokenType type) const;
+    [[nodiscard]] auto is_type(TokenType type) const -> bool;
 
     /**
      * @brief Checks if the given token represents a type or void.
@@ -329,7 +329,7 @@ class Parser {
      * @param type The token type to check.
      * @return True if the token represents a type or void, false otherwise.
      */
-    bool is_type_or_void(TokenType type) const;
+    [[nodiscard]] auto is_type_or_void(TokenType type) const -> bool;
 
     /**
      * @brief Checks if the next token is of the specified type.
@@ -337,7 +337,7 @@ class Parser {
      * @param type The token type to check.
      * @return True if the next token matches the given type, false otherwise.
      */
-    bool is_next_token(TokenType type);
+    auto is_next_token(TokenType type) -> bool;
 
     /**
      * @brief Checks if the last token was of the specified type.
@@ -345,7 +345,7 @@ class Parser {
      * @param type The token type to check.
      * @return True if the last token matches the given type, false otherwise.
      */
-    bool was_last_token(TokenType type);
+    auto was_last_token(TokenType type) -> bool;
 
     /**
      * @brief Checks if the current token matches the specified type.
@@ -353,12 +353,14 @@ class Parser {
      * @param type The token type to check.
      * @return True if the current token matches the given type, false otherwise.
      */
-    bool is_token(TokenType type) const;
+    [[nodiscard]] auto is_token(TokenType type) const -> bool;
 
-    const Position get_position() const { return current_token.get_position(); };
+    [[nodiscard]] auto get_position() const -> const Position {
+        return current_token.get_position();
+    };
 
-    template<typename T>
-    T shall(T arg, std::string error) {
+    template <typename T>
+    auto shall(T arg, std::string error) -> T {
         if (!arg) throw ParserError(get_position(), error);
         return std::move(arg);
     }
@@ -376,20 +378,20 @@ class Parser {
      *
      * @return Smart pointer to parsed program.
      */
-    ProgramPtr parse();
+    auto parse() -> ProgramPtr;
 
     /**
      * @brief Parses a single statement.
      * @return Smart pointer to parsed statement.
      */
-    StatementPtr parse_statement();
+    auto parse_statement() -> StatementPtr;
 
     /**
      * @brief Parses an expression.
      *
      * @return Smart pointer to parsed expression.
      */
-    ExprPtr parse_expression();
+    auto parse_expression() -> ExprPtr;
 
     /**
      * @brief Advances to the next token.

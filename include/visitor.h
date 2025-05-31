@@ -62,7 +62,7 @@ class ParserPrinter : public Visitor {
      *
      * @return String representing the current indentation.
      */
-    std::string indent_str() const;
+    [[nodiscard]] auto indent_str() const -> std::string;
 
     void increase_indent();
     void decrease_indent();
@@ -82,9 +82,9 @@ class ParserPrinter : public Visitor {
      * @param indent The initial indentation level (default is 0).
      */
     ParserPrinter(std::ostream &os, int indent = 0) : os(os), indent(indent) {}
-    ~ParserPrinter() = default;
+    ~ParserPrinter() override = default;
 
-    virtual void visit(const Program &program) override;
+    void visit(const Program &program) override;
 
     void visit(const LiteralExpr &expr) override;
     void visit(const IdentifierExpr &expr) override;

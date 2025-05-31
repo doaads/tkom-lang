@@ -8,8 +8,8 @@ GlobalFunction::GlobalFunction(const Function* func) : func(func) {
     type = func->get_signature()->clone_type_as_type_obj();
 }
 
-std::vector<std::shared_ptr<VarRef>> GlobalFunction::prepare_func_args(
-    InterpreterVisitor& interpreter, ArgVector& args) const {
+auto GlobalFunction::prepare_func_args(InterpreterVisitor& interpreter, ArgVector& args) const
+    -> std::vector<std::shared_ptr<VarRef>> {
     const auto expected = func->get_signature()->get_params();
     shall(expected.size() == args.size(), "Invalid argument vector size");
     std::vector<std::shared_ptr<VarRef>> var_refs;
@@ -60,7 +60,7 @@ void GlobalFunction::call(InterpreterVisitor& interpreter, ArgVector args) {
     interpreter.pop_call_stack();
 }
 
-const Function* GlobalFunction::get_func() const { return func; }
+auto GlobalFunction::get_func() const -> const Function* { return func; }
 
 LocalFunction::LocalFunction(std::shared_ptr<Callable> callee_func, ArgVector bound_args)
     : callee(std::move(callee_func)), bound_args(bound_args) {
@@ -84,7 +84,7 @@ void LocalFunction::call(InterpreterVisitor& interpreter, ArgVector args) {
     return;
 }
 
-const Function* LocalFunction::get_func() const {
+auto LocalFunction::get_func() const -> const Function* {
     if (callee == nullptr) return nullptr;
     return callee->get_func();
 }

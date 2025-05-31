@@ -8,7 +8,7 @@ Parser::Parser(std::shared_ptr<Lexer> lexer) : lexer(std::move(lexer)) {}
  *      start_symbol = {function_def}
  */
 
-ProgramPtr Parser::parse() {
+auto Parser::parse() -> ProgramPtr {
     std::vector<std::unique_ptr<Function>> functions;
     FuncPtr function;
 
@@ -26,7 +26,7 @@ ProgramPtr Parser::parse() {
  *      function_def = func_signature, block
  */
 
-FuncPtr Parser::parse_func_def() {
+auto Parser::parse_func_def() -> FuncPtr {
     FuncSignPtr signature = parse_func_signature();
     if (!signature) return nullptr;
 
@@ -41,7 +41,7 @@ FuncPtr Parser::parse_func_def() {
  * func_param}
  */
 
-FuncSignPtr Parser::parse_func_signature() {
+auto Parser::parse_func_signature() -> FuncSignPtr {
     const Position pos = get_position();
     TypePtr ret_type = parse_type(true);
     if (!ret_type) {
@@ -50,7 +50,7 @@ FuncSignPtr Parser::parse_func_signature() {
 
     shall(is_token(TokenType::T_IDENTIFIER), "Expected function identifier");
 
-    std::string func_name = current_token.get_value<std::string>();
+    auto func_name = current_token.get_value<std::string>();
     std::vector<std::unique_ptr<VariableSignature>> params;
 
     if (!is_next_token(TokenType::T_FUNC_SIGN)) {
@@ -73,10 +73,10 @@ FuncSignPtr Parser::parse_func_signature() {
  *      func_param = type_non_void, identifier
  */
 
-ParamPtr Parser::parse_func_param() {
+auto Parser::parse_func_param() -> ParamPtr {
     TypePtr current_arg_type = shall(parse_type(), "Expected type");
     shall(is_token(TokenType::T_IDENTIFIER), "Expected parameter name");
-    const std::string val = current_token.get_value<std::string>();
+    const auto val = current_token.get_value<std::string>();
     next_token();
     return std::make_unique<VariableSignature>(std::move(current_arg_type), val);
 }
@@ -85,7 +85,7 @@ ParamPtr Parser::parse_func_param() {
  *      block = "{", {statement}, "}"
  */
 
-BlockPtr Parser::parse_block() {
+auto Parser::parse_block() -> BlockPtr {
     if (!is_token(TokenType::T_LBLOCK)) return nullptr;
 
     std::vector<StatementPtr> statements;
@@ -109,7 +109,7 @@ BlockPtr Parser::parse_block() {
  *                | assignment
  */
 
-StatementPtr Parser::parse_statement() {
+auto Parser::parse_statement() -> StatementPtr {
     StatementPtr statement = parse_conditional_statement(TokenType::T_IF);
     if (statement) return statement;
 
@@ -135,7 +135,7 @@ StatementPtr Parser::parse_statement() {
  *      Parsed together due to common construction at start
  */
 
-StatementPtr Parser::parse_assign_or_call() {
+auto Parser::parse_assign_or_call() -> StatementPtr {
     const Position pos = get_position();
     ExprPtr expr = parse_expression();
     if (!expr) return nullptr;
@@ -150,7 +150,7 @@ StatementPtr Parser::parse_assign_or_call() {
     TypePtr type = parse_type();
 
     shall(is_token(TokenType::T_IDENTIFIER), "Expected identifier");
-    const std::string val = current_token.get_value<std::string>();
+    const auto val = current_token.get_value<std::string>();
     next_token();
 
     ParamPtr signature =
@@ -166,7 +166,7 @@ StatementPtr Parser::parse_assign_or_call() {
  *    while_loop = while, condition, block
  */
 
-StatementPtr Parser::parse_while_loop() {
+auto Parser::parse_while_loop() -> StatementPtr {
     if (!is_token(TokenType::T_WHILE)) return nullptr;
 
     const Position pos = get_position();
@@ -184,7 +184,7 @@ StatementPtr Parser::parse_while_loop() {
     for_loop    = for, for_loop_args, block, call_op, bind_front, ";"
 */
 
-StatementPtr Parser::parse_for_loop() {
+auto Parser::parse_for_loop() -> StatementPtr {
     if (!is_token(TokenType::T_FOR)) return nullptr;
     const Position pos = get_position();
 
@@ -209,7 +209,7 @@ StatementPtr Parser::parse_for_loop() {
  *    for_loop_args = "(", (identifier | assignment), ";", expression, ")"
  */
 
-ForLoopArgsPtr Parser::parse_for_loop_args() {
+auto Parser::parse_for_loop_args() -> ForLoopArgsPtr {
     shall(is_token(TokenType::T_LPAREN), "Expected (");
 
     next_token();
@@ -217,7 +217,7 @@ ForLoopArgsPtr Parser::parse_for_loop_args() {
     std::variant<StatementPtr, std::string> iterator;
     if (!assign) {
         shall(is_token(TokenType::T_IDENTIFIER), "Expected assign or identifier");
-        std::string identifier = current_token.get_value<std::string>();
+        auto identifier = current_token.get_value<std::string>();
         shall(is_next_token(TokenType::T_SEMICOLON), "Expected ';'");
     } else {
         iterator = std::move(assign);
@@ -238,7 +238,7 @@ ForLoopArgsPtr Parser::parse_for_loop_args() {
  *    ret_statement = ret, [expression]
  */
 
-StatementPtr Parser::parse_ret_statement() {
+auto Parser::parse_ret_statement() -> StatementPtr {
     if (!is_token(TokenType::T_RET)) return nullptr;
     const Position pos = get_position();
 
@@ -255,7 +255,7 @@ StatementPtr Parser::parse_ret_statement() {
  *    elif_st      = elif, condition, block, [elif_st | else_st]
  */
 
-StatementPtr Parser::parse_conditional_statement(TokenType st_type) {
+auto Parser::parse_conditional_statement(TokenType st_type) -> StatementPtr {
     if (!is_token(st_type)) return nullptr;
     const Position pos = get_position();
 
@@ -276,7 +276,7 @@ StatementPtr Parser::parse_conditional_statement(TokenType st_type) {
  *    else_st      = else, block
  */
 
-StatementPtr Parser::parse_else_statement() {
+auto Parser::parse_else_statement() -> StatementPtr {
     if (!is_token(TokenType::T_ELSE)) return nullptr;
 
     const Position pos = get_position();
@@ -291,7 +291,7 @@ StatementPtr Parser::parse_else_statement() {
  *    condition    = "(", expresion, ")"
  */
 
-ExprPtr Parser::parse_condition() {
+auto Parser::parse_condition() -> ExprPtr {
     shall(is_token(TokenType::T_LPAREN), "Expected '('");
     next_token();
     ExprPtr condition = shall(parse_expression(), "Expected expression");
@@ -305,13 +305,13 @@ ExprPtr Parser::parse_condition() {
  *    expression = or_expression;
  */
 
-ExprPtr Parser::parse_expression() {
+auto Parser::parse_expression() -> ExprPtr {
     ExprPtr expr = parse_or_expression();
     return expr;
 }
 
 template <typename ConditionFunc, typename NextFunc>
-ExprPtr Parser::parse_binary_expr(ConditionFunc condition, NextFunc next, bool limited) {
+auto Parser::parse_binary_expr(ConditionFunc condition, NextFunc next, bool limited) -> ExprPtr {
     ExprPtr left = next();
     if (!left) {
         return nullptr;
@@ -334,7 +334,7 @@ ExprPtr Parser::parse_binary_expr(ConditionFunc condition, NextFunc next, bool l
  *    or_expression = and_expression, {logical_or, and_expression}
  */
 
-ExprPtr Parser::parse_or_expression() {
+auto Parser::parse_or_expression() -> ExprPtr {
     return parse_binary_expr([this]() { return is_token(TokenType::T_OR); },
                              [this]() { return parse_and_expression(); });
 }
@@ -343,7 +343,7 @@ ExprPtr Parser::parse_or_expression() {
  *    and_expression = comp_expression, {logical_and, comp_expression}
  */
 
-ExprPtr Parser::parse_and_expression() {
+auto Parser::parse_and_expression() -> ExprPtr {
     return parse_binary_expr([this]() { return is_token(TokenType::T_AND); },
                              [this]() { return parse_comp_expression(); });
 }
@@ -353,7 +353,7 @@ ExprPtr Parser::parse_and_expression() {
  * additive_expression]
  */
 
-ExprPtr Parser::parse_comp_expression() {
+auto Parser::parse_comp_expression() -> ExprPtr {
     return parse_binary_expr([this]() { return is_comparative(current_token.get_type()); },
                              [this]() { return parse_additive_expression(); }, true);
 }
@@ -362,7 +362,7 @@ ExprPtr Parser::parse_comp_expression() {
  *    additive_expression = term, {add_sub_op, term}
  */
 
-ExprPtr Parser::parse_additive_expression() {
+auto Parser::parse_additive_expression() -> ExprPtr {
     return parse_binary_expr(
         [this]() { return is_token(TokenType::T_PLUS) || is_token(TokenType::T_MINUS); },
         [this]() { return parse_term(); });
@@ -372,7 +372,7 @@ ExprPtr Parser::parse_additive_expression() {
  * term = unary_factor, {mult_div_op, unary_factor}
  */
 
-ExprPtr Parser::parse_term() {
+auto Parser::parse_term() -> ExprPtr {
     return parse_binary_expr(
         [this]() { return is_token(TokenType::T_MULT) || is_token(TokenType::T_DIV); },
         [this]() { return parse_unary(); });
@@ -382,7 +382,7 @@ ExprPtr Parser::parse_term() {
  * unary_factor = [unary_operator], factor
  */
 
-ExprPtr Parser::parse_unary() {
+auto Parser::parse_unary() -> ExprPtr {
     TokenType type = current_token.get_type();
     const Position pos = get_position();
     std::optional<UnaryOp> unary_op = token_to_unary_op(type);
@@ -407,7 +407,7 @@ ExprPtr Parser::parse_unary() {
  *        | "(" expression ")"
  */
 
-ExprPtr Parser::parse_factor() {
+auto Parser::parse_factor() -> ExprPtr {
     TokenType type = current_token.get_type();
     if (is_factor(type)) {
         std::unique_ptr<LiteralExpr> expr =
@@ -434,7 +434,7 @@ ExprPtr Parser::parse_factor() {
  *      function_call = function_args, call_op, bind_front
  */
 
-ExprPtr Parser::parse_func_call_or_parens() {
+auto Parser::parse_func_call_or_parens() -> ExprPtr {
     auto args = parse_func_args();
     if (!args) return nullptr;
 
@@ -451,7 +451,7 @@ ExprPtr Parser::parse_func_call_or_parens() {
  *      after parsing args, parse either call or bind front
  */
 
-ExprPtr Parser::parse_bindfrt_or_call(std::vector<ExprPtr>& args) {
+auto Parser::parse_bindfrt_or_call(std::vector<ExprPtr>& args) -> ExprPtr {
     ExprPtr bindfrt = parse_bind_front_right(args);
     if (bindfrt) return bindfrt;
 
@@ -473,7 +473,7 @@ ExprPtr Parser::parse_bindfrt_or_call(std::vector<ExprPtr>& args) {
  *      bind_front = [func_args, bindfrt_op], decorator
  */
 
-ExprPtr Parser::parse_bind_front_right(std::vector<ExprPtr>& args) {
+auto Parser::parse_bind_front_right(std::vector<ExprPtr>& args) -> ExprPtr {
     if (!is_token(TokenType::T_BINDFRT)) return nullptr;
 
     const Position pos = get_position();
@@ -483,7 +483,7 @@ ExprPtr Parser::parse_bind_front_right(std::vector<ExprPtr>& args) {
     return std::make_unique<BindFrtExpr>(pos, std::move(decorator), std::move(args));
 }
 
-ExprPtr Parser::parse_bind_front() {
+auto Parser::parse_bind_front() -> ExprPtr {
     ExprPtr decorator = parse_decorator();
     if (decorator) return decorator;
 
@@ -500,7 +500,7 @@ ExprPtr Parser::parse_bind_front() {
  * decorator = identifier, [decorate_op, identifier]
  */
 
-ExprPtr Parser::parse_decorator() {
+auto Parser::parse_decorator() -> ExprPtr {
     ExprPtr left = parse_identifier();
     if (!left) return nullptr;
 
@@ -513,9 +513,9 @@ ExprPtr Parser::parse_decorator() {
                                         std::move(right));
 }
 
-ExprPtr Parser::parse_identifier() {
+auto Parser::parse_identifier() -> ExprPtr {
     if (!is_token(TokenType::T_IDENTIFIER)) return nullptr;
-    std::string value = current_token.get_value<std::string>();
+    auto value = current_token.get_value<std::string>();
     const Position pos = get_position();
 
     next_token();
@@ -527,7 +527,7 @@ ExprPtr Parser::parse_identifier() {
  * function_arg_list = expression, {",", expression}
  */
 
-std::optional<std::vector<ExprPtr>> Parser::parse_func_args() {
+auto Parser::parse_func_args() -> std::optional<std::vector<ExprPtr>> {
     if (!is_token(TokenType::T_LPAREN)) return std::nullopt;
 
     std::vector<ExprPtr> args;
@@ -549,7 +549,7 @@ std::optional<std::vector<ExprPtr>> Parser::parse_func_args() {
  *      type_non_void     = var_type | func_type
  */
 
-TypePtr Parser::parse_type(bool allow_void) {
+auto Parser::parse_type(bool allow_void) -> TypePtr {
     TypePtr result = parse_var_type(allow_void);
     if (result) return result;
 
@@ -566,7 +566,7 @@ TypePtr Parser::parse_type(bool allow_void) {
  *                        | bool
  */
 
-TypePtr Parser::parse_var_type(bool allow_void) {
+auto Parser::parse_var_type(bool allow_void) -> TypePtr {
     bool mut = false;
     if (is_token(TokenType::T_MUT)) {
         mut = true;
@@ -593,7 +593,7 @@ TypePtr Parser::parse_var_type(bool allow_void) {
  *      func_type_args    = type_non_void, {",", type_non_void}
  */
 
-TypePtr Parser::parse_func_type() {
+auto Parser::parse_func_type() -> TypePtr {
     if (!is_token(TokenType::T_LFTYPE)) return nullptr;
 
     next_token();
@@ -615,7 +615,7 @@ TypePtr Parser::parse_func_type() {
     return std::make_unique<FuncType>(std::move(ret_type), std::move(params));
 }
 
-bool Parser::is_comparative(TokenType type) const {
+auto Parser::is_comparative(TokenType type) const -> bool {
     switch (type) {
         case TokenType::T_NEQ:
             return true;
@@ -634,7 +634,7 @@ bool Parser::is_comparative(TokenType type) const {
     }
 }
 
-bool Parser::is_factor(TokenType type) const {
+auto Parser::is_factor(TokenType type) const -> bool {
     switch (type) {
         case TokenType::T_INT:
             return true;
@@ -649,7 +649,7 @@ bool Parser::is_factor(TokenType type) const {
     }
 }
 
-bool Parser::is_type(TokenType type) const {
+auto Parser::is_type(TokenType type) const -> bool {
     switch (type) {
         case TokenType::T_INT_TYPE:
             return true;
@@ -664,22 +664,22 @@ bool Parser::is_type(TokenType type) const {
     }
 }
 
-bool Parser::is_type_or_void(TokenType type) const {
+auto Parser::is_type_or_void(TokenType type) const -> bool {
     return (is_type(type) || type == TokenType::T_VOID_TYPE);
 }
 
-bool Parser::is_next_token(TokenType type) {
+auto Parser::is_next_token(TokenType type) -> bool {
     next_token();
     return current_token.get_type() == type;
 }
 
-bool Parser::was_last_token(TokenType type) {
+auto Parser::was_last_token(TokenType type) -> bool {
     bool match = current_token.get_type() == type;
     next_token();
     return match;
 }
 
-bool Parser::is_token(TokenType type) const { return current_token.get_type() == type; }
+auto Parser::is_token(TokenType type) const -> bool { return current_token.get_type() == type; }
 
 void Parser::next_token() {
     current_token = lexer->get_token();

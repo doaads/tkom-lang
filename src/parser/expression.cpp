@@ -1,9 +1,10 @@
 #include "expression.h"
 
 #include <string>
+#include <utility>
 
-#include "visitor.h"
 #include "type.h"
+#include "visitor.h"
 
 /* ------------------------------[LITERAL]--------------------------------*/
 
@@ -16,7 +17,7 @@ LiteralExpr::LiteralExpr(const Position pos, Token token)
 
 void LiteralExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-std::string LiteralExpr::get_value_string() const {
+auto LiteralExpr::get_value_string() const -> std::string {
     return std::visit(
         [](auto &&val) -> std::string {
             using T = std::decay_t<decltype(val)>;
@@ -38,9 +39,9 @@ std::string LiteralExpr::get_value_string() const {
 /* ----------------------------[IDENTIFIER]--------------------------------*/
 
 IdentifierExpr::IdentifierExpr(const Position pos, std::string identifier)
-    : Expression(pos), identifier(identifier) {}
+    : Expression(pos), identifier(std::move(identifier)) {}
 
-std::string IdentifierExpr::get_identifier() const { return identifier; }
+auto IdentifierExpr::get_identifier() const -> std::string { return identifier; }
 void IdentifierExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 /* ------------------------------[UNARY]--------------------------------*/
@@ -48,11 +49,11 @@ void IdentifierExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 UnaryExpr::UnaryExpr(Position pos, UnaryOp unary_op, std::unique_ptr<Expression> right)
     : Expression(pos), op_type(unary_op), right(std::move(right)) {}
 
-UnaryOp UnaryExpr::get_operator() const { return op_type; }
+auto UnaryExpr::get_operator() const -> UnaryOp { return op_type; }
 
 void UnaryExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-const Expression *UnaryExpr::get_right() const { return right.get(); }
+auto UnaryExpr::get_right() const -> const Expression * { return right.get(); }
 
 /* ------------------------------[BINARY]--------------------------------*/
 
@@ -62,11 +63,11 @@ BinaryExpr::BinaryExpr(Position pos, std::unique_ptr<Expression> left, BinaryOp 
 
 void BinaryExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-BinaryOp BinaryExpr::get_operator() const { return op; }
+auto BinaryExpr::get_operator() const -> BinaryOp { return op; }
 
-const Expression *BinaryExpr::get_left() const { return left.get(); }
+auto BinaryExpr::get_left() const -> const Expression * { return left.get(); }
 
-const Expression *BinaryExpr::get_right() const { return right.get(); }
+auto BinaryExpr::get_right() const -> const Expression * { return right.get(); }
 
 /* ------------------------------[CALL]--------------------------------*/
 
@@ -74,9 +75,9 @@ CallExpr::CallExpr(Position pos, std::unique_ptr<Expression> name,
                    std::vector<std::unique_ptr<Expression>> args)
     : Expression(pos), func_name(std::move(name)), args(std::move(args)) {}
 
-const Expression *CallExpr::get_func_name() const { return func_name.get(); }
+auto CallExpr::get_func_name() const -> const Expression * { return func_name.get(); }
 
-const std::vector<const Expression *> CallExpr::get_args() const {
+auto CallExpr::get_args() const -> const std::vector<const Expression *> {
     std::vector<const Expression *> result;
     result.reserve(args.size());
     for (const auto &arg : args) {
@@ -95,9 +96,9 @@ BindFrtExpr::BindFrtExpr(Position pos, std::unique_ptr<Expression> name,
 
 void BindFrtExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-const Expression *BindFrtExpr::get_func_name() const { return func_name.get(); }
+auto BindFrtExpr::get_func_name() const -> const Expression * { return func_name.get(); }
 
-const std::vector<const Expression *> BindFrtExpr::get_args() const {
+auto BindFrtExpr::get_args() const -> const std::vector<const Expression *> {
     std::vector<const Expression *> result;
     result.reserve(args.size());
     for (const auto &arg : args) {

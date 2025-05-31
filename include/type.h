@@ -23,13 +23,13 @@ enum class BaseType {
 /**
  * @brief function for translating a TokenType to BaseType
  */
-std::optional<BaseType> translate_token_to_type(TokenType type);
+auto translate_token_to_type(TokenType type) -> std::optional<BaseType>;
 
 /**
  * @brief function for translating non-void types to BaseType
  */
-std::optional<BaseType> get_literal_token_type(TokenType type);
-std::ostream &operator<<(std::ostream &os, const BaseType &type);
+auto get_literal_token_type(TokenType type) -> std::optional<BaseType>;
+auto operator<<(std::ostream &os, const BaseType &type) -> std::ostream &;
 
 /**
  * @brief Abstract class representing a Type
@@ -39,40 +39,38 @@ class Type : public Node {
     /**
      * @brief function returning true if the type is a function type
      */
-    virtual bool is_func() const {
-        return false;
-    };
-    virtual ~Type() = default;
+    [[nodiscard]] virtual auto is_func() const -> bool { return false; };
+    ~Type() override = default;
     virtual void accept(Visitor &visitor) const = 0;
 
     /**
      * @brief function returning true if the type represented is mutable
      */
-    virtual bool get_mut() const = 0;
+    [[nodiscard]] virtual auto get_mut() const -> bool = 0;
 
     /**
      * @brief function for checking type-equality during semantic analysis
      *
      * @param other Pointer to another type object
      */
-    virtual bool is_equal_to(const Type* other) const = 0;
+    virtual auto is_equal_to(const Type *other) const -> bool = 0;
 
     /**
      * @brief function returning the parameters of a function type
      */
-    virtual std::vector<const Type*> get_params() const = 0;
+    [[nodiscard]] virtual auto get_params() const -> std::vector<const Type *> = 0;
 
     /**
      * @brief function returning the return type of a function, or VarType for variables
      */
-    virtual const Type* get_ret_type() const = 0;
+    [[nodiscard]] virtual auto get_ret_type() const -> const Type * = 0;
 
     /**
      * @brief function for type copying
      *
      * @param skip_args how many args to skip (for bind front)
      */
-    virtual std::unique_ptr<Type> clone(size_t skip_args = 0) const = 0;
+    [[nodiscard]] virtual auto clone(size_t skip_args = 0) const -> std::unique_ptr<Type> = 0;
 };
 
 /*
@@ -98,30 +96,32 @@ class VarType : public Type {
     /**
      * @brief get the current type
      */
-    BaseType get_type() const;
+    [[nodiscard]] auto get_type() const -> BaseType;
 
     /**
      * @brief returns true if the type is mutable
      */
-    bool get_mut() const override;
+    [[nodiscard]] auto get_mut() const -> bool override;
 
     /**
      * @brief function for checking type equality
      *
      * @param other the pointer to another Type object
      */
-    bool is_equal_to(const Type* other) const override;
+    auto is_equal_to(const Type *other) const -> bool override;
 
     /**
      * @brief function returning the parameters of a function type
      */
-    std::vector<const Type*> get_params() const override { throw std::runtime_error("Variable type does not contain parameters");}
-    const Type* get_ret_type() const override { return this; }
+    [[nodiscard]] auto get_params() const -> std::vector<const Type *> override {
+        throw std::runtime_error("Variable type does not contain parameters");
+    }
+    [[nodiscard]] auto get_ret_type() const -> const Type * override { return this; }
 
     /**
      * @brief function for cloning this type
      */
-    std::unique_ptr<Type> clone(size_t = 0) const override;
+    [[nodiscard]] auto clone(size_t = 0) const -> std::unique_ptr<Type> override;
 };
 
 /**
@@ -139,32 +139,32 @@ class FuncType : public Type {
      * @param params vector of the function's parameters
      */
     FuncType(std::unique_ptr<Type> ret_type, std::vector<std::unique_ptr<Type>> params);
-    bool is_func() const override { return true; }
+    [[nodiscard]] auto is_func() const -> bool override { return true; }
     void accept(Visitor &visitor) const override;
 
     /**
      * @brief function for checking if a FuncType is mutable, will always return false
      */
-    bool get_mut() const override { return false; }
+    [[nodiscard]] auto get_mut() const -> bool override { return false; }
 
     /**
      * @brief get the return type of a function
      */
-    const Type *get_ret_type() const override;
+    [[nodiscard]] auto get_ret_type() const -> const Type * override;
 
     /**
      * @brief get the parameters of a function
      */
-    std::vector<const Type *> get_params() const override;
+    [[nodiscard]] auto get_params() const -> std::vector<const Type *> override;
 
     /**
      * @brief check if a function type is equal to another
      */
-    bool is_equal_to(const Type* other) const override;
+    auto is_equal_to(const Type *other) const -> bool override;
 
     /**
      * @brief clone a function type
      * @param skip_args how many args to skip
      */
-    std::unique_ptr<Type> clone(size_t skip_args = 0) const override;
+    [[nodiscard]] auto clone(size_t skip_args = 0) const -> std::unique_ptr<Type> override;
 };

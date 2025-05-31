@@ -1,6 +1,6 @@
 #include "tokens.h"
 
-std::ostream &operator<<(std::ostream &os, const TokenType type) {
+auto operator<<(std::ostream &os, const TokenType type) -> std::ostream & {
     switch (type) {
         case TokenType::T_INT_TYPE:
             os << "T_INT_TYPE";

@@ -1,3 +1,6 @@
+#include <algorithm>
+#include <ranges>
+
 #include "interpreter.h"
 #include "interpreter_shall.h"
 #include "type_cast.h"
@@ -7,7 +10,7 @@ void InterpreterVisitor::register_function(const Function* func) {
     functions.push_back(std::move(func_ptr));
 }
 
-ValType InterpreterVisitor::get_value() const { return current_value; }
+auto InterpreterVisitor::get_value() const -> ValType { return current_value; }
 
 void InterpreterVisitor::override_value(ValType val) { current_value = val; }
 
@@ -15,33 +18,32 @@ void InterpreterVisitor::push_call_stack(CallStackFrame frame) { call_stack.push
 
 void InterpreterVisitor::pop_call_stack() { return call_stack.pop_back(); }
 
-std::weak_ptr<Variable> InterpreterVisitor::find_var_in_frame(const std::string& name) {
+auto InterpreterVisitor::find_var_in_frame(const std::string& name) -> std::weak_ptr<Variable> {
     CallStackFrame& frame = call_stack.back();
 
     // find in local vars
-    for (auto it = frame.var_scope.rbegin(); it != frame.var_scope.rend(); ++it) {
-        auto& block = *it;
-        auto var_it = std::find_if(block.vars.begin(), block.vars.end(),
-                                   [&name](const std::shared_ptr<Variable>& var) {
-                                       return var->signature.get_name() == name;
-                                   });
+    for (auto& block : std::ranges::reverse_view(frame.var_scope)) {
+        auto var_it =
+            std::ranges::find_if(block.vars, [&name](const std::shared_ptr<Variable>& var) {
+                return var->signature.get_name() == name;
+            });
         if (var_it != block.vars.end()) {
             return *var_it;
         }
     }
 
     // find in function args (references)
-    auto ref_var = std::find_if(frame.args.begin(), frame.args.end(),
-                                [&name](const auto& arg) { return arg->curr_name == name; });
+    auto ref_var = std::ranges::find_if(
+        frame.args, [&name](const auto& arg) { return arg->curr_name == name; });
 
     if (ref_var < frame.args.end()) return ref_var->get()->ref;
 
     return {};
 }
 
-std::shared_ptr<Callable> InterpreterVisitor::find_func(const std::string& name) {
-    auto func = std::find_if(functions.begin(), functions.end(),
-                             [&name](const auto& func) { return func->get_name() == name; });
+auto InterpreterVisitor::find_func(const std::string& name) -> std::shared_ptr<Callable> {
+    auto func = std::ranges::find_if(
+        functions, [&name](const auto& func) { return func->get_name() == name; });
 
     if (func < functions.end()) return *func;
     return nullptr;
@@ -65,7 +67,7 @@ struct Overload : Ts... {
 };
 template <class... Ts>
 Overload(Ts...) -> Overload<Ts...>;
-ValType InterpreterVisitor::init_var(const Type& type) {
+auto InterpreterVisitor::init_var(const Type& type) -> ValType {
     type.accept(*this);
     return std::visit(Overload{[](const Type* type) -> ValType {
                                    return std::make_shared<LocalFunction>(type->clone());
@@ -96,12 +98,12 @@ void InterpreterVisitor::register_var(const VariableSignature& signature) {
         std::make_shared<Variable>(signature, var_val));
 }
 
-bool InterpreterVisitor::eval_condition(const Expression& expr) {
+auto InterpreterVisitor::eval_condition(const Expression& expr) -> bool {
     expr.accept(*this);
     return std::get<bool>(std::visit(TypeCast(), current_value, ValType{true}));
 }
 
-std::weak_ptr<Variable> InterpreterVisitor::get_for_iterator(const ForLoopArgs& args) {
+auto InterpreterVisitor::get_for_iterator(const ForLoopArgs& args) -> std::weak_ptr<Variable> {
     return std::visit(Overload{[this](const std::unique_ptr<Statement>& iterator) {
                                    iterator->accept(*this);
                                    return this->call_stack.back().var_scope.back().vars.back();

@@ -20,7 +20,7 @@ void modify_value(Arg& arg, ValType value) {
 /**
  * @brief get the value of a variable depending on if it is a reference or not
  */
-ValType get_value(Arg& arg) {
+auto get_value(Arg& arg) -> ValType {
     return std::visit(Overload{[](std::shared_ptr<Variable> var) { return var->value; },
                                [](ValType var) { return var; }},
                       arg);
@@ -29,7 +29,7 @@ ValType get_value(Arg& arg) {
 /**
  * @brief construct a function type based on simple type definitions
  */
-std::unique_ptr<Type> build_type(std::deque<VarType> args) {
+auto build_type(std::deque<VarType> args) -> std::unique_ptr<Type> {
     shall(!args.empty(), "BUILTINS: Expected return type");
     std::unique_ptr<Type> ret_type = args.front().clone();
     args.pop_front();
@@ -40,5 +40,3 @@ std::unique_ptr<Type> build_type(std::deque<VarType> args) {
     }
     return std::make_unique<FuncType>(std::move(ret_type), std::move(func_params));
 }
-
-

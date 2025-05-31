@@ -1,6 +1,6 @@
 #include "operators.h"
 
-std::ostream &operator<<(std::ostream &os, const UnaryOp &op) {
+auto operator<<(std::ostream &os, const UnaryOp &op) -> std::ostream & {
     switch (op) {
         case UnaryOp::NOT:
             os << "NOT";
@@ -12,7 +12,7 @@ std::ostream &operator<<(std::ostream &os, const UnaryOp &op) {
     return os;
 }
 
-std::ostream &operator<<(std::ostream &os, const BinaryOp &op) {
+auto operator<<(std::ostream &os, const BinaryOp &op) -> std::ostream & {
     switch (op) {
         case BinaryOp::NEQ:
             os << "NEQ";
@@ -57,7 +57,7 @@ std::ostream &operator<<(std::ostream &os, const BinaryOp &op) {
     return os;
 }
 
-std::optional<BinaryOp> token_to_binary_op(TokenType type) {
+auto token_to_binary_op(TokenType type) -> std::optional<BinaryOp> {
     switch (type) {
         case TokenType::T_NEQ:
             return BinaryOp::NEQ;
@@ -89,7 +89,7 @@ std::optional<BinaryOp> token_to_binary_op(TokenType type) {
             return std::nullopt;
     }
 }
-std::optional<UnaryOp> token_to_unary_op(TokenType type) {
+auto token_to_unary_op(TokenType type) -> std::optional<UnaryOp> {
     switch (type) {
         case TokenType::T_MINUS:
             return UnaryOp::MINUS;

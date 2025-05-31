@@ -23,5 +23,5 @@ class Node {
     /**
      * get the block's position
      */
-    const Position get_position() const { return pos; }
+    [[nodiscard]] auto get_position() const -> const Position { return pos; }
 };

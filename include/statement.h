@@ -38,7 +38,7 @@ using BlockPtr = std::unique_ptr<Block>;
  */
 class Statement : public Node {
    protected:
-    static std::string indent_str(int amount);
+    static auto indent_str(int amount) -> std::string;
 
    public:
     Statement(const Position pos) : Node(pos) {}

@@ -2,17 +2,17 @@
 
 Token::Token(TokenType type) : type(type) {}
 
-ValueType Token::get_value() const { return value; }
+auto Token::get_value() const -> ValueType { return value; }
 
-TokenType Token::get_type() const { return type; }
+auto Token::get_type() const -> TokenType { return type; }
 
 void Token::set_type(TokenType new_type) { type = new_type; }
 
-Position Token::get_position() const { return position; }
+auto Token::get_position() const -> Position { return position; }
 
 void Token::set_position(Position pos) { position = pos; }
 
-std::ostream &operator<<(std::ostream &os, const Token &token) {
+auto operator<<(std::ostream &os, const Token &token) -> std::ostream & {
     os << "[\033[1;32mTOKEN:\033[0m [Type: \033[1;36m" << token.get_type()
        << "\033[0m, Value: \033[1;36m";
     std::visit(

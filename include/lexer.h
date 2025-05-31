@@ -31,10 +31,10 @@ class Lexer {
     /**
      * @brief get the next token from the tokenizer
      */
-    Token get_token();
+    auto get_token() -> Token;
 
     /**
      * @brief function returning true if the entire file is read
      */
-    bool end() const;
+    [[nodiscard]] auto end() const -> bool;
 };

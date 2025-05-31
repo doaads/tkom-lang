@@ -1,24 +1,37 @@
 #pragma once
 
-#include "interpreter.h"
+#include "exceptions.h"
+#include "local_function.h"
 
+/**
+ * @brief structure of call operators for type casting
+ *
+ * the structure consists of call operators, accepting two arguments which
+ * are the current type, and the desired type
+ */
 struct TypeCast {
-    ValType operator()(std::shared_ptr<Callable> a, std::shared_ptr<Callable> b) {
+    /**
+     * @brief when type casting functions, pass them on if their type is the same
+     */
+    auto operator()(std::shared_ptr<Callable> a, std::shared_ptr<Callable> b) -> ValType {
         if (a->get_type()->is_equal_to(b->get_type())) {
             return a;
         }
         throw InterpreterError("Functions have a different number of parameters");
     }
 
+    /**
+     * @brief if both types are the same, we don't need to type cast
+     */
     template <typename T>
-    ValType operator()(T a, T) {
+    auto operator()(T a, T) -> ValType {
         return a;
     }
 
-    ValType operator()(int a, double) { return static_cast<double>(a); }
-    ValType operator()(double a, int) { return static_cast<int>(a); }
+    auto operator()(int a, double) -> ValType { return static_cast<double>(a); }
+    auto operator()(double a, int) -> ValType { return static_cast<int>(a); }
 
-    ValType operator()(std::string a, int) {
+    auto operator()(std::string a, int) -> ValType {
         try {
             int result = std::stoi(a);
             return result;
@@ -26,27 +39,31 @@ struct TypeCast {
             throw InterpreterError("Cannot cast " + a + " to int");
         }
     }
-    ValType operator()(int a, std::string) { return std::to_string(a); }
+    auto operator()(int a, std::string) -> ValType { return std::to_string(a); }
 
-    ValType operator()(std::string a, double) {
+    auto operator()(std::string a, double) -> ValType {
         try {
             double result = std::stod(a);
             return result;
         } catch (std::exception& e) {
             throw InterpreterError("Cannot cast " + a + " to double");
         }
-        throw InterpreterError("flt type cannot hold a string");
     }
-    ValType operator()(double a, std::string) { return std::to_string(a); }
+    auto operator()(double a, std::string) -> ValType { return std::to_string(a); }
 
-    ValType operator()(bool a, int) { return a ? 1 : 0; }
-    ValType operator()(int a, bool) { return static_cast<bool>(a); }
+    auto operator()(bool a, int) -> ValType { return a ? 1 : 0; }
+    auto operator()(int a, bool) -> ValType { return static_cast<bool>(a); }
 
-    ValType operator()(bool a, double) { return a ? 1.0 : 0.0; }
-    ValType operator()(double a, bool) { return static_cast<bool>(a); }
-    ValType operator()(std::string a, bool) { return a.empty(); }
+    auto operator()(bool a, double) -> ValType { return a ? 1.0 : 0.0; }
+    auto operator()(double a, bool) -> ValType { return static_cast<bool>(a); }
+    auto operator()(std::string a, bool) -> ValType { return a.empty(); }
 
-    template <typename A, typename B>  // we throw if we get 2 type combinations not mentioned here
-    ValType operator()(A, B) { throw InterpreterError("Cannot cast type"); }
+    /**
+     * @brief throw an exception if we get two differing types not mentioned above
+     */
+    template <typename A, typename B>
+    auto operator()(A, B) -> ValType {
+        throw InterpreterError("Cannot cast type");
+    }
 };
 

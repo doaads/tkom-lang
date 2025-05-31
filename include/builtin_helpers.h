@@ -1,11 +1,26 @@
+/**
+ * @file builtin_helpers.h
+ *
+ * Helper functions for easier inplementation of builtin functions
+ */
 #pragma once
 
-#include "interpreter.h"
 #include <deque>
+#include "interpreter_helpers.h"
 
+/**
+ * @brief modify a variable's value.
+ */
 void modify_value(Arg& arg, ValType value);
 
-ValType get_value(Arg& arg);
+/**
+ * @brief get a variable's value
+ */
+auto get_value(Arg& arg) -> ValType;
 
-std::unique_ptr<Type> build_type(std::deque<VarType> args);
-
+/**
+ * @brief build a function type
+ *
+ * The argument must be a std::deque containing the return type as the first element and argument types following it
+ */
+auto build_type(std::deque<VarType> args) -> std::unique_ptr<Type>;

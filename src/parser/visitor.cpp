@@ -6,7 +6,7 @@
 #include "statement_specific.h"
 #include "type.h"
 
-std::string ParserPrinter::indent_str() const {
+auto ParserPrinter::indent_str() const -> std::string {
     return (std::string("┃") + std::string(indent * 2, ' '));
 }
 

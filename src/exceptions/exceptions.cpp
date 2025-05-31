@@ -2,25 +2,25 @@
 
 void CompilerException::set_position(Position pos) { position = pos; }
 
-const Position CompilerException::get_position() const { return position; }
+auto CompilerException::get_position() const -> const Position { return position; }
 
-bool CompilerWarning::is_error() const { return false; }
+auto CompilerWarning::is_error() const -> bool { return false; }
 
-bool CompilerError::is_error() const { return true; }
+auto CompilerError::is_error() const -> bool { return true; }
 
-const char *OverflowWarning::what() const noexcept {
+auto OverflowWarning::what() const noexcept -> const char * {
     return "\033[1;33mWARNING:\033[0m Integer Overflow";
 }
 
-const char *UnexpectedToken::what() const noexcept {
+auto UnexpectedToken::what() const noexcept -> const char * {
     return "\033[1;31mERROR:\033[0m Unexpected token";
 }
 
-const char *IdentifierLengthExceeded::what() const noexcept {
+auto IdentifierLengthExceeded::what() const noexcept -> const char * {
     return "\033[1;31mERROR:\033[0m Identifier Length Exceeded";
 }
 
-const char *UnterminatedString::what() const noexcept {
+auto UnterminatedString::what() const noexcept -> const char * {
     return "\033[1;31mERROR:\033[0m Unterminated string";
 }
 
@@ -29,9 +29,9 @@ const char *UnterminatedString::what() const noexcept {
 GeneralError::GeneralError(const Position &pos, const std::string &msg)
     : std::runtime_error(format_message(pos, msg)), pos(pos) {}
 
-const Position GeneralError::get_position() const { return pos; }
+auto GeneralError::get_position() const -> const Position { return pos; }
 
-std::string GeneralError::format_message(const Position &pos, const std::string &msg) {
+auto GeneralError::format_message(const Position &pos, const std::string &msg) -> std::string {
     return "\033[1;31mException thrown at " + std::to_string(pos.get_line()) + ":" +
            std::to_string(pos.get_column()) + "\033[0m - " + msg;
 }
