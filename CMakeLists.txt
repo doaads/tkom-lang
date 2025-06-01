@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
-elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    add_compile_options(/W4)  # MSVC equivalent of -Wall -Wextra
+    #elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    #add_compile_options(/W4)  # MSVC equivalent of -Wall -Wextra
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

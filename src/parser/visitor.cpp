@@ -7,7 +7,7 @@
 #include "type.h"
 
 auto ParserPrinter::indent_str() const -> std::string {
-    return (std::string("┃") + std::string(indent * 2, ' '));
+    return ("┃" + std::string(indent * 2, ' '));
 }
 
 void ParserPrinter::increase_indent() { ++indent; }

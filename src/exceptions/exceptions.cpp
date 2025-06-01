@@ -1,3 +1,4 @@
+#include <string>
 #include "exceptions.h"
 
 void CompilerException::set_position(Position pos) { position = pos; }

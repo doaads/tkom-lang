@@ -1,3 +1,4 @@
+#include <string>
 #include <fstream>
 #include <iostream>
 
@@ -31,9 +32,10 @@ void print_error(const GeneralError &e, std::string input_file) {
             std::cerr << "  " << line_num - 1 << " | " << prev_line << std::endl;
 
         std::cerr << "\033[1;31m> " << line_num << " | " << curr_line << "\033[0m" << std::endl;
-        std::cerr << "    " << std::string(column_num + std::to_string(line_num).size(), ' ')
+        std::cerr << "    " << std::string(static_cast<size_t>(column_num + std::to_string(line_num).size()), ' ')
+
                   << "\033[1;31m^\033[0m" << std::endl;
-        std::cerr << "    " << std::string(column_num + std::to_string(line_num).size(), ' ')
+        std::cerr << "    " << std::string(static_cast<size_t>(column_num + std::to_string(line_num).size()), ' ')
                   << e.what() << std::endl;
 
         if (!next_line.empty())
