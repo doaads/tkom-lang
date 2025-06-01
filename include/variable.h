@@ -1,18 +1,20 @@
 #pragma once
 
-#include <string>
-
+#include "expression.h"
 #include "type.h"
 
-class ParserVisitor;
+class Visitor;
 
-class FuncParam {
+class VariableSignature {
     std::unique_ptr<Type> type;
-    std::string name;
+    const std::string name;
+    Position pos;
 
    public:
-    FuncParam(std::unique_ptr<Type> type, std::string name);
+    VariableSignature(std::unique_ptr<Type> type, std::string name);
+    VariableSignature(std::unique_ptr<Type> type, std::string name, Position pos);
 
-    void accept(ParserVisitor &visitor) const;
+    void accept(Visitor &visitor) const;
     const Type *get_type() const;
+    const std::string get_name() const;
 };

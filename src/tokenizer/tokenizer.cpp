@@ -10,35 +10,46 @@ Tokenizer::Tokenizer(std::shared_ptr<InputManager> input) : input(input) {}
 
 Token Tokenizer::get_token() {
     Position pos = input->save_position();
-    Token token = build_token(pos);
+    Token token = start_build_token(pos);
     token.set_position(pos);
     return token;
 }
 
-Token Tokenizer::build_token(Position &pos) {
+Token Tokenizer::start_build_token(Position& pos) {
     char current_char = input->get_next_char();
     while (current_char != EOF) {
-        if (std::isspace(current_char)) {
+        if (!std::isspace(current_char)) {
+            return build_token(current_char);
+        } else {
             pos = input->save_position();
             current_char = input->get_next_char();
-            continue;
-        } else if (std::isalpha(current_char)) {
-            return build_identifier(current_char);
-        } else if (std::isdigit(current_char)) {
-            return build_number(current_char);
-        } else if (current_char == '"') {
-            return build_string(current_char);
-        } else if (operator_tokens.count(current_char)) {
-            return build_short_operator(current_char);
-        } else if (first_char_tokens.count(current_char)) {
-            return start_build_long_operator(current_char);
         }
-        throw UnexpectedToken();
     }
     return Token(TokenType::T_EOF);
 }
 
-Token Tokenizer::build_identifier(char current_char) const {
+Token Tokenizer::build_token(char current_char) {
+        OptToken token = build_identifier(current_char);
+        if (token) return *token;
+
+        token = build_number(current_char);
+        if (token) return *token;
+
+        token = build_string(current_char);
+        if (token) return *token;
+
+        token = build_short_operator(current_char);
+        if (token) return *token;
+
+        token = start_build_long_operator(current_char);
+        if (token) return *token;
+
+        throw UnexpectedToken();
+}
+
+OptToken Tokenizer::build_identifier(char current_char) const {
+    if (!std::isalpha(current_char)) return std::nullopt;
+
     std::string identifier = "";
     unsigned short length = 0;
     while (isalnum(current_char) || current_char == '_') {
@@ -62,7 +73,9 @@ Token Tokenizer::build_identifier(char current_char) const {
     return result;
 }
 
-Token Tokenizer::build_number(char current_char) const {
+OptToken Tokenizer::build_number(char current_char) const {
+    if (!std::isdigit(current_char)) return std::nullopt;
+
     unsigned long number = 0;
     bool floating = false;
     unsigned short decimal_places = 0;
@@ -96,7 +109,9 @@ Token Tokenizer::build_number(char current_char) const {
     return result;
 }
 
-Token Tokenizer::build_string(char current_char) const {
+OptToken Tokenizer::build_string(char current_char) const {
+    if (current_char != '"') return std::nullopt;
+
     std::string value = "";
     current_char = input->get_next_char();
     while (current_char != '"') {
@@ -113,12 +128,16 @@ Token Tokenizer::build_string(char current_char) const {
     return result;
 }
 
-Token Tokenizer::build_short_operator(char current_char) const {
+OptToken Tokenizer::build_short_operator(char current_char) const {
+    if (!operator_tokens.count(current_char)) return std::nullopt;
+
     TokenType type = std::get<TokenType>(get_type_for_operator(current_char));
     return build_long_operator(type);
 }
 
-Token Tokenizer::start_build_long_operator(char current_char) const {
+OptToken Tokenizer::start_build_long_operator(char current_char) const {
+    if (!first_char_tokens.count(current_char)) return std::nullopt;
+
     TokenType type = std::get<TokenType>(get_type_for_first_op_char(current_char));
     current_char = input->get_next_char();
     MapTokenType new_type = get_type_for_long_op(current_char, type);
@@ -129,7 +148,7 @@ Token Tokenizer::start_build_long_operator(char current_char) const {
     }
 }
 
-Token Tokenizer::build_long_operator(TokenType type) const {
+OptToken Tokenizer::build_long_operator(TokenType type) const {
     MapTokenType new_type = type;
     char current_char;
     do {
@@ -220,17 +239,17 @@ const std::map<std::pair<char, TokenType>, TokenType> Tokenizer::long_operator_t
     {std::pair<char, TokenType>('=', TokenType::T_NOT), TokenType::T_NEQ},
     {std::pair<char, TokenType>('=', TokenType::T_GT), TokenType::T_GTE},
     {std::pair<char, TokenType>('=', TokenType::T_LT), TokenType::T_LTE},
-    {std::pair<char, TokenType>('>', TokenType::T_EQ), TokenType::T_ASSIGN},
-    {std::pair<char, TokenType>('=', TokenType::T_EQ), TokenType::T_EQ},
-    {std::pair<char, TokenType>('&', TokenType::T_AND), TokenType::T_AND},
-    {std::pair<char, TokenType>('|', TokenType::T_OR), TokenType::T_OR},
+    {std::pair<char, TokenType>('>', TokenType::T_EQ_ST), TokenType::T_ASSIGN},
+    {std::pair<char, TokenType>('=', TokenType::T_EQ_ST), TokenType::T_EQ},
+    {std::pair<char, TokenType>('&', TokenType::T_AND_ST), TokenType::T_AND},
+    {std::pair<char, TokenType>('|', TokenType::T_OR_ST), TokenType::T_OR},
     {std::pair<char, TokenType>('/', TokenType::T_DIV), TokenType::T_COMMENT},
-    {std::pair<char, TokenType>(':', TokenType::T_FUNC_SIGN), TokenType::T_FUNC_SIGN},
+    {std::pair<char, TokenType>(':', TokenType::T_FUNC_SIGN_ST), TokenType::T_FUNC_SIGN},
 };
 
 const std::unordered_map<char, TokenType> Tokenizer::first_char_tokens{
-    {'=', TokenType::T_EQ},
-    {'|', TokenType::T_OR},
-    {'&', TokenType::T_AND},
-    {':', TokenType::T_FUNC_SIGN},
+    {'=', TokenType::T_EQ_ST},
+    {'|', TokenType::T_OR_ST},
+    {'&', TokenType::T_AND_ST},
+    {':', TokenType::T_FUNC_SIGN_ST},
 };

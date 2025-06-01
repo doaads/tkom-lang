@@ -1,0 +1,12 @@
+// some high order function examples
+void main {
+    for (0 => mut int i; i < 20) {
+        (i + "\n") -> stdout;
+    } -> increment @ print_current_val;
+    ret 0;
+}
+
+void print_current_val :: [void::mut int] func, mut int a {
+    (a) -> func;
+    ("LOG: value: " + a + "\n") -> stdout;
+}

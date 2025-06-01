@@ -51,7 +51,7 @@ FuncSignPtr Parser::parse_func_signature() {
     shall(is_token(TokenType::T_IDENTIFIER), "Expected function identifier");
 
     std::string func_name = current_token.get_value<std::string>();
-    std::vector<std::unique_ptr<FuncParam>> params;
+    std::vector<std::unique_ptr<VariableSignature>> params;
 
     if (!is_next_token(TokenType::T_FUNC_SIGN)) {
         shall(is_token(TokenType::T_LBLOCK), "Expected '::'");
@@ -64,7 +64,7 @@ FuncSignPtr Parser::parse_func_signature() {
         next_token();
         if ((param = shall(parse_func_param(), "Expected parameter")))
             params.push_back(std::move(param));
-    } while (is_next_token(TokenType::T_COMMA));
+    } while (is_token(TokenType::T_COMMA));
 
     return std::make_unique<FuncSignature>(pos, std::move(ret_type), std::move(params), func_name);
 }
@@ -76,8 +76,9 @@ FuncSignPtr Parser::parse_func_signature() {
 ParamPtr Parser::parse_func_param() {
     TypePtr current_arg_type = shall(parse_type(), "Expected type");
     shall(is_token(TokenType::T_IDENTIFIER), "Expected parameter name");
-    std::string current_arg_name = current_token.get_value<std::string>();
-    return std::make_unique<FuncParam>(std::move(current_arg_type), current_arg_name);
+    const std::string val = current_token.get_value<std::string>();
+    next_token();
+    return std::make_unique<VariableSignature>(std::move(current_arg_type), val);
 }
 
 /*
@@ -146,17 +147,19 @@ StatementPtr Parser::parse_assign_or_call() {
     }
 
     next_token();
-    TypePtr type = shall(parse_type(), "Expected type");
+    TypePtr type = parse_type();
 
     shall(is_token(TokenType::T_IDENTIFIER), "Expected identifier");
-    ExprPtr identifier =
-        std::make_unique<IdentifierExpr>(get_position(), current_token.get_value<std::string>());
-
-    shall(is_next_token(TokenType::T_SEMICOLON), "Expected ';'");
+    const std::string val = current_token.get_value<std::string>();
     next_token();
 
-    return std::make_unique<AssignStatement>(pos, std::move(expr), std::move(type),
-                                             std::move(identifier));
+    ParamPtr signature =
+        std::make_unique<VariableSignature>(std::move(type), val);
+
+    shall(is_token(TokenType::T_SEMICOLON), "Expected ';'");
+    next_token();
+
+    return std::make_unique<AssignStatement>(pos, std::move(expr), std::move(signature));
 }
 
 /*
@@ -211,10 +214,11 @@ ForLoopArgsPtr Parser::parse_for_loop_args() {
 
     next_token();
     StatementPtr assign = parse_assign_or_call();
-    std::variant<std::monostate, StatementPtr, ExprPtr> iterator;
+    std::variant<StatementPtr, std::string> iterator;
     if (!assign) {
-        ExprPtr identifier = shall(parse_identifier(), "Expected assign or identifier");
-        shall(is_token(TokenType::T_SEMICOLON), "Expected ';'");
+        shall(is_token(TokenType::T_IDENTIFIER), "Expected assign or identifier");
+        std::string identifier = current_token.get_value<std::string>();
+        shall(is_next_token(TokenType::T_SEMICOLON), "Expected ';'");
     } else {
         iterator = std::move(assign);
     }
@@ -434,13 +438,8 @@ ExprPtr Parser::parse_func_call_or_parens() {
     auto args = parse_func_args();
     if (!args) return nullptr;
 
-    ArgOrExpr bindfrt = parse_bindfrt_or_call(std::move(*args));
-    if (ExprPtr* expr = std::get_if<ExprPtr>(&bindfrt)) {
-        return std::move(*expr);
-    }
-
-    // move args back
-    args = std::move(std::get<std::vector<ExprPtr>>(bindfrt));
+    ExprPtr bindfrt = parse_bindfrt_or_call(*args);
+    if (bindfrt) return bindfrt;
 
     if (args->empty()) throw ParserError(get_position(), "Expected expression");
 
@@ -448,24 +447,25 @@ ExprPtr Parser::parse_func_call_or_parens() {
 }
 
 /*
- * we have parsed the arguments, now
- * after parsing args, parse either call or bind front
- * if function returns the ownership of arguments, it means it failed.
+ *      we have parsed the arguments, now
+ *      after parsing args, parse either call or bind front
  */
 
-ArgOrExpr Parser::parse_bindfrt_or_call(std::vector<ExprPtr> args) {
-    ArgOrExpr bindfrt = parse_bind_front_right(std::move(args));
-    if (!bindfrt.index()) return std::get<ExprPtr>(std::move(bindfrt));
+ExprPtr Parser::parse_bindfrt_or_call(std::vector<ExprPtr>& args) {
+    ExprPtr bindfrt = parse_bind_front_right(args);
+    if (bindfrt) return bindfrt;
 
     const Position pos = get_position();
 
-    // move args back
-    args = std::move(std::get<std::vector<ExprPtr>>(bindfrt));
-
-    if (!is_token(TokenType::T_CALL)) return args;  // fail, return ownership of args
+    if (!is_token(TokenType::T_CALL)) return nullptr;
     next_token();
 
-    ExprPtr right = parse_bind_front();
+    //ExprPtr right = parse_bind_front();
+    ExprPtr right = parse_func_call_or_parens();
+    if (!right) right = parse_bind_front();
+
+    shall(right != nullptr, "Expected bind front or identifier");
+
     return std::make_unique<CallExpr>(pos, std::move(right), std::move(args));
 }
 
@@ -473,8 +473,8 @@ ArgOrExpr Parser::parse_bindfrt_or_call(std::vector<ExprPtr> args) {
  *      bind_front = [func_args, bindfrt_op], decorator
  */
 
-ArgOrExpr Parser::parse_bind_front_right(std::vector<ExprPtr> args) {
-    if (!is_token(TokenType::T_BINDFRT)) return args;
+ExprPtr Parser::parse_bind_front_right(std::vector<ExprPtr>& args) {
+    if (!is_token(TokenType::T_BINDFRT)) return nullptr;
 
     const Position pos = get_position();
 
@@ -490,10 +490,10 @@ ExprPtr Parser::parse_bind_front() {
     std::optional<std::vector<ExprPtr>> args = parse_func_args();
     if (!args) return nullptr;
 
-    ArgOrExpr bind_front = parse_bind_front_right(std::move(*args));
-    if (bind_front.index()) return nullptr;
+    ExprPtr bind_front = parse_bind_front_right(*args);
+    if (!bind_front) return nullptr;
 
-    return std::get<ExprPtr>(std::move(bind_front));
+    return bind_front;
 }
 
 /*
@@ -602,14 +602,13 @@ TypePtr Parser::parse_func_type() {
     shall(is_token(TokenType::T_FUNC_SIGN), "Expected '::'");
 
     std::vector<std::unique_ptr<Type>> params;
-    TokenType separator;
-    while (!is_token(TokenType::T_RFTYPE)) {
+    do {
         next_token();
-        params.push_back(parse_type());
-        separator = current_token.get_type();
-        if (separator != TokenType::T_COMMA && separator != TokenType::T_RFTYPE)
-            throw ParserError(get_position(), "Expected ',' or ']'");
-    }
+        auto type = parse_type();
+        if (type) params.push_back(std::move(type));
+    } while (is_token(TokenType::T_COMMA));
+
+    shall(is_token(TokenType::T_RFTYPE), "Expected ']'");
 
     next_token();
 

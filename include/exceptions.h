@@ -59,12 +59,23 @@ class UnterminatedString : public CompilerError {
     ~UnterminatedString() = default;
 };
 
-class ParserError : public std::runtime_error {
+class GeneralError : public std::runtime_error {
    private:
-    const Position pos;
+    Position pos;
     static std::string format_message(const Position &pos, const std::string &msg);
 
    public:
-    ParserError(const Position &pos, const std::string &msg);
+    GeneralError(const Position &pos, const std::string &msg);
+    virtual ~GeneralError() = default;
     const Position get_position() const;
+};
+
+class ParserError : public GeneralError {
+    public:
+        ParserError(const Position& pos, const std::string &msg) : GeneralError(pos, msg) {}
+};
+
+class InterpreterError : public std::runtime_error {
+    public:
+        InterpreterError(const std::string &msg) : std::runtime_error(msg) {}
 };

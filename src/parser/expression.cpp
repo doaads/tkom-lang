@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "parser_visitor.h"
+#include "visitor.h"
 #include "type.h"
 
 /* ------------------------------[LITERAL]--------------------------------*/
@@ -14,25 +14,17 @@ LiteralExpr::LiteralExpr(const Position pos, Token token)
     LiteralExpr::type = *type;
 }
 
-void LiteralExpr::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void LiteralExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
+
+struct LiteralString {
+    const std::string operator()(std::monostate) { return "null"; }
+    const std::string operator()(const std::string& rhs) { return rhs; }
+    const std::string operator()(bool rhs) { return rhs ? "true" : "false"; }
+    const std::string operator()(auto rhs) { return std::to_string(rhs); }
+};
 
 std::string LiteralExpr::get_value_string() const {
-    return std::visit(
-        [](auto &&val) -> std::string {
-            using T = std::decay_t<decltype(val)>;
-            if constexpr (std::is_same_v<T, std::monostate>) {
-                return "null";
-            } else if constexpr (std::is_same_v<T, std::string>) {
-                return val;
-            } else if constexpr (std::is_same_v<T, bool>) {
-                return val ? "true" : "false";
-            } else if constexpr (std::is_arithmetic_v<T>) {
-                return std::to_string(val);
-            } else {
-                throw std::runtime_error("Invalid type");
-            }
-        },
-        value);
+    return std::visit(LiteralString(), value);
 }
 
 /* ----------------------------[IDENTIFIER]--------------------------------*/
@@ -41,7 +33,7 @@ IdentifierExpr::IdentifierExpr(const Position pos, std::string identifier)
     : Expression(pos), identifier(identifier) {}
 
 std::string IdentifierExpr::get_identifier() const { return identifier; }
-void IdentifierExpr::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void IdentifierExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 /* ------------------------------[UNARY]--------------------------------*/
 
@@ -50,7 +42,7 @@ UnaryExpr::UnaryExpr(Position pos, UnaryOp unary_op, std::unique_ptr<Expression>
 
 UnaryOp UnaryExpr::get_operator() const { return op_type; }
 
-void UnaryExpr::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void UnaryExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const Expression *UnaryExpr::get_right() const { return right.get(); }
 
@@ -60,7 +52,7 @@ BinaryExpr::BinaryExpr(Position pos, std::unique_ptr<Expression> left, BinaryOp 
                        std::unique_ptr<Expression> right)
     : Expression(pos), left(std::move(left)), op(op), right(std::move(right)) {}
 
-void BinaryExpr::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void BinaryExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 BinaryOp BinaryExpr::get_operator() const { return op; }
 
@@ -85,7 +77,7 @@ const std::vector<const Expression *> CallExpr::get_args() const {
     return result;
 }
 
-void CallExpr::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void CallExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 /* ------------------------------[BINDFRT]--------------------------------*/
 
@@ -93,7 +85,7 @@ BindFrtExpr::BindFrtExpr(Position pos, std::unique_ptr<Expression> name,
                          std::vector<std::unique_ptr<Expression>> args)
     : Expression(pos), func_name(std::move(name)), args(std::move(args)) {}
 
-void BindFrtExpr::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void BindFrtExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const Expression *BindFrtExpr::get_func_name() const { return func_name.get(); }
 

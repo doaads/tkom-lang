@@ -26,9 +26,21 @@ add_library(variable src/parser/variable.cpp)
 add_library(block src/parser/block.cpp)
 add_library(operators src/parser/operators.cpp)
 add_library(program src/parser/program.cpp)
-add_library(parser_visitor src/parser/parser_visitor.cpp)
+add_library(visitor src/parser/visitor.cpp)
 add_library(print_error src/exceptions/print_error.cpp)
 add_library(parser src/parser/parser.cpp)
+
+add_library(local_function src/interpreter/local_function.cpp)
+add_library(builtins
+    src/interpreter/builtins.cpp
+    src/interpreter/builtin_helpers.cpp
+)
+add_library(interpreter
+    src/interpreter/interpreter_expr.cpp
+    src/interpreter/interpreter.cpp
+    src/interpreter/interpreter_helpers.cpp
+    src/interpreter/tkom_interpreter.cpp
+)
 
 target_include_directories(tokenizer PUBLIC include)
 target_include_directories(token PUBLIC include)
@@ -45,18 +57,23 @@ target_include_directories(variable PUBLIC include)
 target_include_directories(operators PUBLIC include)
 target_include_directories(block PUBLIC include)
 target_include_directories(program PUBLIC include)
-target_include_directories(parser_visitor PUBLIC include)
+target_include_directories(visitor PUBLIC include)
 target_include_directories(print_error PUBLIC include)
 target_include_directories(parser PUBLIC include)
 
-add_executable(tkom src/parser_main.cpp)
-target_include_directories(tkom PRIVATE include)
-target_link_libraries(tkom PRIVATE
+target_include_directories(interpreter PUBLIC include)
+target_include_directories(local_function PUBLIC include)
+target_include_directories(builtins PUBLIC include)
+
+add_library(tkom-parser-lib INTERFACE)
+add_executable(tkom-parser src/parser_main.cpp)
+target_include_directories(tkom-parser PRIVATE include)
+target_link_libraries(tkom-parser-lib INTERFACE
     Boost::program_options
     lexer
     parser
     print_error
-    parser_visitor
+    visitor
     program
     block
     tokenizer
@@ -71,6 +88,7 @@ target_link_libraries(tkom PRIVATE
     variable
     operators
 )
+target_link_libraries(tkom-parser PRIVATE tkom-parser-lib)
 
 add_executable(tkom-lexer src/lexer_main.cpp)
 target_include_directories(tkom-lexer PRIVATE include)
@@ -83,6 +101,15 @@ target_link_libraries(tkom-lexer PRIVATE
     input
     position
     exceptions
+)
+
+add_executable(tkom src/tkom.cpp)
+target_include_directories(tkom PRIVATE include)
+target_link_libraries(tkom PRIVATE
+    interpreter
+    builtins
+    local_function
+    tkom-parser-lib
 )
 
 # Enable testing

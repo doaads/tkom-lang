@@ -26,12 +26,12 @@ const char *UnterminatedString::what() const noexcept {
 
 /* ----------------------------- Parser -------------------------------- */
 
-ParserError::ParserError(const Position &pos, const std::string &msg)
+GeneralError::GeneralError(const Position &pos, const std::string &msg)
     : std::runtime_error(format_message(pos, msg)), pos(pos) {}
 
-const Position ParserError::get_position() const { return pos; }
+const Position GeneralError::get_position() const { return pos; }
 
-std::string ParserError::format_message(const Position &pos, const std::string &msg) {
+std::string GeneralError::format_message(const Position &pos, const std::string &msg) {
     return "\033[1;31mException thrown at " + std::to_string(pos.get_line()) + ":" +
            std::to_string(pos.get_column()) + "\033[0m - " + msg;
 }

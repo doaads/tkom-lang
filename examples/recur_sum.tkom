@@ -1,0 +1,13 @@
+int recur_sum::int n {
+    if (n <= 1) {
+        ret n;
+    }
+    ret ((n - 1) -> recur_sum) + n;
+}
+
+int main {
+    ("Podaj n: ") -> stdin => int n;
+    ("suma to: " + (n)->recur_sum + "\n")->stdout;
+    ret 0;
+}
+

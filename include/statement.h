@@ -8,7 +8,7 @@
  * statements in the abstract syntax tree (AST).
  * and type aliases used for working with statements. Each type of statement (e.g., assignment,
  * conditionals, loops) is represented by a subclass of `Statement` and implements the `accept`
- * method for interacting with a `ParserVisitor`.
+ * method for interacting with a `Visitor`.
  */
 
 #include <memory>
@@ -20,7 +20,7 @@
 
 class Expression;
 class Block;
-class ParserVisitor;
+class Visitor;
 class Type;
 struct ForLoopArgs;
 enum class TokenType;
@@ -34,7 +34,7 @@ using BlockPtr = std::unique_ptr<Block>;
  * The `Statement` class represents a statement in program tree. It is the
  * base class for all specific statement types such as conditionals, loops, assignments, and
  * return statements. The `Statement` class provides an abstract `accept` method, which must
- * be implemented by each derived class to interact with a `ParserVisitor`.
+ * be implemented by each derived class to interact with a `Visitor`.
  */
 class Statement : public Node {
    protected:
@@ -43,5 +43,5 @@ class Statement : public Node {
    public:
     Statement(const Position pos) : Node(pos) {}
 
-    virtual void accept(ParserVisitor &visitor) const = 0;
+    virtual void accept(Visitor &visitor) const = 0;
 };

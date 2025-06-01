@@ -7,3 +7,4 @@ ColumnLimit: 100
 Language: Cpp
 PointerAlignment: Right
 NamespaceIndentation: All
+AlignAfterOpenBracket: Align  # don’t realign params under the opening ‘(’

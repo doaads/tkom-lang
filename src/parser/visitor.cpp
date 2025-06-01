@@ -1,4 +1,4 @@
-#include "parser_visitor.h"
+#include "visitor.h"
 
 #include "block.h"
 #include "expression.h"
@@ -114,21 +114,22 @@ void ParserPrinter::visit(const ElseStatement &stmt) {
     decrease_indent();
 }
 void ParserPrinter::visit(const RetStatement &stmt) {
-    os << indent_str() << "[\033[1;36mRet\033[0m] ";
-    if (auto retval = stmt.get_retval()) retval->accept(*this);
+    os << indent_str() << "[\033[1;36mRet\033[0m]";
     print_pos(stmt);
     os << std::endl;
+    if (auto retval = stmt.get_retval()) retval->accept(*this);
 }
 
 void ParserPrinter::visit(const CallStatement &stmt) { stmt.get_call()->accept(*this); }
+
 void ParserPrinter::visit(const AssignStatement &stmt) {
     os << indent_str() << "[\033[1;36mAssign\033[0m] ";
     os << "\033[1;31m";
-    stmt.get_type()->accept(*this);
+    if (auto type = stmt.get_type()) type->accept(*this);
     os << "\033[0m";
+    os << stmt.get_identifier() << " ";
     print_pos(stmt);
     os << std::endl;
-    stmt.get_identifier()->accept(*this);
     increase_indent();
     stmt.get_value()->accept(*this);
     decrease_indent();
@@ -169,7 +170,7 @@ void ParserPrinter::visit(const FuncType &type) {
     os << "]";
 }
 
-void ParserPrinter::visit(const FuncParam &var) { var.get_type()->accept(*this); }
+void ParserPrinter::visit(const VariableSignature &var) { var.get_type()->accept(*this); }
 
 void ParserPrinter::visit(const FuncSignature &sign) {
     os << "┏━━━FUNCTION: \033[1;33m";

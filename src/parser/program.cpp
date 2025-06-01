@@ -1,8 +1,8 @@
 #include "program.h"
 
-#include "parser_visitor.h"
+#include "visitor.h"
 
-void Program::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void Program::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const std::vector<const Function *> Program::get_functions() const {
     std::vector<const Function *> result;

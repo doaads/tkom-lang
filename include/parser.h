@@ -23,10 +23,10 @@ using FuncPtr = std::unique_ptr<Function>;
 using TypePtr = std::unique_ptr<Type>;
 using FuncSignPtr = std::unique_ptr<FuncSignature>;
 using ProgramPtr = std::unique_ptr<Program>;
-using ParamPtr = std::unique_ptr<FuncParam>;
+using ParamPtr = std::unique_ptr<VariableSignature>;
 
 /**
- * @brief A class responsible for parsing source code into an program tree.
+ * @brief A class responsible for parsing source code into a program tree.
  */
 class Parser {
    private:
@@ -202,7 +202,7 @@ class Parser {
 
     /**
      * @brief Parses a return statement.
-     * `ret_statement = ret, expression`
+     * `ret_statement = ret, expression, ";"
      *
      * @return A unique pointer to the parsed return statement.
      */
@@ -224,7 +224,7 @@ class Parser {
      * previous owner
      *
      */
-    ArgOrExpr parse_bindfrt_or_call(std::vector<ExprPtr> args);
+    ExprPtr parse_bindfrt_or_call(std::vector<ExprPtr>& args);
 
     /**
      * @brief Parses a bind front-right expression.
@@ -234,7 +234,7 @@ class Parser {
      * @return ExprPtr if function succeeds, if it does not - it returns the argument vector to
      * previous owner
      */
-    ArgOrExpr parse_bind_front_right(std::vector<ExprPtr> args);
+    ExprPtr parse_bind_front_right(std::vector<ExprPtr>& args);
 
     /**
      * @brief Parses a bind front expression.
@@ -271,7 +271,7 @@ class Parser {
 
     /**
      * @brief Parses a variable type.
-     * `var_type_mut      = var_type [mut]`
+     * `var_type_mut      = [mut] var_type`
      * `var_type          = int`
      *                   `| flt`
      *                   `| string`

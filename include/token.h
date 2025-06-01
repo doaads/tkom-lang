@@ -9,27 +9,58 @@
 
 using ValueType = std::variant<std::monostate, std::string, int, double, bool>;
 
+/**
+ * @brief class representing a single token
+ */
 class Token {
    private:
-    TokenType type;
-    ValueType value;
-    Position position;
+    TokenType type;  //< the type of the token
+    ValueType value;  //< the value of the token
+    Position position;  //< the position of the token
 
    public:
     Token() = default;
+    /**
+     * @brief Construct the token with a given type
+     */
     Token(TokenType type);
+
+    /**
+     * @brief get the value of a token
+     */
     template <typename T>
     T get_value() const {
         return std::get<T>(value);
     }
+
+    /**
+     * @brief get the value of the token as a `std::variant` (`ValueType`)
+     */
     ValueType get_value() const;
     template <typename T>
     void set_value(T new_value) {
         value = new_value;
     }
+
+    /**
+     * @brief get the type of the token
+     */
     TokenType get_type() const;
+
+    /**
+     * @brief set the type of the token
+     * @param new_type the new type of the token
+     */
     void set_type(TokenType new_type);
+
+    /**
+     * @brief get the token's position
+     */
     Position get_position() const;
+
+    /**
+     * @brief set the token's position
+     */
     void set_position(Position pos);
 
     friend std::ostream &operator<<(std::ostream &os, const Token &token);

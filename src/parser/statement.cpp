@@ -1,6 +1,6 @@
 #include "block.h"
 #include "expression.h"
-#include "parser_visitor.h"
+#include "visitor.h"
 #include "statement_specific.h"
 #include "tokens.h"
 #include "type.h"
@@ -17,7 +17,7 @@ ForLoopStatement::ForLoopStatement(Position pos, std::unique_ptr<ForLoopArgs> ar
       body(std::move(body)),
       on_iter_call(std::move(on_iter_call)) {}
 
-void ForLoopStatement::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void ForLoopStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const ForLoopArgs *ForLoopStatement::get_args() const { return args.get(); }
 const Block *ForLoopStatement::get_body() const { return body.get(); }
@@ -29,7 +29,7 @@ WhileLoopStatement::WhileLoopStatement(Position pos, std::unique_ptr<Expression>
                                        std::unique_ptr<Block> body)
     : Statement(pos), condition(std::move(condition)), body(std::move(body)) {}
 
-void WhileLoopStatement::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void WhileLoopStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const Expression *WhileLoopStatement::get_condition() const { return condition.get(); }
 const Block *WhileLoopStatement::get_body() const { return body.get(); };
@@ -51,7 +51,7 @@ ConditionalStatement::ConditionalStatement(Position pos, TokenType type,
                                            std::unique_ptr<Block> body)
     : Statement(pos), type(type), condition(std::move(condition)), body(std::move(body)) {}
 
-void ConditionalStatement::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void ConditionalStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 TokenType ConditionalStatement::get_type() const { return type; }
 
@@ -66,7 +66,7 @@ const Statement *ConditionalStatement::get_else_st() const { return else_st.get(
 ElseStatement::ElseStatement(Position pos, std::unique_ptr<Block> body)
     : Statement(pos), body(std::move(body)) {}
 
-void ElseStatement::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void ElseStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const Block *ElseStatement::get_body() const { return body.get(); }
 
@@ -75,7 +75,7 @@ const Block *ElseStatement::get_body() const { return body.get(); }
 RetStatement::RetStatement(Position pos, std::unique_ptr<Expression> retval)
     : Statement(pos), retval(std::move(retval)) {}
 
-void RetStatement::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void RetStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const Expression *RetStatement::get_retval() const { return retval.get(); }
 
@@ -84,21 +84,21 @@ const Expression *RetStatement::get_retval() const { return retval.get(); }
 CallStatement::CallStatement(Position pos, std::unique_ptr<Expression> call)
     : Statement(pos), call(std::move(call)) {}
 
-void CallStatement::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void CallStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const Expression *CallStatement::get_call() const { return call.get(); }
 
 /* ------------------------------[ASSIGN]--------------------------------*/
 
 AssignStatement::AssignStatement(Position pos, std::unique_ptr<Expression> value,
-                                 std::unique_ptr<Type> type, std::unique_ptr<Expression> identifier)
+                                 std::unique_ptr<VariableSignature> signature)
     : Statement(pos),
       value(std::move(value)),
-      type(std::move(type)),
-      identifier(std::move(identifier)) {}
+      var_sign(std::move(signature)) {}
 
-void AssignStatement::accept(ParserVisitor &visitor) const { visitor.visit(*this); }
+void AssignStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 const Expression *AssignStatement::get_value() const { return value.get(); }
-const Type *AssignStatement::get_type() const { return type.get(); }
-const Expression *AssignStatement::get_identifier() const { return identifier.get(); }
+const Type *AssignStatement::get_type() const { return var_sign->get_type(); }
+const std::string AssignStatement::get_identifier() const { return var_sign->get_name(); }
+const VariableSignature *AssignStatement::get_signature() const { return var_sign.get(); }
