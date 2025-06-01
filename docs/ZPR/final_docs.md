@@ -8,7 +8,7 @@ The project's goal was to implement a programming language that has:
 * function arguments passed via reference
 * high-order functions implemented into it
 
-The implemented language's syntax and more details on the grammar can be found [here](../TKOM/dokumentacja-koncowa.md)
+The implemented language's syntax and more details on the grammar can be found [here](https://doaads.github.io/tkom-lang/md_docs_2TKOM_2dokumentacja-koncowa-tkom.html)
 
 The following tools have been used during implementation:
 * **C++23**
