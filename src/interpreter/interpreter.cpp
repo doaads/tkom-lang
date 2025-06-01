@@ -10,7 +10,11 @@ InterpreterVisitor::InterpreterVisitor(std::vector<std::shared_ptr<Callable>> bu
 
 void InterpreterVisitor::visit(const Program& program) {
     for (const auto& fn : program.get_functions()) {
-        register_function(fn);
+        try {
+            register_function(fn);
+        } catch (InterpreterError &e) {
+            throw GeneralError(fn->get_position(), e.what());
+        }
     }
     auto main = find_func("main");
     main->call(*this, {});

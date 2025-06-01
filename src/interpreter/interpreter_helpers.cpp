@@ -6,6 +6,8 @@
 #include "type_cast.h"
 
 void InterpreterVisitor::register_function(const Function* func) {
+    std::string name = func->get_signature()->get_name();
+    shall(!find_func(name), "Attempted to re-define " + name);
     auto func_ptr = std::make_shared<GlobalFunction>(func);
     functions.push_back(std::move(func_ptr));
 }
