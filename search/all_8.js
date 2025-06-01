@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['c_0',['ZPR/TKOM - Interpreted Programming language implementation in C++',['../index.html',1,'']]],
+  ['call_1',['call',['../classCallStatement.html#a6d13c1dfcefb45b0255ad7e2914ae77d',1,'CallStatement::call'],['../classBuiltIn.html#a97daf8637fb3903e34225cc68e2c8d13',1,'BuiltIn::call()'],['../classCallable.html#a60dd29fa47febfc9027275a6c1b4d6fd',1,'Callable::call()'],['../classGlobalFunction.html#a6af905d36f418d08157cc557e54c10c2',1,'GlobalFunction::call()'],['../classLocalFunction.html#ae895676cd8883cb8455838d8c045d07f',1,'LocalFunction::call()']]],
+  ['call_5fstack_2',['call_stack',['../classInterpreterVisitor.html#a432ff8990c133f96dae4ba5b02c9fad9',1,'InterpreterVisitor']]],
+  ['callable_3',['Callable',['../classCallable.html',1,'']]],
+  ['callable_2eh_4',['callable.h',['../callable_8h.html',1,'']]],
+  ['callee_5',['callee',['../classLocalFunction.html#ad587edd8964a46c9f768f0a06d1c4574',1,'LocalFunction']]],
+  ['callexpr_6',['callexpr',['../classCallExpr.html',1,'CallExpr'],['../classCallExpr.html#a8aa2796f152170e66ca45baed22dee1d',1,'CallExpr::CallExpr()']]],
+  ['callstackframe_7',['CallStackFrame',['../structCallStackFrame.html',1,'']]],
+  ['callstatement_8',['callstatement',['../classCallStatement.html',1,'CallStatement'],['../classCallStatement.html#a3c2b7c69049a9353d51c9d2ebd554c52',1,'CallStatement::CallStatement()']]],
+  ['check_5ftypes_9',['check_types',['../classBuiltIn.html#a8486e4bb096b3182640a6c0ad3460cf9',1,'BuiltIn']]],
+  ['clone_10',['clone',['../classType.html#a41731e639b5b5aa98cc39b21d8d6cab3',1,'Type::clone()'],['../classVarType.html#ac14ddcddfdd6785c54ab91e9cc7163fb',1,'VarType::clone()'],['../classFuncType.html#a92d73f1e9e4c472e2ffeb665534ad696',1,'FuncType::clone()']]],
+  ['clone_5ftype_5fas_5ftype_5fobj_11',['clone_type_as_type_obj',['../classFuncSignature.html#abc2a464626e7ee7fe48ae78bf41d3573',1,'FuncSignature']]],
+  ['column_12',['column',['../classPosition.html#a47a14aa0b9e3d15fe2fef8283c26be37',1,'Position']]],
+  ['compare_13',['Compare',['../structCompare.html',1,'']]],
+  ['compilererror_14',['compilererror',['../classCompilerError.html',1,'CompilerError'],['../classCompilerError.html#a315474a2d3f8835f6e1c01099a1af751',1,'CompilerError::CompilerError()']]],
+  ['compilerexception_15',['compilerexception',['../classCompilerException.html',1,'CompilerException'],['../classCompilerException.html#a7d539e528908bb97d3d5dfa5f24bec1a',1,'CompilerException::CompilerException()']]],
+  ['compilerwarning_16',['compilerwarning',['../classCompilerWarning.html',1,'CompilerWarning'],['../classCompilerWarning.html#a42cd1e79ebfff1648ab22c5b64b06de0',1,'CompilerWarning::CompilerWarning()']]],
+  ['condition_17',['condition',['../structForLoopArgs.html#a7ea53a17fd0beebfb74da0dc558315b0',1,'ForLoopArgs::condition'],['../classWhileLoopStatement.html#ab48a083e3ec6db55e5667f2af8dd73db',1,'WhileLoopStatement::condition'],['../classConditionalStatement.html#a92881a45c92ef85306956d7b7bf386fe',1,'ConditionalStatement::condition']]],
+  ['conditionalstatement_18',['conditionalstatement',['../classConditionalStatement.html#a576d1f2f39cb0c1afafa7534f9e1439e',1,'ConditionalStatement::ConditionalStatement(Position pos, TokenType type, std::unique_ptr&lt; Expression &gt; condition, std::unique_ptr&lt; Block &gt; body, std::unique_ptr&lt; Statement &gt; else_st)'],['../classConditionalStatement.html#af134a270c84ade99a6625a47f1e35d30',1,'ConditionalStatement::ConditionalStatement(Position pos, TokenType type, std::unique_ptr&lt; Expression &gt; condition, std::unique_ptr&lt; Block &gt; body)'],['../classConditionalStatement.html',1,'ConditionalStatement']]],
+  ['curr_5fname_19',['curr_name',['../structVarRef.html#acd6195018adc3190487fccdc9b5ccd7b',1,'VarRef']]],
+  ['current_5ftoken_20',['current_token',['../classParser.html#a21ea3fca7b244f80d61baa44d145d3c6',1,'Parser']]],
+  ['current_5ftype_21',['current_type',['../classInterpreterVisitor.html#ac19292a34ed6bfa5db6fcbe5289b2570',1,'InterpreterVisitor']]],
+  ['current_5fvalue_22',['current_value',['../classInterpreterVisitor.html#a06a877922fa1ee701e0ff6d8c7dbd58b',1,'InterpreterVisitor']]],
+  ['czas_20życia_20zmiennych_23',['1.2.1 Czas życia zmiennych',['../md_docs_2TKOM_2dokumentacja-koncowa-tkom.html#autotoc_md7',1,'']]]
+];
