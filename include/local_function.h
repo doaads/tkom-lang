@@ -20,7 +20,7 @@ using ArgVector = std::vector<Arg>;
  */
 class Callable {
    public:
-    ~Callable() = default;
+    virtual ~Callable() = default;
     virtual void call(InterpreterVisitor& interpreter, ArgVector params) = 0;
     [[nodiscard]] virtual auto get_func() const -> const Function* = 0;
     [[nodiscard]] virtual auto get_type() const -> const Type* = 0;
