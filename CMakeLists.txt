@@ -6,13 +6,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
-    find_package(Boost REQUIRED COMPONENTS program_options)
 elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     add_compile_options(/bigobj)  # MSVC equivalent of -Wall -Wextra
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+find_package(Boost REQUIRED COMPONENTS program_options)
 
 include_directories(include)
 
