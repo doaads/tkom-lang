@@ -2,6 +2,7 @@
 
 #include <map>
 #include <unordered_map>
+#include <optional>
 
 #include "input_manager.h"
 #include "token.h"
