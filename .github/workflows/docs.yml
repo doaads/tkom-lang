@@ -1,0 +1,26 @@
+name: Deploy documentation with GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # or 'master', adjust if needed
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install just
+        uses: extractions/setup-just@v1
+
+      - name: Build docs with just
+        run: just docs
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/html
