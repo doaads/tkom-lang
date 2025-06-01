@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
 
+/**
+ * @brief class representing all possible tokens
+ */
 enum class TokenType {
     // keywords
     T_INT_TYPE,
@@ -66,4 +69,4 @@ enum class TokenType {
     T_FUNC_SIGN_ST
 };
 
-std::ostream &operator<<(std::ostream &os, const TokenType type);
+auto operator<<(std::ostream &os, const TokenType type) -> std::ostream &;

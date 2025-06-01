@@ -6,7 +6,7 @@
  * @brief function for promoting types to string for the purpose of weak-type arithmetics
  */
 template <typename T>
-std::string to_string(const T& v) {
+auto to_string(const T& v) -> std::string {
     if constexpr (std::is_same_v<T, bool>) {
         return v ? "true" : "false";
     } else if constexpr (std::is_arithmetic_v<T>) {
@@ -22,7 +22,7 @@ std::string to_string(const T& v) {
  * @brief function for checking if types are of arithmetic rank for 2-argument functions
  */
 template <typename L, typename R>
-constexpr bool are_of_arithmetic_rank() {
+constexpr auto are_of_arithmetic_rank() -> bool {
     return std::is_arithmetic_v<L> && std::is_arithmetic_v<R>;
 }
 
@@ -30,7 +30,7 @@ constexpr bool are_of_arithmetic_rank() {
  * @brief function returning the value of an arithmetic function provided as the third argument
  */
 template <typename OpFunc>
-ValType get_val_for_arithmetic(const ValType& l, const ValType& r, OpFunc func) {
+auto get_val_for_arithmetic(const ValType& l, const ValType& r, OpFunc func) -> ValType {
     return std::visit(
         [func](auto l, auto r) -> ValType {
             if constexpr (are_of_arithmetic_rank<decltype(l), decltype(r)>()) return func(l, r);
@@ -55,10 +55,10 @@ Overload(Ts...) -> Overload<Ts...>;
  * @brief struct for handling the '+' operator
  */
 struct Add {
-    ValType operator()(const std::string& l, const std::string& r) { return l + r; }
-    ValType operator()(const std::string& l, auto r) { return l + to_string(r); }
-    ValType operator()(auto l, const std::string& r) { return to_string(l) + r; }
-    ValType operator()(const auto& l, const auto& r) {
+    auto operator()(const std::string& l, const std::string& r) -> ValType { return l + r; }
+    auto operator()(const std::string& l, auto r) -> ValType { return l + to_string(r); }
+    auto operator()(auto l, const std::string& r) -> ValType { return to_string(l) + r; }
+    auto operator()(const auto& l, const auto& r) -> ValType {
         return get_val_for_arithmetic(
             l, r, [](const auto& a, const auto& b) -> ValType { return a + b; });
     }
@@ -71,7 +71,7 @@ struct Add {
  */
 
 struct Sub {
-    ValType operator()(auto l, auto r) {
+    auto operator()(auto l, auto r) -> ValType {
         return get_val_for_arithmetic(l, r, [](auto a, auto b) -> ValType { return a - b; });
     }
 };
@@ -83,15 +83,15 @@ struct Sub {
  * string
  */
 struct Mul {
-    ValType mult_string(const std::string& str, int count) {
+    auto mult_string(const std::string& str, int count) -> ValType {
         if (count < 0) throw InterpreterError("Cannot multiply a string by a negative integer");
         std::string result;
         for (int i = 0; i < count; ++i) result += str;
         return result;
     }
-    ValType operator()(const std::string& s, int count) { return mult_string(s, count); }
-    ValType operator()(int count, const std::string& s) { return mult_string(s, count); }
-    ValType operator()(const auto& l, const auto& r) {
+    auto operator()(const std::string& s, int count) -> ValType { return mult_string(s, count); }
+    auto operator()(int count, const std::string& s) -> ValType { return mult_string(s, count); }
+    auto operator()(const auto& l, const auto& r) -> ValType {
         return get_val_for_arithmetic(
             l, r, [](const auto& a, const auto& b) -> ValType { return a * b; });
     }
@@ -103,7 +103,7 @@ struct Mul {
  * works only for arithmetic types
  */
 struct Div {
-    ValType operator()(const auto& l, const auto& r) {
+    auto operator()(const auto& l, const auto& r) -> ValType {
         return get_val_for_arithmetic(
             l, r, [](const auto& a, const auto& b) -> ValType { return a / b; });
     }
@@ -118,8 +118,10 @@ template <typename CompareFunc>
 struct Compare {
     CompareFunc func;
 
-    ValType operator()(const std::string& l, const std::string& r) { return func(l, r); }
-    ValType operator()(const auto& l, const auto& r) { return get_val_for_arithmetic(l, r, func); }
+    auto operator()(const std::string& l, const std::string& r) -> ValType { return func(l, r); }
+    auto operator()(const auto& l, const auto& r) -> ValType {
+        return get_val_for_arithmetic(l, r, func);
+    }
 };
 
 /**
@@ -128,7 +130,7 @@ struct Compare {
 template <typename UnaryFunc>
 struct Unary {
     UnaryFunc func;
-    ValType operator()(auto l) {
+    auto operator()(auto l) -> ValType {
         if constexpr (std::is_arithmetic_v<decltype(l)>) return func(l);
         throw InterpreterError("Unsupported operator for type");
     }
@@ -141,17 +143,20 @@ template <typename LogicalFunc>
 struct Logical {
     LogicalFunc func;
 
-    ValType operator()(const std::string& l, const std::string& r) {
+    auto operator()(const std::string& l, const std::string& r) -> ValType {
         return func(!l.empty(), !r.empty());
     }
-    ValType operator()(const auto& l, const auto& r) { return get_val_for_arithmetic(l, r, func); }
+    auto operator()(const auto& l, const auto& r) -> ValType {
+        return get_val_for_arithmetic(l, r, func);
+    }
 };
 
 struct Decorate {
-    ValType operator()(const std::shared_ptr<Callable>& l, const std::shared_ptr<Callable>& r) {
+    auto operator()(const std::shared_ptr<Callable>& l, const std::shared_ptr<Callable>& r)
+        -> ValType {
         ArgVector args;
-        args.push_back(ValType{l});
+        args.emplace_back(ValType{l});
         return std::make_shared<LocalFunction>(r, args);
     }
-    ValType operator()(auto, auto) { throw InterpreterError("Unsupported operator: '@'"); }
+    auto operator()(auto, auto) -> ValType { throw InterpreterError("Unsupported operator: '@'"); }
 };

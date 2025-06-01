@@ -1,11 +1,12 @@
 #include "input_manager.h"
 
 #include <istream>
+#include <utility>
 
 InputManager::InputManager(std::shared_ptr<Position> position, std::shared_ptr<std::istream> input)
-    : position(position), input_stream(input), handed_back(false), eof(false) {}
+    : position(std::move(position)), input_stream(std::move(input)) {}
 
-char InputManager::get_next_char() {
+auto InputManager::get_next_char() -> char {
     if (handed_back) {
         handed_back = false;
         return last_char;
@@ -23,11 +24,11 @@ char InputManager::get_next_char() {
     return last_char;
 }
 
-Position InputManager::save_position() const { return *position; }
+auto InputManager::save_position() const -> Position { return *position; }
 
 void InputManager::unget() { handed_back = true; }
 
-bool InputManager::end() const { return eof; }
+auto InputManager::end() const -> bool { return eof; }
 
 void InputManager::skip_line() {
     while (last_char != '\n' && last_char != EOF) {

@@ -6,7 +6,7 @@
 #include "statement_specific.h"
 #include "type.h"
 
-std::string ParserPrinter::indent_str() const {
+auto ParserPrinter::indent_str() const -> std::string {
     return (std::string("┃") + std::string(indent * 2, ' '));
 }
 
@@ -26,7 +26,6 @@ void ParserPrinter::visit(const Program &program) {
 void ParserPrinter::visit(const LiteralExpr &expr) {
     os << indent_str() << "└[LiteralExpr \033[1m";
     os << expr.get_value_string() << "\033[0m] ";
-    os << "at ";
     print_pos(expr);
     os << std::endl;
 }

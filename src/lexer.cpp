@@ -12,7 +12,7 @@ Lexer::Lexer(std::shared_ptr<std::istream> input_stream, bool verbose) : Lexer(i
     this->verbose = verbose;
 }
 
-Token Lexer::get_token() {
+auto Lexer::get_token() -> Token {
     Token result;
     try {
         result = tokenizer->get_token();
@@ -27,4 +27,4 @@ Token Lexer::get_token() {
     return result;
 }
 
-bool Lexer::end() const { return eof; }
+auto Lexer::end() const -> bool { return eof; }

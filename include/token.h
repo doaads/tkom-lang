@@ -29,14 +29,14 @@ class Token {
      * @brief get the value of a token
      */
     template <typename T>
-    T get_value() const {
+    [[nodiscard]] auto get_value() const -> T {
         return std::get<T>(value);
     }
 
     /**
      * @brief get the value of the token as a `std::variant` (`ValueType`)
      */
-    ValueType get_value() const;
+    [[nodiscard]] auto get_value() const -> ValueType;
     template <typename T>
     void set_value(T new_value) {
         value = new_value;
@@ -45,7 +45,7 @@ class Token {
     /**
      * @brief get the type of the token
      */
-    TokenType get_type() const;
+    [[nodiscard]] auto get_type() const -> TokenType;
 
     /**
      * @brief set the type of the token
@@ -56,12 +56,12 @@ class Token {
     /**
      * @brief get the token's position
      */
-    Position get_position() const;
+    [[nodiscard]] auto get_position() const -> Position;
 
     /**
      * @brief set the token's position
      */
     void set_position(Position pos);
 
-    friend std::ostream &operator<<(std::ostream &os, const Token &token);
+    friend auto operator<<(std::ostream &os, const Token &token) -> std::ostream &;
 };

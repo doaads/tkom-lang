@@ -49,16 +49,14 @@ class LiteralExpr : public Expression {
 
    public:
     template <typename T>
-    T get_value() const {
-            return std::get<T>(value);
+    auto get_value() const -> T {
+        return std::get<T>(value);
     }
-    ValueType get_value() const {
-            return value;
-    }
+    [[nodiscard]] auto get_value() const -> ValueType { return value; }
 
     LiteralExpr(const Position pos, Token token);
     void accept(Visitor &visitor) const override;
-    std::string get_value_string() const;
+    [[nodiscard]] auto get_value_string() const -> std::string;
 };
 
 /**
@@ -72,7 +70,7 @@ class IdentifierExpr : public Expression {
     IdentifierExpr(const Position pos, std::string identifier);
 
     void accept(Visitor &visitor) const override;
-    std::string get_identifier() const;
+    [[nodiscard]] auto get_identifier() const -> std::string;
 };
 
 /**
@@ -88,10 +86,10 @@ class UnaryExpr : public Expression {
 
    public:
     UnaryExpr(const Position pos, UnaryOp unary_op, std::unique_ptr<Expression> right);
-    UnaryOp get_operator() const;
-    void accept(Visitor &visitor) const;
+    [[nodiscard]] auto get_operator() const -> UnaryOp;
+    void accept(Visitor &visitor) const override;
 
-    const Expression *get_right() const;
+    [[nodiscard]] auto get_right() const -> const Expression *;
 };
 
 /**
@@ -110,11 +108,11 @@ class BinaryExpr : public Expression {
    public:
     BinaryExpr(const Position pos, std::unique_ptr<Expression> left, BinaryOp op,
                std::unique_ptr<Expression> right);
-    void accept(Visitor &visitor) const;
+    void accept(Visitor &visitor) const override;
 
-    const Expression *get_left() const;
-    BinaryOp get_operator() const;
-    const Expression *get_right() const;
+    [[nodiscard]] auto get_left() const -> const Expression *;
+    [[nodiscard]] auto get_operator() const -> BinaryOp;
+    [[nodiscard]] auto get_right() const -> const Expression *;
 };
 
 /**
@@ -131,10 +129,10 @@ class CallExpr : public Expression {
    public:
     CallExpr(const Position pos, std::unique_ptr<Expression> name,
              std::vector<std::unique_ptr<Expression>> args);
-    void accept(Visitor &visitor) const;
+    void accept(Visitor &visitor) const override;
 
-    const Expression *get_func_name() const;
-    const std::vector<const Expression *> get_args() const;
+    [[nodiscard]] auto get_func_name() const -> const Expression *;
+    [[nodiscard]] auto get_args() const -> const std::vector<const Expression *>;
 };
 
 /**
@@ -148,8 +146,8 @@ class BindFrtExpr : public Expression {
    public:
     BindFrtExpr(const Position pos, std::unique_ptr<Expression> name,
                 std::vector<std::unique_ptr<Expression>> args);
-    void accept(Visitor &visitor) const;
+    void accept(Visitor &visitor) const override;
 
-    const Expression *get_func_name() const;
-    const std::vector<const Expression *> get_args() const;
+    [[nodiscard]] auto get_func_name() const -> const Expression *;
+    [[nodiscard]] auto get_args() const -> const std::vector<const Expression *>;
 };

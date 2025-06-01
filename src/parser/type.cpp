@@ -2,7 +2,7 @@
 
 #include "visitor.h"
 
-std::ostream &operator<<(std::ostream &os, const BaseType &type) {
+auto operator<<(std::ostream &os, const BaseType &type) -> std::ostream & {
     switch (type) {
         case BaseType::INT:
             os << "int";
@@ -23,7 +23,7 @@ std::ostream &operator<<(std::ostream &os, const BaseType &type) {
     return os;
 }
 
-std::optional<BaseType> translate_token_to_type(TokenType type) {
+auto translate_token_to_type(TokenType type) -> std::optional<BaseType> {
     switch (type) {
         case TokenType::T_INT_TYPE:
             return BaseType::INT;
@@ -40,7 +40,7 @@ std::optional<BaseType> translate_token_to_type(TokenType type) {
     }
 }
 
-std::optional<BaseType> get_literal_token_type(TokenType type) {
+auto get_literal_token_type(TokenType type) -> std::optional<BaseType> {
     switch (type) {
         case TokenType::T_INT:
             return BaseType::INT;
@@ -59,16 +59,16 @@ std::optional<BaseType> get_literal_token_type(TokenType type) {
 
 VarType::VarType(BaseType type, bool mut) : type(type), mut(mut) {}
 
-BaseType VarType::get_type() const { return type; }
-bool VarType::get_mut() const { return mut; }
+auto VarType::get_type() const -> BaseType { return type; }
+auto VarType::get_mut() const -> bool { return mut; }
 void VarType::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 FuncType::FuncType(std::unique_ptr<Type> ret_type, std::vector<std::unique_ptr<Type>> params)
     : ret_type(std::move(ret_type)), params(std::move(params)) {}
 
-const Type *FuncType::get_ret_type() const { return ret_type.get(); }
+auto FuncType::get_ret_type() const -> const Type * { return ret_type.get(); }
 
-std::vector<const Type *> FuncType::get_params() const {
+auto FuncType::get_params() const -> std::vector<const Type *> {
     std::vector<const Type *> result;
     result.reserve(params.size());
     for (const auto &param : params) {
@@ -79,20 +79,20 @@ std::vector<const Type *> FuncType::get_params() const {
 
 void FuncType::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-bool VarType::is_equal_to(const Type* other) const {
+auto VarType::is_equal_to(const Type *other) const -> bool {
     if (other == nullptr) return false;
     if (!other->is_func()) {
-        const VarType* var_other = static_cast<const VarType*>(other);
+        const auto *var_other = static_cast<const VarType *>(other);
         return type == var_other->type && mut == var_other->mut;
     }
     return false;
 }
 
-bool FuncType::is_equal_to(const Type* other) const {
+auto FuncType::is_equal_to(const Type *other) const -> bool {
     if (other == nullptr) return false;
     if (other->is_func()) {
-        const FuncType* func_other = static_cast<const FuncType*>(other);
-        
+        const auto *func_other = static_cast<const FuncType *>(other);
+
         if (!ret_type->is_equal_to(func_other->ret_type.get())) {
             return false;
         }
@@ -112,11 +112,11 @@ bool FuncType::is_equal_to(const Type* other) const {
     return false;
 }
 
-std::unique_ptr<Type> VarType::clone(size_t) const {
+auto VarType::clone(size_t) const -> std::unique_ptr<Type> {
     return std::make_unique<VarType>(type, mut);
 }
 
-std::unique_ptr<Type> FuncType::clone(size_t skip_args) const{
+auto FuncType::clone(size_t skip_args) const -> std::unique_ptr<Type> {
     if (skip_args > params.size()) {
         throw std::out_of_range("FuncType::clone: skip_args out of range");
     }

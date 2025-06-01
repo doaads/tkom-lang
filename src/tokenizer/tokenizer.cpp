@@ -3,19 +3,20 @@
 #include <unistd.h>
 
 #include <cmath>
+#include <utility>
 
 #include "exceptions.h"
 
-Tokenizer::Tokenizer(std::shared_ptr<InputManager> input) : input(input) {}
+Tokenizer::Tokenizer(std::shared_ptr<InputManager> input) : input(std::move(input)) {}
 
-Token Tokenizer::get_token() {
+auto Tokenizer::get_token() -> Token {
     Position pos = input->save_position();
     Token token = start_build_token(pos);
     token.set_position(pos);
     return token;
 }
 
-Token Tokenizer::start_build_token(Position& pos) {
+auto Tokenizer::start_build_token(Position& pos) -> Token {
     char current_char = input->get_next_char();
     while (current_char != EOF) {
         if (!std::isspace(current_char)) {
@@ -25,29 +26,29 @@ Token Tokenizer::start_build_token(Position& pos) {
             current_char = input->get_next_char();
         }
     }
-    return Token(TokenType::T_EOF);
+    return {TokenType::T_EOF};
 }
 
-Token Tokenizer::build_token(char current_char) {
-        OptToken token = build_identifier(current_char);
-        if (token) return *token;
+auto Tokenizer::build_token(char current_char) -> Token {
+    OptToken token = build_identifier(current_char);
+    if (token) return *token;
 
-        token = build_number(current_char);
-        if (token) return *token;
+    token = build_number(current_char);
+    if (token) return *token;
 
-        token = build_string(current_char);
-        if (token) return *token;
+    token = build_string(current_char);
+    if (token) return *token;
 
-        token = build_short_operator(current_char);
-        if (token) return *token;
+    token = build_short_operator(current_char);
+    if (token) return *token;
 
-        token = start_build_long_operator(current_char);
-        if (token) return *token;
+    token = start_build_long_operator(current_char);
+    if (token) return *token;
 
-        throw UnexpectedToken();
+    throw UnexpectedToken();
 }
 
-OptToken Tokenizer::build_identifier(char current_char) const {
+auto Tokenizer::build_identifier(char current_char) const -> OptToken {
     if (!std::isalpha(current_char)) return std::nullopt;
 
     std::string identifier = "";
@@ -73,7 +74,7 @@ OptToken Tokenizer::build_identifier(char current_char) const {
     return result;
 }
 
-OptToken Tokenizer::build_number(char current_char) const {
+auto Tokenizer::build_number(char current_char) const -> OptToken {
     if (!std::isdigit(current_char)) return std::nullopt;
 
     unsigned long number = 0;
@@ -109,7 +110,7 @@ OptToken Tokenizer::build_number(char current_char) const {
     return result;
 }
 
-OptToken Tokenizer::build_string(char current_char) const {
+auto Tokenizer::build_string(char current_char) const -> OptToken {
     if (current_char != '"') return std::nullopt;
 
     std::string value = "";
@@ -128,14 +129,14 @@ OptToken Tokenizer::build_string(char current_char) const {
     return result;
 }
 
-OptToken Tokenizer::build_short_operator(char current_char) const {
+auto Tokenizer::build_short_operator(char current_char) const -> OptToken {
     if (!operator_tokens.count(current_char)) return std::nullopt;
 
     TokenType type = std::get<TokenType>(get_type_for_operator(current_char));
     return build_long_operator(type);
 }
 
-OptToken Tokenizer::start_build_long_operator(char current_char) const {
+auto Tokenizer::start_build_long_operator(char current_char) const -> OptToken {
     if (!first_char_tokens.count(current_char)) return std::nullopt;
 
     TokenType type = std::get<TokenType>(get_type_for_first_op_char(current_char));
@@ -148,7 +149,7 @@ OptToken Tokenizer::start_build_long_operator(char current_char) const {
     }
 }
 
-OptToken Tokenizer::build_long_operator(TokenType type) const {
+auto Tokenizer::build_long_operator(TokenType type) const -> OptToken {
     MapTokenType new_type = type;
     char current_char;
     do {
@@ -161,42 +162,42 @@ OptToken Tokenizer::build_long_operator(TokenType type) const {
     return Token(type);
 }
 
-MapTokenType Tokenizer::get_type_for_operator(char c) const {
+auto Tokenizer::get_type_for_operator(char c) const -> MapTokenType {
     auto it = operator_tokens.find(c);
     if (it != operator_tokens.end()) {
         return it->second;
     } else {
-        return MapTokenType(std::monostate());
+        return {std::monostate()};
     }
 }
 
-MapTokenType Tokenizer::get_type_for_first_op_char(char c) const {
+auto Tokenizer::get_type_for_first_op_char(char c) const -> MapTokenType {
     auto it = first_char_tokens.find(c);
     if (it != first_char_tokens.end()) {
         return it->second;
     } else {
-        return MapTokenType(std::monostate());
+        return {std::monostate()};
     }
 }
 
-MapTokenType Tokenizer::get_type_for_long_op(char c, TokenType type) const {
+auto Tokenizer::get_type_for_long_op(char c, TokenType type) const -> MapTokenType {
     std::pair<char, TokenType> pair = std::pair<char, TokenType>(c, type);
     auto it = long_operator_tokens.find(pair);
     if (it == long_operator_tokens.end()) {
-        return MapTokenType(std::monostate());
+        return {std::monostate()};
     }
     return it->second;
 }
 
-MapTokenType Tokenizer::get_keyword_for_string(std::string value) const {
+auto Tokenizer::get_keyword_for_string(std::string value) const -> MapTokenType {
     auto it = keyword_tokens.find(value);
     if (it == keyword_tokens.end()) {
-        return MapTokenType(std::monostate());
+        return {std::monostate()};
     }
     return it->second;
 }
 
-char Tokenizer::get_char_for_escape(char c) const {
+auto Tokenizer::get_char_for_escape(char c) const -> char {
     switch (c) {
         case 'n':
             return '\n';

@@ -6,7 +6,7 @@
 /**
  * @brief function printing a string into the standard output
  */
-ValType __stdout(ArgVector& args) {
+auto __stdout(ArgVector& args) -> ValType {
     ValType string = get_value(args[0]);
     std::cout << std::get<std::string>(string);
     return std::monostate();  // void
@@ -15,13 +15,13 @@ ValType __stdout(ArgVector& args) {
 /**
  * @brief function incrementing a mutable integer
  */
-ValType __increment_r(ArgVector& args) {
+auto __increment_r(ArgVector& args) -> ValType {
     ValType arg = get_value(args[0]);
     modify_value(args[0], std::get<int>(arg) + 1);
     return std::monostate();  // void
 }
 
-ValType __increment_v(ArgVector& args) {
+auto __increment_v(ArgVector& args) -> ValType {
     ValType arg = get_value(args[0]);
     return std::get<int>(arg) + 1;
 }
@@ -29,13 +29,13 @@ ValType __increment_v(ArgVector& args) {
 /**
  * @brief function decrementing a mutable integer
  */
-ValType __decrement(ArgVector& args) {
+auto __decrement(ArgVector& args) -> ValType {
     ValType arg = get_value(args[0]);
     modify_value(args[0], std::get<int>(arg) - 1);
     return std::monostate();  // void
 }
 
-ValType __stdin(ArgVector& args) {
+auto __stdin(ArgVector& args) -> ValType {
     std::string val;
     ValType string = get_value(args[0]);
     std::cout << std::get<std::string>(string);
@@ -43,13 +43,13 @@ ValType __stdin(ArgVector& args) {
     return val;
 }
 
-ValType __sqrt_r(ArgVector& args) {
+auto __sqrt_r(ArgVector& args) -> ValType {
     ValType arg = get_value(args[0]);
     modify_value(args[0], sqrt(std::get<double>(arg)));
     return std::monostate();
 }
 
-ValType __sqrt_v(ArgVector& args) {
+auto __sqrt_v(ArgVector& args) -> ValType {
     ValType arg = get_value(args[0]);
     return sqrt(std::get<double>(arg));
 }

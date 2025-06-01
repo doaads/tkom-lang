@@ -1,9 +1,12 @@
-#include <memory>
-
 #include "interpreter.h"
+
+#include <memory>
+#include <utility>
+
 #include "interpreter_shall.h"
 
-InterpreterVisitor::InterpreterVisitor(std::vector<std::shared_ptr<Callable>> builtins) : functions(builtins) {}
+InterpreterVisitor::InterpreterVisitor(std::vector<std::shared_ptr<Callable>> builtins)
+    : functions(std::move(builtins)) {}
 
 void InterpreterVisitor::visit(const Program& program) {
     for (const auto& fn : program.get_functions()) {
@@ -23,7 +26,7 @@ void InterpreterVisitor::visit(const Function& func) {
 }
 
 void InterpreterVisitor::visit(const Block& block) {
-    call_stack.back().var_scope.push_back(BlockScope());
+    call_stack.back().var_scope.emplace_back();
     for (auto& stmt : block.get_statements()) {
         try_visit(stmt);
         if (returning) break;
@@ -41,10 +44,10 @@ void InterpreterVisitor::visit(const CallExpr& expr) {
         // we got a identifier expression, pass by ref
         if (receiver == ReceivedBy::VAR) {
             auto var_ptr = var;
-            args.push_back(var_ptr.lock());
-        // we got a standard expression, we will pass by value
+            args.emplace_back(var_ptr.lock());
+            // we got a standard expression, we will pass by value
         } else {
-            args.push_back(current_value);
+            args.emplace_back(current_value);
         }
     }
     std::get<std::shared_ptr<Callable>>(func)->call(*this, args);
@@ -143,9 +146,9 @@ void InterpreterVisitor::visit(const BindFrtExpr& expr) {
         try_visit(arg);
         if (receiver == ReceivedBy::VAR) {
             auto var_ptr = var;
-            args.push_back(var_ptr.lock()->value);
+            args.emplace_back(var_ptr.lock()->value);
         } else {
-            args.push_back(current_value);
+            args.emplace_back(current_value);
         }
     }
     auto new_func = std::make_shared<LocalFunction>(func, args);

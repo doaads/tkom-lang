@@ -27,7 +27,7 @@ struct ForLoopArgs {
     std::variant<std::unique_ptr<Statement>, std::string>
         iterator;  // identifier or Assign
     std::unique_ptr<Expression> condition;
-    friend std::ostream &operator<<(std::ostream &os, ForLoopArgs args);
+    friend auto operator<<(std::ostream &os, ForLoopArgs args) -> std::ostream &;
 };
 
 /**
@@ -45,9 +45,9 @@ class ForLoopStatement : public Statement {
 
     void accept(Visitor &visitor) const override;
 
-    const ForLoopArgs *get_args() const;
-    const Block *get_body() const;
-    const Expression *get_on_iter() const;
+    [[nodiscard]] auto get_args() const -> const ForLoopArgs *;
+    [[nodiscard]] auto get_body() const -> const Block *;
+    [[nodiscard]] auto get_on_iter() const -> const Expression *;
 };
 
 /**
@@ -64,8 +64,8 @@ class WhileLoopStatement : public Statement {
 
     void accept(Visitor &visitor) const override;
 
-    const Expression *get_condition() const;
-    const Block *get_body() const;
+    [[nodiscard]] auto get_condition() const -> const Expression *;
+    [[nodiscard]] auto get_body() const -> const Block *;
 };
 
 /**
@@ -86,10 +86,10 @@ class ConditionalStatement : public Statement {
 
     void accept(Visitor &visitor) const override;
 
-    TokenType get_type() const;
-    const Expression *get_condition() const;
-    const Block *get_body() const;
-    const Statement *get_else_st() const;
+    [[nodiscard]] auto get_type() const -> TokenType;
+    [[nodiscard]] auto get_condition() const -> const Expression *;
+    [[nodiscard]] auto get_body() const -> const Block *;
+    [[nodiscard]] auto get_else_st() const -> const Statement *;
 };
 
 /**
@@ -104,7 +104,7 @@ class ElseStatement : public Statement {
 
     void accept(Visitor &visitor) const override;
 
-    const Block *get_body() const;
+    [[nodiscard]] auto get_body() const -> const Block *;
 };
 
 /**
@@ -119,7 +119,7 @@ class RetStatement : public Statement {
 
     void accept(Visitor &visitor) const override;
 
-    const Expression *get_retval() const;
+    [[nodiscard]] auto get_retval() const -> const Expression *;
 };
 
 /**
@@ -134,7 +134,7 @@ class CallStatement : public Statement {
 
     void accept(Visitor &visitor) const override;
 
-    const Expression *get_call() const;
+    [[nodiscard]] auto get_call() const -> const Expression *;
 };
 
 /**
@@ -150,8 +150,8 @@ class AssignStatement : public Statement {
 
     void accept(Visitor &visitor) const override;
 
-    const Expression *get_value() const;
-    const Type *get_type() const;
-    const std::string get_identifier() const;
-    const VariableSignature* get_signature() const;
+    [[nodiscard]] auto get_value() const -> const Expression *;
+    [[nodiscard]] auto get_type() const -> const Type *;
+    [[nodiscard]] auto get_identifier() const -> const std::string;
+    [[nodiscard]] auto get_signature() const -> const VariableSignature *;
 };

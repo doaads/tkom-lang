@@ -9,15 +9,21 @@
 class ParserPrinter;
 class Visitor;
 
+/**
+ * @brief class representing a block of code consisting of statements
+ */
 class Block : public Node {
    private:
-    std::vector<std::unique_ptr<Statement>> statements;
+    std::vector<std::unique_ptr<Statement>> statements;  //< the block's body
 
    public:
     Block(std::vector<std::unique_ptr<Statement>> statements);
-    ~Block() = default;
+    ~Block() override = default;
 
     void accept(Visitor &visitor) const;
 
-    std::vector<const Statement *> get_statements() const;
+    /**
+     * @brief get the block's body as a vector of const Statement*
+     */
+    [[nodiscard]] auto get_statements() const -> std::vector<const Statement *>;
 };

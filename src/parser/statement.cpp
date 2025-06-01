@@ -5,7 +5,7 @@
 #include "tokens.h"
 #include "type.h"
 
-std::string Statement::indent_str(int amount) { return std::string(amount * 2, ' '); }
+auto Statement::indent_str(int amount) -> std::string { return std::string(amount * 2, ' '); }
 
 /* ------------------------------[FOR LOOP]--------------------------------*/
 
@@ -19,9 +19,9 @@ ForLoopStatement::ForLoopStatement(Position pos, std::unique_ptr<ForLoopArgs> ar
 
 void ForLoopStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-const ForLoopArgs *ForLoopStatement::get_args() const { return args.get(); }
-const Block *ForLoopStatement::get_body() const { return body.get(); }
-const Expression *ForLoopStatement::get_on_iter() const { return on_iter_call.get(); }
+auto ForLoopStatement::get_args() const -> const ForLoopArgs * { return args.get(); }
+auto ForLoopStatement::get_body() const -> const Block * { return body.get(); }
+auto ForLoopStatement::get_on_iter() const -> const Expression * { return on_iter_call.get(); }
 
 /* -----------------------------[WHILE LOOP]-------------------------------*/
 
@@ -31,8 +31,8 @@ WhileLoopStatement::WhileLoopStatement(Position pos, std::unique_ptr<Expression>
 
 void WhileLoopStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-const Expression *WhileLoopStatement::get_condition() const { return condition.get(); }
-const Block *WhileLoopStatement::get_body() const { return body.get(); };
+auto WhileLoopStatement::get_condition() const -> const Expression * { return condition.get(); }
+auto WhileLoopStatement::get_body() const -> const Block * { return body.get(); };
 
 /* -----------------------------[CONDITIONAL]-------------------------------*/
 
@@ -53,13 +53,13 @@ ConditionalStatement::ConditionalStatement(Position pos, TokenType type,
 
 void ConditionalStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-TokenType ConditionalStatement::get_type() const { return type; }
+auto ConditionalStatement::get_type() const -> TokenType { return type; }
 
-const Expression *ConditionalStatement::get_condition() const { return condition.get(); }
+auto ConditionalStatement::get_condition() const -> const Expression * { return condition.get(); }
 
-const Block *ConditionalStatement::get_body() const { return body.get(); }
+auto ConditionalStatement::get_body() const -> const Block * { return body.get(); }
 
-const Statement *ConditionalStatement::get_else_st() const { return else_st.get(); }
+auto ConditionalStatement::get_else_st() const -> const Statement * { return else_st.get(); }
 
 /* -------------------------------[ELSE]---------------------------------*/
 
@@ -68,7 +68,7 @@ ElseStatement::ElseStatement(Position pos, std::unique_ptr<Block> body)
 
 void ElseStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-const Block *ElseStatement::get_body() const { return body.get(); }
+auto ElseStatement::get_body() const -> const Block * { return body.get(); }
 
 /* -------------------------------[RET]----------------------------------*/
 
@@ -77,7 +77,7 @@ RetStatement::RetStatement(Position pos, std::unique_ptr<Expression> retval)
 
 void RetStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-const Expression *RetStatement::get_retval() const { return retval.get(); }
+auto RetStatement::get_retval() const -> const Expression * { return retval.get(); }
 
 /* -------------------------------[CALL]---------------------------------*/
 
@@ -86,7 +86,7 @@ CallStatement::CallStatement(Position pos, std::unique_ptr<Expression> call)
 
 void CallStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-const Expression *CallStatement::get_call() const { return call.get(); }
+auto CallStatement::get_call() const -> const Expression * { return call.get(); }
 
 /* ------------------------------[ASSIGN]--------------------------------*/
 
@@ -98,7 +98,7 @@ AssignStatement::AssignStatement(Position pos, std::unique_ptr<Expression> value
 
 void AssignStatement::accept(Visitor &visitor) const { visitor.visit(*this); }
 
-const Expression *AssignStatement::get_value() const { return value.get(); }
-const Type *AssignStatement::get_type() const { return var_sign->get_type(); }
-const std::string AssignStatement::get_identifier() const { return var_sign->get_name(); }
-const VariableSignature *AssignStatement::get_signature() const { return var_sign.get(); }
+auto AssignStatement::get_value() const -> const Expression * { return value.get(); }
+auto AssignStatement::get_type() const -> const Type * { return var_sign->get_type(); }
+auto AssignStatement::get_identifier() const -> const std::string { return var_sign->get_name(); }
+auto AssignStatement::get_signature() const -> const VariableSignature * { return var_sign.get(); }

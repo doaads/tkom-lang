@@ -25,7 +25,7 @@ class InterpreterVisitor : public Visitor {
 
     std::vector<std::shared_ptr<Callable>>
         functions;  //< vector of available global functions (either user-defined or built-in)
-    ValType decorate(ValType decorator, ValType decoratee);
+    auto decorate(ValType decorator, ValType decoratee) -> ValType;
 
     /**
      * @brief register a new global function
@@ -47,12 +47,12 @@ class InterpreterVisitor : public Visitor {
     /**
      * @brief prepare a for loop iterator
      */
-    std::weak_ptr<Variable> get_for_iterator(const ForLoopArgs &args);
+    auto get_for_iterator(const ForLoopArgs &args) -> std::weak_ptr<Variable>;
 
     /**
      * @brief evaluate a condition
      */
-    bool eval_condition(const Expression &expr);
+    auto eval_condition(const Expression &expr) -> bool;
 
     template <typename T>
     void try_visit(T obj) {
@@ -70,41 +70,41 @@ class InterpreterVisitor : public Visitor {
      * @brief construct with a vector of builtin functions
      */
     InterpreterVisitor(std::vector<std::shared_ptr<Callable>> builtins);
-    void visit(const Program &program);
+    void visit(const Program &program) override;
 
-    void visit(const LiteralExpr &expr);
-    void visit(const IdentifierExpr &expr);
-    void visit(const UnaryExpr &expr);
-    void visit(const BinaryExpr &expr);
-    void visit(const CallExpr &expr);
-    void visit(const BindFrtExpr &expr);
+    void visit(const LiteralExpr &expr) override;
+    void visit(const IdentifierExpr &expr) override;
+    void visit(const UnaryExpr &expr) override;
+    void visit(const BinaryExpr &expr) override;
+    void visit(const CallExpr &expr) override;
+    void visit(const BindFrtExpr &expr) override;
 
-    void visit(const ForLoopStatement &stmt);
-    void visit(const WhileLoopStatement &stmt);
-    void visit(const ConditionalStatement &stmt);
-    void visit(const ElseStatement &stmt);
-    void visit(const RetStatement &stmt);
-    void visit(const CallStatement &stmt);
-    void visit(const AssignStatement &stmt);
+    void visit(const ForLoopStatement &stmt) override;
+    void visit(const WhileLoopStatement &stmt) override;
+    void visit(const ConditionalStatement &stmt) override;
+    void visit(const ElseStatement &stmt) override;
+    void visit(const RetStatement &stmt) override;
+    void visit(const CallStatement &stmt) override;
+    void visit(const AssignStatement &stmt) override;
 
-    void visit(const Block &block);
-    void visit(const VarType &var);
-    void visit(const FuncType &func);
+    void visit(const Block &block) override;
+    void visit(const VarType &var) override;
+    void visit(const FuncType &func) override;
 
-    void visit(const VariableSignature &var) {
+    void visit(const VariableSignature &var) override {
         (void)var;
         return;
     }
-    void visit(const FuncSignature &sign) {
+    void visit(const FuncSignature &sign) override {
         (void)sign;
         return;
     }
-    void visit(const Function &func);
+    void visit(const Function &func) override;
 
     /**
      * @brief return the current value
      */
-    ValType get_value() const;
+    [[nodiscard]] auto get_value() const -> ValType;
 
     /**
      * @brief override the current value
@@ -124,15 +124,15 @@ class InterpreterVisitor : public Visitor {
     /**
      * @brief get a variable reference in the current frame by identifier
      */
-    std::weak_ptr<Variable> find_var_in_frame(const std::string &name);
+    auto find_var_in_frame(const std::string &name) -> std::weak_ptr<Variable>;
 
     /**
      * @brief find a global function with a given name
      */
-    std::shared_ptr<Callable> find_func(const std::string &name);
+    auto find_func(const std::string &name) -> std::shared_ptr<Callable>;
 
     /**
      * initialize a variable with a given type
      */
-    ValType init_var(const Type &type);
+    auto init_var(const Type &type) -> ValType;
 };
