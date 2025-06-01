@@ -45,8 +45,17 @@ jobs:
             c_compiler: cl
 
     steps:
-    - name: install boost
-      run: sudo apt-get update && sudo apt-get install libboost-all-dev
+
+    - name: Install Boost on Linux
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libboost-all-dev
+
+    - name: Install Boost on Windows
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install boost-msvc-14.3 -y
       
     - uses: actions/checkout@v4
 
