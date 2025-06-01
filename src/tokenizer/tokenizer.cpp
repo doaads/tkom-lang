@@ -1,7 +1,5 @@
 #include "tokenizer.h"
 
-#include <unistd.h>
-
 #include <cmath>
 #include <utility>
 
