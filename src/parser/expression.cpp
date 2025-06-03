@@ -18,13 +18,13 @@ LiteralExpr::LiteralExpr(const Position pos, Token token)
 void LiteralExpr::accept(Visitor &visitor) const { visitor.visit(*this); }
 
 struct LiteralString {
-    const std::string operator()(std::monostate) { return "null"; }
-    const std::string operator()(const std::string& rhs) { return rhs; }
-    const std::string operator()(bool rhs) { return rhs ? "true" : "false"; }
-    const std::string operator()(auto rhs) { return std::to_string(rhs); }
+    auto operator()(std::monostate) -> const std::string { return "null"; }
+    auto operator()(const std::string& rhs) -> const std::string { return rhs; }
+    auto operator()(bool rhs) -> const std::string { return rhs ? "true" : "false"; }
+    auto operator()(auto rhs) -> const std::string { return std::to_string(rhs); }
 };
 
-std::string LiteralExpr::get_value_string() const {
+auto LiteralExpr::get_value_string() const -> std::string {
     return std::visit(LiteralString(), value);
 }
 
