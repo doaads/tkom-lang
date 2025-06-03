@@ -1,11 +1,13 @@
-# TKOM Lang
-
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/doaads/tkom-lang/cmake-multi-platform.yml)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/doaads/tkom-lang/docs.yml?label=docs)
+
+# TKOM Language
 
 *Bartosz Nowak*
 
 Interpreted Programming Language written in C++ for ZPR and TKOM.
+
+- [Project Documentation](https://doaads.github.io/tkom-lang/)
 
 ## Getting started
 
@@ -32,4 +34,4 @@ The compiled binary `./tkom` can be run from the `build/` directory via:
 
 When toggled, the `-V` flag will enable verbose logging, and will print out the parsed syntax tree on the screen:
 
-![](img/2025-06-03-12-42-08.png)
+![](img/2025-06-03-12-55-47.png)
