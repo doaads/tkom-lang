@@ -73,7 +73,7 @@ var NAVTREEINDEX =
 "annotated.html",
 "classInterpreterVisitor.html#af7970ef0f035e6c80f52d0ff1abd385e",
 "classWhileLoopStatement.html",
-"structTypeCast.html#a73863bae73b908ab19cf1a722e305c6b"
+"structTypeCast.html#a41ebbc002f06133c4f6cb4714db76ee8"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

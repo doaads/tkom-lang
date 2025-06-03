@@ -5,5 +5,6 @@ var searchData=
   ['2_20analizator_20składniowy_2',['5.2 Analizator Składniowy',['../md_docs_2TKOM_2dokumentacja-koncowa-tkom.html#autotoc_md11',1,'']]],
   ['2_20building_20the_20project_3',['2. Building the project',['../index.html#autotoc_md15',1,'']]],
   ['2_20definiowanie_20zmiennych_4',['1.2 Definiowanie zmiennych',['../md_docs_2TKOM_2dokumentacja-koncowa-tkom.html#autotoc_md6',1,'']]],
-  ['2_20operatory_5',['1.1.2 Operatory',['../md_docs_2TKOM_2dokumentacja-koncowa-tkom.html#autotoc_md4',1,'']]]
+  ['2_20language_20structure_5',['4.2 Language structure',['../index.html#autotoc_md19',1,'']]],
+  ['2_20operatory_6',['1.1.2 Operatory',['../md_docs_2TKOM_2dokumentacja-koncowa-tkom.html#autotoc_md4',1,'']]]
 ];

@@ -135,11 +135,59 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!-- fragment --><p>When toggled, the <code>-V</code> flag will enable verbose logging, and will print out the parsed syntax tree on the screen:</p>
 <p><img src="img/2025-05-31-20-25-35.png" alt="" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md17"></a>
-4. Example source files</h1>
+4. Laguange quickstart</h1>
+<h2><a class="anchor" id="autotoc_md18"></a>
+4.1 Example source files</h2>
 <p>The example source files are available at <code>examples/</code>. They show the language's general syntax and demonstrate mechanisms such as decorators and bind fronts.</p>
-<h1><a class="anchor" id="autotoc_md18"></a>
+<h2><a class="anchor" id="autotoc_md19"></a>
+4.2 Language structure</h2>
+<p>A source file must consist of at least one function definition. A source file must contain a definition for a <code>main</code> function with the following signature:</p>
+<div class="fragment"><div class="line">[int::]</div>
+</div><!-- fragment --><p>An example <code>main</code> function will look like this:</p>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="lexer__main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1">main</a> {  <span class="comment">// skip `::` operator here, as we have no parameters</span></div>
+<div class="line">...    <span class="comment">// user code</span></div>
+<div class="line"><a class="code hl_function" href="arithmetics_8h.html#a9390d8a36fc2d7229efffb33781e79c0">ret</a> 0; <span class="comment">// return 0</span></div>
+<div class="line">}</div>
+<div class="ttc" id="aarithmetics_8h_html_a9390d8a36fc2d7229efffb33781e79c0"><div class="ttname"><a href="arithmetics_8h.html#a9390d8a36fc2d7229efffb33781e79c0">are_of_arithmetic_rank</a></div><div class="ttdeci">constexpr auto are_of_arithmetic_rank() -&gt; bool</div><div class="ttdoc">function for checking if types are of arithmetic rank for 2-argument functions</div><div class="ttdef"><b>Definition</b> arithmetics.h:25</div></div>
+<div class="ttc" id="alexer__main_8cpp_html_a808f40e2e9d6eb5463165c031dfa3eb1"><div class="ttname"><a href="lexer__main_8cpp.html#a808f40e2e9d6eb5463165c031dfa3eb1">main</a></div><div class="ttdeci">auto main(int argc, char **argv) -&gt; int</div><div class="ttdef"><b>Definition</b> lexer_main.cpp:10</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md20"></a>
+4.3 Builtin functions</h2>
+<p>Aside from user functions, a couple of builtin functions are available:</p><ul>
+<li><code>increment</code> - <code>[void::mut int]</code> - increment by reference</li>
+<li><code>increment_v</code> - <code>[int::int]</code> - increment by value</li>
+<li><code>sqrt</code> - <code>[void::mut flt]</code> - square root by reference</li>
+<li><code>sqrt</code> - <code>[flt::flt]</code> - square root by value</li>
+<li><code>stdout</code> - <code>[void::string]</code> - print</li>
+<li><code>stdin</code> - <code>[string::string]</code> - get input from user</li>
+</ul>
+<p>Full language description is available <a href="https://doaads.github.io/tkom-lang/md_docs_2TKOM_2dokumentacja-koncowa-tkom.html">here</a></p>
+<h1><a class="anchor" id="autotoc_md21"></a>
 5. Testing</h1>
-<p>The project has been tested using <code>Google Test</code>. The tests can be run via <code>just test</code>. </p>
+<p>The project has been tested using <code>Google Test</code>. The tests can be run via <code>just test</code> (or <code>ctest</code> in <code>build/</code>)</p>
+<p>The tests include:</p><ul>
+<li>Parametrized tests for the lexical analyzer consisting of every token</li>
+<li>Parametrized tests for the parser consisting of every construction</li>
+<li>More detailed parser tests parsing full programs</li>
+<li>Parametrized interpreter tests for many expression combinations and their results</li>
+<li>Parametrized interpreter tests for exceptions</li>
+<li>More detailed interpreter tests for every possible statement</li>
+<li>More detailed interpreter tests for full programs</li>
+<li>More detailed interpreter tests for high-order functions</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md22"></a>
+6. Platform support</h1>
+<p>The product is being continually tested and compiled on the following platforms:</p>
+<ul>
+<li><b>Ubuntu Latest</b> with <b>GCC</b></li>
+<li><b>Ubuntu Latest</b> with <b>Clang</b></li>
+<li><b>Windows x64</b> with <b>Visual Studio</b></li>
+</ul>
+<p>More details can be seen <a href="https://github.com/doaads/tkom-lang/actions/workflows/cmake-multi-platform.yml">here</a></p>
+<h1><a class="anchor" id="autotoc_md23"></a>
+7. Building the documentation locally</h1>
+<p>If needed, the documentation can be built locally using</p>
+<div class="fragment"><div class="line">just docs</div>
+</div><!-- fragment --><p>The results can be viewed at <code>docs/html/index.html</code> </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->

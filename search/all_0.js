@@ -8,6 +8,7 @@ var searchData=
   ['1_202_202_20przesłanianie_20zmiennych_5',['1.2.2 Przesłanianie zmiennych',['../md_docs_2TKOM_2dokumentacja-koncowa-tkom.html#autotoc_md8',1,'']]],
   ['1_202_20definiowanie_20zmiennych_6',['1.2 Definiowanie zmiennych',['../md_docs_2TKOM_2dokumentacja-koncowa-tkom.html#autotoc_md6',1,'']]],
   ['1_20analizator_20leksykalny_7',['5.1 Analizator Leksykalny',['../md_docs_2TKOM_2dokumentacja-koncowa-tkom.html#autotoc_md10',1,'']]],
-  ['1_20general_20details_8',['1. General Details',['../index.html#autotoc_md14',1,'']]],
-  ['1_20opis_20języka_9',['1. Opis Języka',['../md_docs_2TKOM_2dokumentacja-koncowa-tkom.html#autotoc_md1',1,'']]]
+  ['1_20example_20source_20files_8',['4.1 Example source files',['../index.html#autotoc_md18',1,'']]],
+  ['1_20general_20details_9',['1. General Details',['../index.html#autotoc_md14',1,'']]],
+  ['1_20opis_20języka_10',['1. Opis Języka',['../md_docs_2TKOM_2dokumentacja-koncowa-tkom.html#autotoc_md1',1,'']]]
 ];
